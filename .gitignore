@@ -1,0 +1,7 @@
+.DS_Store
+*.iws
+node_modules
+out
+logs/*.log
+
+config-prod.json

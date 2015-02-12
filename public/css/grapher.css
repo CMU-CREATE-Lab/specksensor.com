@@ -1,0 +1,44 @@
+.date_axis {
+  height: 42px;
+  z-index: 2;
+  border: 1px solid black;
+  border-bottom-width: 0; }
+
+.y_axis {
+  width: 42px;
+  border: 1px solid black;
+  border-left-width: 0; }
+
+.y_axis_label {
+  position: absolute;
+  text-align: center;
+  font-size: 8pt;
+  height: auto; }
+
+#channel_switcher_panel {
+  font-size: 12px;
+  float: left; }
+
+.channel_link {
+  display: inline-block;
+  margin-right: 20px; }
+  .channel_link .selected {
+    cursor: default;
+    font-weight: bold; }
+  .channel_link .unselected {
+    cursor: pointer;
+    color: #428bca; }
+  .channel_link a {
+    text-decoration: none; }
+
+#value_and_time {
+  display: inline-block;
+  text-align: left;
+  font-size: 12px;
+  float: left;
+  margin-right: 20px; }
+
+#autoScaleLock {
+  float: right;
+  font-size: 12px;
+  margin-right: 5px; }

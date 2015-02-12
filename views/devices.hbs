@@ -1,0 +1,48 @@
+<script language="JavaScript" type="text/javascript">
+   var esdr = null;
+   var PRODUCT_ID = '{{speck_product_id}}';
+
+   $(document).ready(function() {
+      var accessToken = new com.specksensor.AccessToken();
+      accessToken.load(function(err, token) {
+         console.log("Done getting the token: " + token);
+
+         esdr = new org.cmucreatelab.esdr.ESDR(token);
+         fetchDevices();
+      });
+   });
+
+   function fetchDevices() {
+      esdr.devices.find("?orderBy=-created&where=productId="+PRODUCT_ID, {
+         success : function(devices) {
+            renderDevices(devices.rows);
+         },
+         unauthorized : function() {
+            // TODO:
+            console.log("Unauthorized error trying to get the device list from ESDR.");
+         },
+         error : function(responseBody) {
+            // TODO:
+            console.log("Unexpected error trying to get the device list from ESDR.");
+         }
+      });
+   }
+
+   function renderDevices(devices) {
+      var deviceListItemTemplate = Handlebars.templates['device_list_item'];
+      $("#device_list").empty();
+      if (devices && devices.length > 0) {
+         devices.forEach(function(device) {
+            console.log(device);
+            var deviceElement = $(deviceListItemTemplate(device));
+            $("#device_list").append(deviceElement);
+         });
+      } else {
+         $("#device_list").append("You have not yet registered any Specks.")
+      }
+   }
+</script>
+<div class="content_container">
+   <h2>My Specks</h2>
+   <div id="device_list" class="device_list"></div>
+</div>

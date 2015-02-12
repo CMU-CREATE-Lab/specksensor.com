@@ -1,0 +1,36 @@
+{
+   "server" : {
+      "url" : "http://localhost:8889",
+      "port" : 8889
+   },
+   "esdr" : {
+      "rootUrl" : "http://localhost:3001",
+      "apiRootUrl" : "http://localhost:3001/api/v1",
+      "oauthTokenUrl" : "http://localhost:3001/oauth/token"
+   },
+   "cookie" : {
+      "secret" : "C is for cookie, that's good enough for me."
+   },
+   "client" : {
+      "secret" : "Our planet is a lonely speck in the great enveloping cosmic dark.",
+      "resetPasswordToken" : {
+         "url" : "http://localhost:8889/password-reset/:resetPasswordToken",
+         "willReturnViaApi" : true,
+         "willEmailToUser" : false
+      },
+      "verificationToken" : {
+         "url" : "http://localhost:8889/verification/:verificationToken",
+         "willReturnViaApi" : true,
+         "willEmailToUser" : false
+      }
+   },
+   "database" : {
+      "host" : "localhost",
+      "database" : "speck_test",
+      "username" : "speck_test",
+      "password" : "password",
+      "pool" : {
+         "connectionLimit" : 10
+      }
+   }
+}

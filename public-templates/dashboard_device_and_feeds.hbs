@@ -1,0 +1,10 @@
+<div class="device_and_feeds">
+   <div id="device_{{id}}" class="device">{{name}}</div>
+   <div id="feeds_for_device_{{id}}">
+      {{#each feeds}}
+         <div class="feed">
+            <input type="checkbox" id="feed_checkbox_{{id}}" class="feed_checkbox" value="{{id}}"><label for="feed_checkbox_{{id}}">{{name}}</label>
+         </div>
+      {{/each}}
+   </div>
+</div>

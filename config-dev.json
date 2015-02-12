@@ -1,0 +1,17 @@
+{
+   "cookie" : {
+      "secret" : "C is for cookie, that's good enough for me."
+   },
+   "client" : {
+      "secret" : "Our planet is a lonely speck in the great enveloping cosmic dark."
+   },
+   "database" : {
+      "host" : "localhost",
+      "database" : "speck_dev",
+      "username" : "speck_dev",
+      "password" : "password",
+      "pool" : {
+         "connectionLimit" : 10
+      }
+   }
+}
