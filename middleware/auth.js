@@ -32,13 +32,23 @@ module.exports = function(UserModel) {
    ));
 
    passport.serializeUser(function(user, done) {
-      log.debug("serializing user " + user.id + " (ESDR user " + user.esdrUserId + ")");
+      if (user == null) {
+         log.debug("serializeUser(): null user");
+      }
+      else {
+         log.debug("serializeUser(): id " + user.id + " (ESDR user " + user.esdrUserId + ")");
+      }
       done(null, user.id);
    });
 
    passport.deserializeUser(function(id, done) {
       UserModel.findById(id, function(err, user) {
-         log.debug("deserializing user " + id + " (ESDR user " + user.esdrUserId + ")");
+         if (user == null) {
+            log.debug("deserializeUser(): null user");
+         }
+         else {
+            log.debug("deserializeUser(): id " + id + " (ESDR user " + user.esdrUserId + ")");
+         }
          done(err, user);
       });
    });
