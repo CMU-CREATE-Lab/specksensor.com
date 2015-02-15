@@ -305,8 +305,12 @@
 
       Object.keys(feedsById).forEach(function(feedId) {
          var feed = feedsById[feedId];
-         var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
-         addMarker(getMarkerIdForFeed(feed), latLong);
+         var latitude = feed['latitude'];
+         var longitude = feed['longitude'];
+         if (latitude != null && longitude != null) {
+            var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+            addMarker(getMarkerIdForFeed(feed), latLong);
+         }
       });
 
       // select the marker corresponding to the currently selected feed
@@ -430,6 +434,8 @@
       // remove the current feed from the grapher (if any)
       removeFeedFromGrapher(selectedFeed);
 
+      $("#no_geolocation").hide();
+
       // uncheck all checkboxes
       $('.feed_checkbox').prop('checked', false);
 
@@ -438,6 +444,10 @@
 
          // check the appropriate checkbox
          $('#feed_checkbox_' + selectedFeed.id).prop('checked', true);
+
+         if (selectedFeed.latitude == null || selectedFeed.longitude == null) {
+            $("#no_geolocation").show();
+         }
 
          // update the grapher
          addFeedToGrapher(selectedFeed);
@@ -488,7 +498,14 @@
             "style" : {
                "styles" : [
                   { "type" : "line", "lineWidth" : 1, "show" : true, "color" : DARK_BLUE_COLOR },
-                  { "type" : "circle", radius : 1, "lineWidth" : 1, "show" : true, "color" : DARK_BLUE_COLOR, fill : true }
+                  {
+                     "type" : "circle",
+                     radius : 1,
+                     "lineWidth" : 1,
+                     "show" : true,
+                     "color" : DARK_BLUE_COLOR,
+                     fill : true
+                  }
                ],
                "highlight" : {
                   "lineWidth" : 1,
@@ -647,7 +664,6 @@
       yAxisLabelElement.width(yAxisHeight); // set the width == height since we're rotating
       var yAxisLabelHeight = yAxisLabelElement.height();
       var plotContainerWidth = totalWidth - yAxisWidth - yAxisLabelHeight - 3 - 5;  // subtract 3 to allow for borders and another 5 for right margin
-      console.log("plotContainerWidth=[" + plotContainerWidth + "]");
 
       // compute the position of the y-axis label
       var yAxisLabelLeft = Math.round(yAxisWidth + yAxisLabelHeight / 2 - yAxisHeight / 2 + 2);
@@ -714,6 +730,9 @@
             </tr>
          </table>
       </div>
-      <div id="map_area" style="display:none"></div>
+      <div style="position: relative">
+         <div id="map_area" style="display:none"></div>
+         <div id="no_geolocation" class="noselect">You have not geolocated the selected feed.</div>
+      </div>
    </div>
 </div>

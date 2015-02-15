@@ -317,6 +317,16 @@ li {
       border: 1px solid black;
       width: 880px;
       height: 400px; }
+    #dashboard #content_area #no_geolocation {
+      position: absolute;
+      width: 350px;
+      text-align: center;
+      padding: 2px;
+      top: 1px;
+      left: 50%;
+      margin: 0 auto 0 -175px;
+      background-color: rgba(255, 200, 200, 0.75);
+      display: none; }
 
 .device_list .device_list_item {
   border: 1px solid #1c1c1e;
