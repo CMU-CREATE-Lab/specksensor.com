@@ -492,13 +492,12 @@ $DASHBOARD_MENU_PANEL_WIDTH: 190px;
 $DASHBOARD_MENU_PANEL_PADDING: 5px;
 #dashboard {
    background: $TRANSLUCENT_WHITE_BODY_BACKGROUND;
-   margin: 0 auto 40px auto;
-   padding: 70px 0 70px 0;
+   margin: 0 auto 0px auto;
 
    #menu_panel {
       position: absolute;
       width: $DASHBOARD_MENU_PANEL_WIDTH - (2*$DASHBOARD_MENU_PANEL_PADDING);
-      margin-top: 33px;
+      margin-top: 44px;
       padding: $DASHBOARD_MENU_PANEL_PADDING;
 
       font-size: 12px;
@@ -537,7 +536,7 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       #map_area {
          margin-top: 10px;
          border: 1px solid black;
-         width: 809px;
+         width: 880px;
          height: 400px;
       }
    }

@@ -1,6 +1,719 @@
-<div class="content_container">
-   <div class="table_right">
+<link href="/css/grapher.css" rel="stylesheet" type="text/css"/>
+<script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/bodytrack-grapher/org/bodytrack/grapher/gwt/grapher2.nocache.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/bodytrack-grapher/org/bodytrack/grapher/MultiplotGrapher.js" type="text/javascript"></script>
+<script src="/lib/canvas-layer/src/CanvasLayer.js" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript">
+   var DEVICE_PIXEL_RATIO = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
+
+   var PRODUCT_ID = '{{speck_product_id}}';
+
+   var LIGHT_BLUE_COLOR = "#428bca";
+   var DARK_BLUE_COLOR = "#2e68a3";
+   var POINT_RADIUS_HAS_DATA = 6;
+   var POINT_RADIUS_NO_DATA = 4;
+   var TWO_PI = 2 * Math.PI;
+
+   var esdr = null;
+
+   var feedsById = {};
+   var selectedFeed = null;
+   var selectedChannelName = "particle_concentration";
+
+   // grapher stuff
+   var dateAxis;
+   var plotContainer;
+   var grapher;
+   var isAutoScaleOn = false;
+
+   // map stuff
+   var map = null;
+   var mapProjection;
+   var canvasLayer;
+   var context;
+   var isCanvasInitialized = false;
+   var canvasTransformProperties = {
+      neWorldCoords : null,
+      swWorldCoords : null,
+      widthWorldCoords : null,
+      heightWorldCoords : null,
+      xMultiplier : null,
+      yMultiplier : null
+   };
+
+   var markers = {};
+
+   var availablePlotColors = ["#990000", "#009900", "#000099", "#999900", "#6600ff"];
+   var usedPlotColorsByDeviceId = {};
+
+   window.grapherLoad = function() {
+      var accessToken = new com.specksensor.AccessToken();
+
+      // try fetching the access token
+      accessToken.load(function(err, token) {
+
+         esdr = new org.cmucreatelab.esdr.ESDR(token);
+
+         // first load the devices, sorted by name
+         esdr.devices.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + "&orderBy=name&fields=id,name",
+                           {
+                              success : function(foundDevices) {
+                                 if (foundDevices && foundDevices.rows && foundDevices.rows.length > 0) {
+                                    var devices = foundDevices.rows;
+                                    // now load all the feeds
+                                    esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + "&orderBy=-lastUpload&fields=id,userId,name,deviceId,apiKeyReadOnly,isPublic,latitude,longitude,channelSpecs,channelBounds,lastUpload,minTimeSecs,maxTimeSecs",
+                                                    {
+                                                       success : function(foundFeeds) {
+                                                          if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
+
+                                                             // pick the first feed as the default selected feed since
+                                                             // it received the most recent upload
+                                                             selectedFeed = foundFeeds.rows[0];
+
+                                                             // sort the feeds by deviceId
+                                                             var feedsByDeviceId = {};
+                                                             foundFeeds.rows.forEach(function(feed) {
+                                                                feedsById[feed.id] = feed;
+                                                                feed.lastUploadFormatted = (feed.minTimeSecs == null || feed.maxTimeSecs == null) ? "never" : new Date(feed.lastUpload).toLocaleDateString() + " at " + new Date(feed.lastUpload).toLocaleTimeString();
+                                                                if (!(feed.deviceId in feedsByDeviceId)) {
+                                                                   feedsByDeviceId[feed.deviceId] = [];
+                                                                }
+                                                                feedsByDeviceId[feed.deviceId].push(feed);
+                                                             });
+
+                                                             // build the devices and feeds menu
+                                                             var deviceAndFeedsTemplate = Handlebars.templates['dashboard_device_and_feeds'];
+                                                             devices.forEach(function(device) {
+                                                                device.feeds = feedsByDeviceId[device.id];
+                                                                var deviceAndFeedsElement = $(deviceAndFeedsTemplate(device));
+                                                                $("#devices_and_feeds").append(deviceAndFeedsElement);
+                                                             });
+
+                                                             // add the click handler for the checkboxes
+                                                             $(".feed_checkbox").click(function() {
+                                                                var feedId = $(this).val();
+                                                                setFeedSelected(feedId, $(this).is(':checked'));
+                                                             });
+
+                                                             initializeMap();
+                                                          }
+                                                          else {
+                                                             showHasNoDataMessage('has_no_feeds_panel');
+                                                          }
+                                                       },
+                                                       validationError : function(errors) {
+                                                          // TODO
+                                                          console.log("Validation error while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(errors, null, 3));
+                                                       },
+                                                       error : function(responseBody, httpStatusCode) {
+                                                          // TODO: some other error
+                                                          console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(responseBody, null, 3));
+                                                       },
+                                                       failure : function(err, httpStatusCode) {
+                                                          // TODO: some other error
+                                                          console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + err);
+                                                       }
+                                                    });
+                                 }
+                                 else {
+                                    showHasNoDataMessage('has_no_devices_panel');
+                                 }
+                              },
+                              unauthorized : function() {
+                                 // TODO:
+                                 console.log("Unauthorized");
+                              },
+                              validationError : function(errors) {
+                                 // TODO
+                                 console.log("Validation error while trying to load devices owned by the user: " + JSON.stringify(errors, null, 3));
+                              },
+                              error : function(responseBody, httpStatusCode) {
+                                 // TODO: some other error
+                                 console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load devices owned by the user: " + JSON.stringify(responseBody, null, 3));
+                              },
+                              failure : function(err, httpStatusCode) {
+                                 // TODO: some other error
+                                 console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load devices owned by the user: " + err);
+                              }
+                           });
+      });
+   };
+
+   function showHasNoDataMessage(divToShow) {
+      $("#loading_panel").hide();
+      $("#" + divToShow).show();
+   }
+
+   function initializeMap() {
+      console.log("Loading map...");
+      $("#content_area").show();
+      $("#map_area").show();
+      var mapOptions = {
+         center : new google.maps.LatLng(38.00325787792078, -95.4462277304077),
+         zoom : 4,
+         mapTypeId : google.maps.MapTypeId.ROADMAP,
+         panControl : false,
+         zoomControl : true,
+         mapTypeControl : true,
+         scaleControl : true,
+         streetViewControl : false,
+         overviewMapControl : false
+      };
+      map = new google.maps.Map(document.getElementById("map_area"), mapOptions);
+
+      // Add an idle event listener ONCE to handle map loading.
+      google.maps.event.addListenerOnce(map, 'idle', function() {
+         console.log("Map loading done!");
+         mapProjection = map.getProjection();
+         initializeCanvas();
+         initializeGrapher();
+         initializeMarkers();
+         fitMapBoundsToMarkers();
+      });
+
+      // listen for mouse move and click events
+      google.maps.event.addListener(map, 'mousemove', createCanvasFeatureDetectingMouseEventHandler(
+            function(marker) {
+               map.setOptions({ draggableCursor : 'pointer' });
+            },
+            function() {
+               map.setOptions({ draggableCursor : null });
+            }
+      ));
+      google.maps.event.addListener(map, 'click', createCanvasFeatureDetectingMouseEventHandler(
+            function(marker) {
+               var id = marker['id'];
+
+               // if the marker for the selected feed is already selected, then remove it
+               setFeedSelected(id, !(selectedFeed && selectedFeed.id == id));
+            },
+            function() {
+               // nothing to do
+            }
+      ));
+   }
+
+   function initializeGrapher() {
+      console.log("In initializeGrapher()");
+      var now = new Date();
+      var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      var channelMinTimeSecs = midnight.getTime() / 1000;
+      var channelMaxTimeSecs = now.getTime() / 1000;
+
+      // Grapher is not happy if min time equals max time.  Adjust them if necessary
+      if (channelMinTimeSecs == channelMaxTimeSecs) {
+         channelMinTimeSecs--;
+         channelMaxTimeSecs++;
+      }
+      dateAxis = new DateAxis("date_axis", "horizontal");
+      dateAxis.setRange(channelMinTimeSecs, channelMaxTimeSecs);
+      dateAxis.addAxisChangeListener(function() {
+         // auto-scale the y-axes
+         if (isAutoScaleOn && selectedFeed) {
+            autoScaleYAxes();
+         }
+      });
+      grapher = new org.bodytrack.grapher.MultiplotGrapher(dateAxis);
+      plotContainer = new PlotContainer("plot", false, []);
+
+      addFeedToGrapher(selectedFeed);
+
+      $("#loading_panel").hide();
+      $("#grapher_container").show();
+      $("#menu_panel").show();
+
+      setSizes();
+   }
+
+   function createCanvasFeatureDetectingMouseEventHandler(featureDetectedCallback, featureNotDetectedCallback) {
+      return function(evt) {
+         if (evt && evt.latLng && mapProjection != null) {
+
+            // convert the mouse event latLng to canvas coords
+            var eventPoint = worldPointToCanvasPixelCoords(mapProjection.fromLatLngToPoint(evt.latLng));
+
+            // get the canvas color at this pixel to see whether there's a point drawn here (very important to take
+            // the DEVICE_PIXEL_RATIO into account here!)
+            var imageData = context.getImageData(eventPoint.x * DEVICE_PIXEL_RATIO, eventPoint.y * DEVICE_PIXEL_RATIO, 1, 1);
+            if (imageData.data[0] != 0 ||
+                imageData.data[1] != 0 ||
+                imageData.data[2] != 0) {
+
+               // iterate over all the points to see which is closest to this pixel
+               var mapBounds = map.getBounds();
+               var bestPoint = null;
+               var bestDistance = POINT_RADIUS_HAS_DATA;
+               $.each(markers, function(markerId, marker) {
+                  // TODO: this bounds containment check could be smarter...
+                  if (mapBounds.contains(marker['location'])) {
+
+                     // compute the canvas position for this marker
+                     var candidate = worldPointToCanvasPixelCoords(marker['worldPoint']);
+
+                     // compute the distance between this marker's point and the event point
+                     var distance = Math.sqrt(Math.pow(candidate.x - eventPoint.x, 2) + Math.pow(candidate.y - eventPoint.y, 2));
+
+                     // if the distance is less than the bestDistance found so far, then we've found a hit
+                     if (distance <= bestDistance) {
+                        bestPoint = marker;
+                        bestDistance = distance;
+                     }
+                  }
+               });
+
+               if (bestPoint != null) {
+                  featureDetectedCallback(bestPoint);
+               }
+               else {
+                  featureNotDetectedCallback();
+               }
+            }
+            else {
+               featureNotDetectedCallback();
+            }
+         }
+      }
+   }
+
+   function initializeCanvas() {
+      // initialize the canvasLayer
+      var canvasLayerOptions = {
+         map : map,
+         resizeHandler : function() {
+            // nothing to do
+         },
+         animate : false,
+         updateHandler : renderMarkers
+      };
+      canvasLayer = new CanvasLayer(canvasLayerOptions);
+      context = canvasLayer.canvas.getContext('2d');
+      isCanvasInitialized = true;
+
+      // Poke google maps and trigger a resize whenever we detect a browser resize
+      window.addEventListener('resize',
+                              function() {
+                                 google.maps.event.trigger(map, 'resize')
+                              },
+                              false);
+   }
+
+   function initializeMarkers() {
+      var getMarkerIdForFeed = function(feed) {
+         return feed.id;
+      };
+
+      Object.keys(feedsById).forEach(function(feedId) {
+         var feed = feedsById[feedId];
+         var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+         addMarker(getMarkerIdForFeed(feed), latLong);
+      });
+
+      // select the marker corresponding to the currently selected feed
+      setFeedSelected(selectedFeed.id, true);
+   }
+
+   function fitMapBoundsToMarkers() {
+      // fit the map to show all markers
+      var markerIds = Object.keys(markers);
+      if (markerIds.length > 0) {
+         var bounds = new google.maps.LatLngBounds();
+         markerIds.forEach(function(id) {
+            var marker = markers[id];
+            bounds.extend(marker.location);
+         });
+         map.fitBounds(bounds);
+      }
+   }
+
+   function renderMarkers() {
+
+      // clear previous canvas contents
+      context.clearRect(0, 0, canvasLayer.canvas.width, canvasLayer.canvas.height);
+
+      // Update the properties required when transforming world points to canvas points
+      updateCanvasTransformProperties();
+
+      // render the points
+      var mapBounds = map.getBounds();
+      $.each(markers, function(markerId, marker) {
+         // TODO: this bounds containment check could be smarter...
+         if (mapBounds.contains(marker['location'])) {
+
+            // compute the canvas position for this point
+            var markerCoords = worldPointToCanvasPixelCoords(marker['worldPoint']);
+
+            drawPoint(markerCoords, marker);
+         }
+      });
+   }
+
+   function updateCanvasTransformProperties() {
+      var mapBounds = map.getBounds();
+      canvasTransformProperties.neWorldCoords = mapProjection.fromLatLngToPoint(mapBounds.getNorthEast());
+      canvasTransformProperties.swWorldCoords = mapProjection.fromLatLngToPoint(mapBounds.getSouthWest());
+      canvasTransformProperties.widthWorldCoords = canvasTransformProperties.neWorldCoords.x - canvasTransformProperties.swWorldCoords.x;
+      canvasTransformProperties.heightWorldCoords = canvasTransformProperties.swWorldCoords.y - canvasTransformProperties.neWorldCoords.y;
+
+      // we need to be careful here to use the canvas's *style* width/height here, and not the actual
+      // width/height which will be different on devices where the pixel ratio is not 1 (e.g. retina displays)
+      canvasTransformProperties.xMultiplier = $(canvasLayer.canvas).width() / canvasTransformProperties.widthWorldCoords;
+      canvasTransformProperties.yMultiplier = $(canvasLayer.canvas).height() / canvasTransformProperties.heightWorldCoords;
+   }
+
+   function worldPointToCanvasPixelCoords(worldPoint) {
+      return {
+         x : (worldPoint.x - canvasTransformProperties.swWorldCoords.x) * canvasTransformProperties.xMultiplier,
+         y : (worldPoint.y - canvasTransformProperties.neWorldCoords.y) * canvasTransformProperties.yMultiplier
+      };
+   }
+
+   function drawPoint(markerCoords, marker) {
+      var isNoData = marker['value'] == null;
+      var radius = (isNoData ? POINT_RADIUS_NO_DATA : POINT_RADIUS_HAS_DATA);
+      if (selectedFeed && selectedFeed.id == marker.id) {
+         context.beginPath();
+         context.arc(markerCoords.x, markerCoords.y, radius + 1, 0, TWO_PI, false);
+         context.lineWidth = 2;
+         context.strokeStyle = LIGHT_BLUE_COLOR;
+         context.stroke();
+      }
+
+      drawCircle(markerCoords, radius, "rgba(10, 10, 10, 0.6)");
+      // TODO: drawCircle(markerCoords, radius, isNoData ? "rgba(10, 10, 10, 0.6)" : getColorForValue(marker['value']));
+   }
+
+   function drawCircle(centerPoint, radius, color) {
+      context.beginPath();
+      context.arc(centerPoint.x, centerPoint.y, radius, 0, TWO_PI, false);
+      context.fillStyle = color;
+      context.fill();
+   }
+
+   //function getColorForValue(value) {
+   //   if (value) {
+   //      return getParticleConcentrationIndex(value)['color'];
+   //   }
+   //   return "rgba(255, 126, 0, 0.6)";
+   //}
+   //
+   //function getParticleConcentrationIndex(value) {
+   //   if (value <= PARTICLE_CONCENTRATION_INDEX[0]['max']) {
+   //      return PARTICLE_CONCENTRATION_INDEX[0];
+   //   }
+   //   else if (value > PARTICLE_CONCENTRATION_INDEX[PARTICLE_CONCENTRATION_INDEX.length - 2]['max']) {
+   //      return PARTICLE_CONCENTRATION_INDEX[PARTICLE_CONCENTRATION_INDEX.length - 1];
+   //   }
+   //   else {
+   //      for (var i = 1; i < PARTICLE_CONCENTRATION_INDEX.length - 1; i++) {
+   //         if (value <= PARTICLE_CONCENTRATION_INDEX[i]['max']) {
+   //            return PARTICLE_CONCENTRATION_INDEX[i];
+   //         }
+   //      }
+   //   }
+   //   return PARTICLE_CONCENTRATION_INDEX[PARTICLE_CONCENTRATION_INDEX.length - 1];
+   //}
+
+   // Add a marker to the map and push to the array.
+   function addMarker(id, location) {
+      markers[id] = {
+         id : id,
+         location : location,
+         worldPoint : mapProjection.fromLatLngToPoint(location),
+         value : null
+      };
+   }
+
+   function setFeedSelected(feedId, isSelected) {
+      var feed = feedsById[feedId];
+
+      // remove the current feed from the grapher (if any)
+      removeFeedFromGrapher(selectedFeed);
+
+      // uncheck all checkboxes
+      $('.feed_checkbox').prop('checked', false);
+
+      if (isSelected) {
+         selectedFeed = feed;
+
+         // check the appropriate checkbox
+         $('#feed_checkbox_' + selectedFeed.id).prop('checked', true);
+
+         // update the grapher
+         addFeedToGrapher(selectedFeed);
+      }
+      else {
+         selectedFeed = null;
+      }
+
+      // update markers
+      renderMarkers();
+   }
+
+   function removeFeedFromGrapher(feed) {
+      if (feed) {
+         var plotId = feed.id;
+         plotContainer.removePlot(grapher.getPlot(plotId));
+         grapher.removePlot(plotId);
+
+         $("#y_axis_label").empty();
+         $("#channel_switcher_panel").empty();
+
+         // TODO: figure out a better way to remove the contents of the y axis
+         $("#y_axis").find("canvas").remove();
+      }
+   }
+
+   function addFeedToGrapher(feed, willPreserveDateAxis) {
+      if (feed) {
+         willPreserveDateAxis = !!willPreserveDateAxis;
+
+         if (!willPreserveDateAxis) {
+            var channelMinTimeSecs = feed.channelBounds.channels[selectedChannelName].minTimeSecs;
+            var channelMaxTimeSecs = feed.channelBounds.channels[selectedChannelName].maxTimeSecs;
+
+            // Grapher is not happy if min time equals max time.  Adjust them if necessary
+            if (channelMinTimeSecs == channelMaxTimeSecs) {
+               channelMinTimeSecs--;
+               channelMaxTimeSecs++;
+            }
+            dateAxis.setMaxRange(channelMinTimeSecs, channelMaxTimeSecs);
+            dateAxis.setRange(channelMinTimeSecs, channelMaxTimeSecs);
+         }
+
+         var theChannel = {
+            "min" : feed.channelBounds.channels[selectedChannelName].minValue,
+            "max" : feed.channelBounds.channels[selectedChannelName].maxValue,
+            "time_type" : "utc",
+            "style" : {
+               "styles" : [
+                  { "type" : "line", "lineWidth" : 1, "show" : true, "color" : DARK_BLUE_COLOR },
+                  { "type" : "circle", radius : 1, "lineWidth" : 1, "show" : true, "color" : DARK_BLUE_COLOR, fill : true }
+               ],
+               "highlight" : {
+                  "lineWidth" : 1,
+                  "styles" : [
+                     {
+                        "show" : true,
+                        "type" : "lollipop",
+                        "color" : LIGHT_BLUE_COLOR,
+                        "radius" : 0,
+                        "lineWidth" : 1,
+                        "fill" : false
+                     },
+                     {
+                        "type" : "circle",
+                        radius : 3,
+                        "lineWidth" : 0.5,
+                        "show" : true,
+                        "color" : LIGHT_BLUE_COLOR,
+                        fill : false
+                     },
+                     {
+                        "show" : true,
+                        "type" : "value",
+                        "fillColor" : LIGHT_BLUE_COLOR,
+                        "marginWidth" : 10,
+                        "font" : "7pt Helvetica,Arial,Verdana,sans-serif",
+                        "verticalOffset" : 7,
+                        "numberFormat" : "###,##0.##"
+                     }
+                  ]
+               }
+            }
+         };
+
+         // set the Y axis label
+         var yAxisLabel = null;
+         if (feed['channelSpecs'] && feed['channelSpecs'][selectedChannelName]) {
+            var prettyName = feed['channelSpecs'][selectedChannelName]['prettyName'];
+            var units = feed['channelSpecs'][selectedChannelName]['units'];
+            if (prettyName) {
+               yAxisLabel = prettyName;
+            }
+            if (units) {
+               channelUnits = units;
+               yAxisLabel += " (" + units + ")";
+            }
+         }
+         $("#y_axis_label").html(yAxisLabel == null ? "" : yAxisLabel);
+
+         // render the links to change channels
+         $("#channel_switcher_panel").empty();
+         if (feed['channelBounds'] && feed['channelBounds']['channels']) {
+            var availableChannels = Object.keys(feed['channelBounds']['channels']).sort();
+            if (!(selectedChannelName in feed['channelBounds']['channels'])) {
+               selectedChannelName = availableChannels[0];
+            }
+
+            availableChannels.forEach(function(channelName) {
+               var prettyChannelName = feed['channelSpecs'][channelName]['prettyName'];
+               var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
+               var element = $('<div class="channel_link"><span class="' + selectionStateClass + '">' + prettyChannelName + '</span></div>');
+
+               // add click event handler to the channel change links
+               if (channelName != selectedChannelName) {
+                  element.click(function() {
+                     // update the grapher to show the newly selected channel
+                     selectedChannelName = channelName;
+                     removeFeedFromGrapher(selectedFeed);
+                     addFeedToGrapher(selectedFeed, true);
+                  });
+               }
+               $("#channel_switcher_panel").append(element);
+            });
+         }
+
+         var plotId = feed.id;
+         grapher.addPlot(plotId,
+                         theChannel,
+                         function(level, offset, successCallback) {
+                            esdr.tiles.get(feed.apiKeyReadOnly, selectedChannelName, level, offset, {
+                               success : function(json) {
+                                  successCallback(JSON.stringify(json));
+                               },
+                               unauthorized : function() {
+                                  // TODO:
+                                  console.log("Unauthorized");
+                               },
+                               forbidden : function() {
+                                  // TODO:
+                                  console.log("Forbidden");
+                               },
+                               error : function(responseBody) {
+                                  // TODO:
+                                  console.log("Error: " + responseBody);
+                               }
+                            });
+                         },
+                         "y_axis");
+
+         grapher.addDataPointListener(plotId, function(val) {
+            var valueAndTimeElement = $("#value_and_time");
+            if (val == null) {
+               valueAndTimeElement.empty();
+            }
+            else {
+               valueAndTimeElement.html(val.valueString + (channelUnits == null ? "" : " " + channelUnits) + " at " + val.dateString);
+            }
+         });
+
+         plotContainer.addPlot(grapher.getPlot(plotId));
+
+         setSizes();
+      }
+   }
+
+   function autoScaleLockChange() {
+      isAutoScaleOn = $("#autoScaleLockCheckbox").is(":checked");
+      if (isAutoScaleOn) {
+         autoScaleYAxes();
+         $("#autoScaleYAxesButton").attr("disabled", "disabled");
+      }
+      else {
+         $("#autoScaleYAxesButton").removeAttr("disabled");
+      }
+   }
+
+   function autoScaleYAxes() {
+      grapher.forEachPlot(function(plot, yAxis) {
+         var stats = plot.getStatistics(dateAxis.getMin(), dateAxis.getMax());
+
+         if (typeof stats['y_min'] !== 'undefined' && typeof stats['y_max'] !== 'undefined') {
+            var paddedRange = paddedYAxisRange(stats['y_min'], stats['y_max']);
+            yAxis.setRange(paddedRange['min'], paddedRange['max']);
+         }
+      });
+   }
+
+   function paddedYAxisRange(min, max) {
+      var yDiff = max - min;
+      var padding = 0.5;
+      if (yDiff < 1e-10) {
+         padding = 0.5;
+      }
+      else {
+         padding = 0.05 * yDiff;
+      }
+      return { min : min - padding, max : max + padding }
+   }
+
+   function setSizes() {
+      var yAxisElement = $("#y_axis");
+      var yAxisLabelElement = $("#y_axis_label");
+      var totalWidth = $("#content_area").width();
+      var yAxisWidth = yAxisElement.width();
+      var yAxisHeight = yAxisElement.height();
+      yAxisLabelElement.width(yAxisHeight); // set the width == height since we're rotating
+      var yAxisLabelHeight = yAxisLabelElement.height();
+      var plotContainerWidth = totalWidth - yAxisWidth - yAxisLabelHeight - 3 - 5;  // subtract 3 to allow for borders and another 5 for right margin
+      console.log("plotContainerWidth=[" + plotContainerWidth + "]");
+
+      // compute the position of the y-axis label
+      var yAxisLabelLeft = Math.round(yAxisWidth + yAxisLabelHeight / 2 - yAxisHeight / 2 + 2);
+      var yAxisLabelTop = Math.round(yAxisHeight / 2 - yAxisLabelHeight / 2);
+
+      // set positions and sizes
+      yAxisLabelElement.css("top", yAxisLabelTop + "px").css("left", yAxisLabelLeft + "px");
+      dateAxis.setSize(plotContainerWidth, $("#date_axis").height(), SequenceNumber.getNext());
+      plotContainer.setSize(plotContainerWidth, $("#plot").height(), SequenceNumber.getNext());
+      grapher.updateYAxesSizes();
+   }
+
+</script>
+
+<div id="dashboard" class="content_container">
+   <div id="loading_panel" style="height: 262px">Loading...</div>
+   <div id="has_no_devices_panel" style="display:none">
       <h2>Dashboard</h2>
-      Coming soon.
+      <p>You have not yet registered any Specks.</p>
+      <p>Would you like to view the <a href="/data">public data</a> instead?</p>
+   </div>
+   <div id="has_no_feeds_panel" style="display:none">
+      <h2>Dashboard</h2>
+      <p>Your Speck has not yet uploaded any data. Once it has uploaded some data, you can explore it here.
+      </p>
+      <p>Would you like to view the <a href="/data">public data</a> instead?</p>
+   </div>
+   <div id="menu_panel" style="display:none">
+      <div class="title">My Specks</div>
+      <div id="devices_and_feeds"></div>
+      <div id="show_public_feeds_toggle"></div>
+   </div>
+   <div id="content_area" style="display:none">
+      <h2>Dashboard</h2>
+      <div id="grapher_container" class="noselect" style="display:none">
+         <table id="grapher" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td>
+                  <div id="date_axis_container">
+                     <div id="date_axis" class="date_axis"></div>
+                  </div>
+               </td>
+               <td>&nbsp;</td>
+            </tr>
+            <tr>
+               <td>
+                  <div id="plot" class="plot" style="height:200px; border: 1px solid black;"></div>
+               </td>
+               <td>
+                  <div id="y_axis" class="y_axis" style="position:relative;height:200px">
+                     <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
+                  </div>
+               </td>
+            </tr>
+            <tr>
+               <td colspan="2" align="right">
+                  <div id="autoScaleLock">
+                     <input id="autoScaleLockCheckbox" name="autoScaleLockCheckbox" type="checkbox" onchange="autoScaleLockChange()" value="true">
+                     <label for="autoScaleLockCheckbox">Auto Scale Y Axis</label>
+                     <div id="value_and_time"></div>
+                  </div>
+                  <div id="channel_switcher_panel"></div>
+               </td>
+            </tr>
+         </table>
+      </div>
+      <div id="map_area" style="display:none"></div>
    </div>
 </div>
