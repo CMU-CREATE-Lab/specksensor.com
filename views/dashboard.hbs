@@ -61,7 +61,7 @@
                                  if (foundDevices && foundDevices.rows && foundDevices.rows.length > 0) {
                                     var devices = foundDevices.rows;
                                     // now load all the feeds
-                                    esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + "&orderBy=-lastUpload&fields=id,userId,name,deviceId,apiKeyReadOnly,isPublic,latitude,longitude,channelSpecs,channelBounds,lastUpload,minTimeSecs,maxTimeSecs",
+                                    esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + ",minTimeSecs<>__null__&orderBy=-lastUpload&fields=id,userId,name,deviceId,apiKeyReadOnly,isPublic,latitude,longitude,channelSpecs,channelBounds,lastUpload,minTimeSecs,maxTimeSecs",
                                                     {
                                                        success : function(foundFeeds) {
                                                           if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
