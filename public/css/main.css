@@ -292,7 +292,7 @@ li {
   #dashboard #menu_panel {
     position: absolute;
     width: 180px;
-    margin-top: 44px;
+    margin-top: 72px;
     padding: 5px;
     font-size: 12px; }
     #dashboard #menu_panel .title {
@@ -312,6 +312,11 @@ li {
   #dashboard #content_area {
     position: relative;
     margin-left: 190px; }
+    #dashboard #content_area #time_range_switcher_panel, #dashboard #content_area #time_range_switcher_panel_placeholder {
+      display: none;
+      font-size: 12px;
+      text-align: center;
+      margin-bottom: 10px; }
     #dashboard #content_area #map_area {
       margin-top: 10px;
       border: 1px solid black;

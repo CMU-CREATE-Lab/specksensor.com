@@ -19,17 +19,20 @@
   font-size: 12px;
   float: left; }
 
-.channel_link {
+.channel_link, .time_range_link {
   display: inline-block;
   margin-right: 20px; }
-  .channel_link .selected {
+  .channel_link .selected, .time_range_link .selected {
     cursor: default;
     font-weight: bold; }
-  .channel_link .unselected {
+  .channel_link .unselected, .time_range_link .unselected {
     cursor: pointer;
-    color: #428bca; }
-  .channel_link a {
+    color: #6699B6; }
+  .channel_link a, .time_range_link a {
     text-decoration: none; }
+
+.channel_link:last-of-type, .time_range_link:last-of-type {
+  margin-right: 0; }
 
 #value_and_time {
   display: inline-block;

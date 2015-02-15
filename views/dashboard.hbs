@@ -46,6 +46,40 @@
    var availablePlotColors = ["#990000", "#009900", "#000099", "#999900", "#6600ff"];
    var usedPlotColorsByDeviceId = {};
 
+   var timeRangeOptions = [
+      {
+         "label" : "past hour",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(3600);
+         }
+      },
+      {
+         "label" : "past 12 hours",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(43200);
+         }
+      },
+      {
+         "label" : "past 24 hours",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(86400);
+         }
+      },
+      {
+         "label" : "past 7 days",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(604800);
+         }
+      },
+      {
+         "label" : "all data",
+         "handler" : function() {
+            dateAxis.setMaxRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
+            dateAxis.setRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
+         }
+      }
+   ];
+
    window.grapherLoad = function() {
       var accessToken = new com.specksensor.AccessToken();
 
@@ -195,6 +229,20 @@
 
    function initializeGrapher() {
       console.log("In initializeGrapher()");
+
+      // render the time range options
+      timeRangeOptions.forEach(function(timeRangeOption) {
+         var timeRangeElement = $('<div class="time_range_link"><a href="#" onclick="return false;">' + timeRangeOption.label + '</a></div>');
+         timeRangeElement.click(timeRangeOption.handler);
+         $("#time_range_switcher_panel").append(timeRangeElement);
+      });
+      if (selectedFeed) {
+         $("#time_range_switcher_panel").show();
+      }
+      else {
+         $("#time_range_switcher_panel").hide();
+      }
+
       var now = new Date();
       var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -435,6 +483,8 @@
       removeFeedFromGrapher(selectedFeed);
 
       $("#no_geolocation").hide();
+      $("#time_range_switcher_panel").hide();
+      $("#time_range_switcher_panel_placeholder").hide();
 
       // uncheck all checkboxes
       $('.feed_checkbox').prop('checked', false);
@@ -449,11 +499,14 @@
             $("#no_geolocation").show();
          }
 
+         $("#time_range_switcher_panel").show();
+
          // update the grapher
          addFeedToGrapher(selectedFeed);
       }
       else {
          selectedFeed = null;
+         $("#time_range_switcher_panel_placeholder").show();
       }
 
       // update markers
@@ -676,6 +729,13 @@
       grapher.updateYAxesSizes();
    }
 
+   function setRangeFromSecondsAgoToNow(numSecondsAgo) {
+      var max = Date.now() / 1000;
+      var min = max - numSecondsAgo;
+      dateAxis.setMaxRange(Math.min(min, selectedFeed.minTimeSecs), Math.max(max, selectedFeed.maxTimeSecs));
+      dateAxis.setRange(min, max);
+   }
+
 </script>
 
 <div id="dashboard" class="content_container">
@@ -702,6 +762,8 @@
          <table id="grapher" border="0" cellpadding="0" cellspacing="0">
             <tr>
                <td>
+                  <div id="time_range_switcher_panel"></div>
+                  <div id="time_range_switcher_panel_placeholder">&nbsp;&nbsp;&nbsp;</div>
                   <div id="date_axis_container">
                      <div id="date_axis" class="date_axis"></div>
                   </div>

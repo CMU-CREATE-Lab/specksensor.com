@@ -1,4 +1,4 @@
-$LINK_COLOR: #428bca;
+$LINK_COLOR: #6699B6;
 
 .date_axis {
    height: 42px;
@@ -25,7 +25,7 @@ $LINK_COLOR: #428bca;
    float: left;
 }
 
-.channel_link {
+.channel_link, .time_range_link {
    display: inline-block;
    margin-right: 20px;
 
@@ -44,11 +44,15 @@ $LINK_COLOR: #428bca;
    }
 }
 
+.channel_link:last-of-type, .time_range_link:last-of-type {
+   margin-right: 0;
+}
+
 #value_and_time {
    display: inline-block;
    text-align: left;
    font-size: 12px;
-   float:left;
+   float: left;
    margin-right: 20px;
 }
 
