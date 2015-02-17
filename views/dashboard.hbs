@@ -119,8 +119,12 @@
                                                              var deviceAndFeedsTemplate = Handlebars.templates['dashboard_device_and_feeds'];
                                                              devices.forEach(function(device) {
                                                                 device.feeds = feedsByDeviceId[device.id];
-                                                                var deviceAndFeedsElement = $(deviceAndFeedsTemplate(device));
-                                                                $("#devices_and_feeds").append(deviceAndFeedsElement);
+
+                                                                // don't show devices here which have no feeds
+                                                                if (device.feeds && device.feeds.length > 0) {
+                                                                   var deviceAndFeedsElement = $(deviceAndFeedsTemplate(device));
+                                                                   $("#devices_and_feeds").append(deviceAndFeedsElement);
+                                                                }
                                                              });
 
                                                              // add the click handler for the checkboxes
