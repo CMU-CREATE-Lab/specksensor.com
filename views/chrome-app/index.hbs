@@ -58,7 +58,7 @@
 
    window.addEventListener("message",
                            function(event) {
-                              // remember the source and origin
+                              // remember the source and origin so we can respond and initiate requests later
                               if (!postMessagePeer) {
                                  postMessagePeer = {
                                     target : event.source,
@@ -93,7 +93,15 @@
 
    function showBeginRegistrationPanel() {
       updateProgressBar(0);
-      showPanel('begin_registration_panel');
+      showPanel('begin_registration_panel_has_api_key');
+
+      //// TODO
+      //if (speck.feedApiKey) {
+      //   // TODO: get feed details from ESDR, display to user
+      //   showPanel('begin_registration_panel_has_api_key');
+      //} else {
+      //   showPanel('begin_registration_panel_no_api_key');
+      //}
    }
 
    var updateProgressBar = function(step) {
@@ -444,7 +452,8 @@
       updateProgressBar(4);
       if (wasSuccessful) {
          showPanel('finished_success_panel');
-      } else {
+      }
+      else {
          showPanel('finished_failure_panel');
       }
    }
@@ -503,7 +512,19 @@
    </div>
 </div>
 
-<div id="begin_registration_panel" class="content_container upload_panel">
+<div id="begin_registration_panel_no_api_key" class="content_container upload_panel">
+   <div class="page_instructions">
+      You can view and explore data uploaded from your Speck on specksensor.com.  To enable uploads, you must
+      first register your Speck with your specksensor.com account. This section will walk you through the registration
+      process.
+   </div>
+   <form id="login_form" class="big_form" onsubmit="showLogInPanel(); return false;">
+      <div class="form-group">
+         <button type="submit" class="btn btn-primary pull-right">Start</button>
+      </div>
+   </form>
+</div>
+<div id="begin_registration_panel_has_api_key" class="content_container upload_panel">
    <div class="page_instructions">
       You can view and explore data uploaded from your Speck on specksensor.com.  To enable uploads, you must
       first register your Speck with your specksensor.com account. This section will walk you through the registration
@@ -689,6 +710,7 @@
 <div id="finished_success_panel" class="content_container upload_panel">
    <div class="page_instructions">
       <p>Success! Your Speck is now configured for uploading.</p>
+      {{!-- TODO: display prompt to configure wifi if not already set up --}}
    </div>
    <form class="big_form" onsubmit="window.location.reload(); return false;">
       <div class="form-group">
