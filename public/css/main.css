@@ -226,20 +226,6 @@ li {
   border: 1px solid #598800;
   background: #E2F1BB; }
 
-#map_area #map_canvas {
-  width: 416px;
-  height: 300px;
-  border: 1px solid #1c1c1e;
-  margin: 0;
-  padding: 0; }
-#map_area .map_instructions {
-  font-size: 12px !important;
-  color: #666666; }
-#map_area #map_geolocation {
-  font-size: 12px !important; }
-#map_area .map_geolocation_prompt {
-  display: none; }
-
 #home_page #home_page_image_overlay {
   position: absolute;
   margin-left: auto;

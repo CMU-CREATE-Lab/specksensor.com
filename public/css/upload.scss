@@ -1,7 +1,103 @@
+$BODY_TEXT_COLOR: #1c1c1e;
+
 body {
-   background: #455f6a !important;
+   background: white !important;
+   max-height: 760px;
+   overflow-y: hidden;
 }
 
 .upload_panel {
    display: none;
+}
+
+#already_logged_in_email {
+   font-weight: bold;
+}
+
+#upload_progress_bar {
+   margin-bottom: 20px;
+
+   .marker_on {
+      width: 20px;
+      height: 20px;
+      background: transparent url("../images/progress_marker_on.png") no-repeat 0 0;
+      background-size: 20px 20px;
+   }
+   .marker_off {
+      width: 20px;
+      height: 20px;
+      background: transparent url("../images/progress_marker_off.png") no-repeat 0 0;
+      background-size: 20px 20px;
+   }
+
+   .bar_on {
+      width: 130px;
+      height: 6px;
+      background-color: black;
+   }
+
+   .bar_off {
+      width: 130px;
+      height: 6px;
+      background-color: #acacac;
+   }
+
+   .label_on {
+      color: black;
+   }
+
+   .label_off {
+      color: #acacac;
+   }
+
+   .half_bar_spacer {
+      width: 65px;
+      height: 1px;
+   }
+
+   .marker_spacer {
+      width: 20px;
+      height: 1px;
+   }
+}
+
+#create_feed_form_extra_controls {
+   width: 425px;
+   margin-top: 12px;
+}
+
+// =====================================================================================================================
+// Map
+// =====================================================================================================================
+
+#map_area {
+
+   #map_canvas {
+      width: 423px;
+      height: 230px;
+      border: 1px solid $BODY_TEXT_COLOR;
+      margin: 0;
+      padding: 0;
+   }
+
+   .map_instructions {
+      font-size: 12px !important;
+      color: #666666;
+   }
+
+   #map_geolocation {
+      font-size: 12px !important;
+   }
+
+   .map_geolocation_prompt {
+      display: none;
+   }
+}
+
+// =====================================================================================================================
+// Bootstrap overrides
+// =====================================================================================================================
+
+.h2, h2 {
+   margin-top: 0;
 }

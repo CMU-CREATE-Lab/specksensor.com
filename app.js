@@ -273,6 +273,7 @@ flow.series([
 
                            app.use('/login', sessionSupport, require('./routes/login'));
                            app.use('/logout', sessionSupport, require('./routes/logout')(db.users));
+                           app.use('/chrome-app/v1', sessionSupport, require('./routes/chrome-app'));
                            app.use('/access-token', sessionSupport, require('./routes/access-token'));
                            app.use('/password-reset', sessionSupport, require('./routes/password-reset')(db.users));
 

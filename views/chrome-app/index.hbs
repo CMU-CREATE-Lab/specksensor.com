@@ -1,0 +1,713 @@
+<script language="JavaScript" type="text/javascript">
+   var PRODUCT_ID = '{{speckProductId}}';
+   var ESDR_USER_ID = '{{esdrUserId}}' || null;
+   //var ESDR_API_
+
+   var accessToken = null;
+   var esdr = null;
+   var speck = null;
+   var map = null;
+   var marker = null;
+   var deviceId = null;
+   var feeds = null;
+   var selectedFeed = null;
+
+   var isRequestingDeletion = false;
+   var deleteDataTimeoutHandle = null;
+
+   var postMessagePeer = null;
+
+   var messageEventHandlers = {
+      'device-info' : function(deviceInfo) {
+         console.log("I got a device-info message: " + JSON.stringify(deviceInfo, null, 3));
+         if (deviceInfo && deviceInfo.serialNumber) {
+            speck = deviceInfo;
+            showBeginRegistrationPanel();
+         }
+         else {
+            showPanel('no_serial_number_available')
+         }
+      },
+
+      'geolocation-response' : function(geolocationResponse) {
+         console.log("geolocation-response: " + JSON.stringify(geolocationResponse, null, 3));
+         if (geolocationResponse &&
+             geolocationResponse['wasSuccessful'] &&
+             geolocationResponse['location'] &&
+             geolocationResponse['location']['lat'] &&
+             geolocationResponse['location']['lng']) {
+            $(".map_geolocation_prompt").hide();
+            $("#map_geolocation_link").show();
+            var userLocation = new google.maps.LatLng(geolocationResponse['location']['lat'],
+                                                      geolocationResponse['location']['lng']);
+            marker.setPosition(userLocation);
+            map.setZoom(17);
+            map.setCenter(userLocation);
+         }
+         else {
+            $(".map_geolocation_prompt").hide();
+            $("#map_geolocation_status_fail").show();
+         }
+      },
+
+      'set-feed-api-key-response' : function(response) {
+         console.log("set-feed-api-key-response: " + JSON.stringify(response, null, 3));
+         showFinishedPanel(response && response.success);
+      }
+   };
+
+   window.addEventListener("message",
+                           function(event) {
+                              // remember the source and origin
+                              if (!postMessagePeer) {
+                                 postMessagePeer = {
+                                    target : event.source,
+                                    origin : event.origin
+                                 }
+                              }
+
+                              // handle the event
+                              if (event.data && event.data.eventId) {
+                                 var eventHandler = messageEventHandlers[event.data.eventId];
+                                 if (typeof eventHandler === 'function') {
+                                    eventHandler(event.data.data);
+                                 }
+                                 else {
+                                    console.log("Invalid event handler [" + event.data.eventId + "]");
+                                 }
+                              }
+                              else {
+                                 console.log("Unexpected event format");
+                              }
+                           },
+                           false);
+
+   function sendMessage(eventId, data) {
+      if (postMessagePeer) {
+         postMessagePeer.target.postMessage({ eventId : eventId, data : data }, postMessagePeer.origin);
+      }
+      else {
+         console.log("ERROR: Can't send postMessage because postMessagePeer is null or undefined");
+      }
+   }
+
+   function showBeginRegistrationPanel() {
+      updateProgressBar(0);
+      showPanel('begin_registration_panel');
+   }
+
+   var updateProgressBar = function(step) {
+      // reset everything
+      $(".progress_marker").removeClass('marker_on').addClass('marker_off');
+      $(".progress_bar").removeClass('bar_on').addClass('bar_off');
+      $(".progress_label").removeClass('label_on').addClass('label_off');
+
+      // turn on markers and bars up to step
+      if (step >= 0 && step <= 4) {
+         for (var i = 0; i < step; i++) {
+            $("#progress_marker_" + i).removeClass('marker_off').addClass('marker_on');
+            $("#progress_bar_" + i).removeClass('bar_off').addClass('bar_on');
+            $("#progress_label_" + i).removeClass('label_off').addClass('label_on');
+         }
+      }
+   };
+
+   function showSignUpPanel() {
+      updateProgressBar(0);
+      showPanel('signup_panel');
+      $("#signup_email").focus();
+   }
+
+   function showLogInPanel() {
+      updateProgressBar(1);
+
+      accessToken = new com.specksensor.AccessToken();
+
+      // try fetching the access token
+      accessToken.load(function(err, token) {
+         console.log("Done getting the token: " + token);
+
+         if (token == null) {
+            showPanel('login_panel');
+            $("#login_email").focus();
+         }
+         else {
+            showPanel('already_logged_in_panel');
+            esdr = new org.cmucreatelab.esdr.ESDR(token);
+            esdr.users.findById(ESDR_USER_ID,
+                                {
+                                   success : function(userInfo) {
+                                      console.log("Got user info: " + JSON.stringify(userInfo, null, 3));
+                                      $("#already_logged_in_email").text(userInfo.email);
+                                   },
+                                   unauthorized : function() {
+                                      // TODO
+                                      console.log("Get user info not authorized!");
+                                   },
+                                   forbidden : function() {
+                                      // TODO
+                                      console.log("Get user info forbidden!");
+                                   },
+                                   error : function(responseBody, httpStatusCode) {
+                                      // TODO
+                                      console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to get user info:" + JSON.stringify(responseBody, null, 3));
+                                   },
+                                   failure : function(err, httpStatusCode) {
+                                      // TODO: some other error
+                                      console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to get user info: " + err);
+                                   }
+                                });
+         }
+      });
+   }
+
+   function logout() {
+      superagent
+            .get("/logout")
+            .end(function(err, res) {
+                    console.log(JSON.stringify(res.body, null, 3));
+
+                    // make sure the access token is cleared
+                    if (accessToken) {
+                       accessToken.set(null);
+                    }
+                 });
+   }
+
+   function handleLoginSuccess(loginResult) {
+      console.log("in handleLoginSuccess(): got access token: " + loginResult.accessToken);
+      $(".upload_panel").hide();
+      accessToken.set(loginResult.accessToken);
+      esdr = new org.cmucreatelab.esdr.ESDR(loginResult.accessToken);
+
+      // start the upload process by checking whether this device is already registered
+      getDevice(speck.serialNumber);
+   }
+
+   function handleLoginUnauthorized(messages) {
+      messages.add('Login failed. Please double-check your login below and make sure you have ' +
+                   'activated your account by clicking the link in the verification email we sent ' +
+                   'when you signed up.');
+   }
+
+   function getDevice() {
+      var serialNumber = speck.serialNumber;
+      console.log("Checking whether device [" + serialNumber + "] is registered...");
+      esdr.devices.findByProductAndSerialNumber(PRODUCT_ID,
+                                                serialNumber,
+                                                'id',
+                                                {
+                                                   success : function(foundDevice) {
+                                                      console.log("found device: " + JSON.stringify(foundDevice, null, 3));
+                                                      deviceId = foundDevice.id;
+                                                      getFeeds();
+                                                   },
+                                                   unauthorized : function() {
+                                                      // TODO: unauthorized--need to log in first and try again (this shouldn't happen, but...)
+                                                   },
+                                                   notFound : function() {
+                                                      console.log("Unknown device, need to create it.");
+                                                      showCreateDevicePanel();
+                                                   },
+                                                   error : function(responseBody, httpStatusCode) {
+                                                      // TODO: some unexpected error
+                                                      console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") trying to get the device info from ESDR: " + JSON.stringify(responseBody, null, 3));
+                                                   },
+                                                   failure : function(err, httpStatusCode) {
+                                                      // TODO: some unexpected error
+                                                      console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") trying to get the device info from ESDR: " + err);
+                                                   }
+                                                });
+   }
+
+   function showCreateDevicePanel() {
+      updateProgressBar(2);
+      showPanel('create_device_panel');
+      $("#create_device_device_name").val("Speck (" + speck.serialNumber.substr(0, 8) + ")");
+   }
+
+   function submitCreateDeviceForm() {
+      var messages = new com.specksensor.Messages();
+      var form = $("#create_device_form");
+      var errorMessagesElement = $("#create_device_error_messages");
+      errorMessagesElement.empty().hide();
+
+      var deviceNameElement = $("#create_device_device_name");
+      var deviceName = deviceNameElement.val().trim();
+
+      var device = {
+         name : deviceName,
+         serialNumber : speck.serialNumber
+      };
+
+      // perform simple validation
+      if (deviceName.length <= 0) {
+         messages.add('Please give the Speck a name (e.g. "Speck (' + speck.serialNumber.slice(0, 8) + ')")');
+         deviceNameElement.focus();
+      }
+
+      if (messages.isEmpty()) {
+         setFormEnabled(form, false);
+         esdr.devices.create(PRODUCT_ID,
+                             device,
+                             {
+                                complete : function() {
+                                   setFormEnabled(form, true);
+                                },
+                                created : function(createdDevice) {
+                                   deviceId = createdDevice.id;
+                                   console.log("Device created: " + JSON.stringify(createdDevice, null, 3));
+                                   showChooseFeedPanel();
+                                },
+                                duplicate : function() {
+                                   // TODO: serial number already exists for this product and user
+                                   messages.add("Sorry, you have already registered this Speck.");
+                                   messages.render(errorMessagesElement);
+                                },
+                                validationError : function(validationErrors) {
+                                   console.log("Error: invalid serial number: " + JSON.stringify(validationErrors, null, 3));
+                                   messages.add("Sorry, that name is not valid.");
+                                   messages.render(errorMessagesElement);
+                                },
+                                error : function(responseBody, httpStatusCode) {
+                                   // TODO: some other error
+                                   console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to create the device: " + JSON.stringify(responseBody, null, 3));
+                                   messages.add("Sorry, an unexpected error occurred.");
+                                   messages.render(errorMessagesElement);
+                                },
+                                failure : function(err, httpStatusCode) {
+                                   // TODO: some other error
+                                   console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") trying to create the device: " + err);
+                                   messages.add("Sorry, an unexpected error occurred.");
+                                   messages.render(errorMessagesElement);
+                                }
+                             });
+      }
+      else {
+         messages.render(errorMessagesElement);
+      }
+
+      return false;
+   }
+
+   function getFeeds() {
+      updateProgressBar(3);
+
+      feeds = null;
+      esdr.feeds.find("?where=deviceId=" + deviceId + "&orderBy=-lastUpload", // TODO: limit selected fields!
+                      {
+                         success : function(foundFeeds) {
+                            feeds = foundFeeds.rows;
+                            if (feeds.length > 0) {
+                               var feedListItemTemplate = Handlebars.templates['feed_list_item'];
+                               feeds.forEach(function(feed) {
+                                  feed.lastUploadFormatted = (feed.minTimeSecs == null || feed.maxTimeSecs == null) ? "never" : new Date(feed.lastUpload).toLocaleDateString() + " at " + new Date(feed.lastUpload).toLocaleTimeString();
+                                  var feedElement = $(feedListItemTemplate(feed));
+                                  $("#existing_feeds").append(feedElement);
+                                  feedElement.click(function() {
+                                     selectFeed(feed);
+                                  });
+                               });
+                            }
+                            showChooseFeedPanel();
+                         },
+                         validationError : function(errors) {
+                            // TODO
+                            console.log("Validation error while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(errors, null, 3));
+                         },
+                         error : function(responseBody, httpStatusCode) {
+                            // TODO: some other error
+                            console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(responseBody, null, 3));
+                         },
+                         failure : function(err, httpStatusCode) {
+                            // TODO: some other error
+                            console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + err);
+                         }
+                      });
+   }
+
+   function showChooseFeedPanel() {
+      updateProgressBar(3);
+
+      $("#choose_feed_panel");
+
+      initializeMap();
+
+      // show the appropriate instructions
+      var hasFeeds = (feeds && feeds.length > 0);
+      var hasExactlyOneFeed = (feeds && feeds.length == 1);
+      $(".choose_feed_panel_instructions").hide();
+      $("#create_feed_panel").hide();
+      $("#choose_existing_feed_button").hide();
+      if (hasFeeds) {
+         if (hasExactlyOneFeed) {
+            $("#choose_feed_panel_instructions_one_feed").show();
+            selectFeed(feeds[0]);
+         }
+         else {
+            $("#choose_feed_panel_instructions_multiple_feeds").show();
+         }
+         $("#choose_existing_feed_button").show();
+      }
+      else {
+         showCreateFeedPanel();
+      }
+
+      showPanel('choose_feed_panel');
+   }
+
+   function showCreateFeedPanel() {
+      updateProgressBar(3);
+
+      $("#create_feed_panel").show();
+      $("#choose_feed_form").hide();
+      $(".choose_feed_panel_instructions").hide();
+
+      // make sure the map is rendered correctly
+      var center = map.getCenter();
+      google.maps.event.trigger(map, "resize");
+      map.setCenter(center);
+      return false;
+   }
+
+   function initializeMap() {
+      var mapOptions = {
+         center : { lat : 36.81435205714916, lng : -93.35445347656253 },
+         zoom : 3,
+         streetViewControl : false,
+         overviewMapControl : false
+      };
+      map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+      map.set("disableDoubleClickZoom", true);
+      marker = new google.maps.Marker({
+                                         position : map.getCenter(),
+                                         map : map,
+                                         draggable : true
+                                      });
+
+      google.maps.event.addListener(map, 'dblclick', function(e) {
+         console.log(e.latLng.toString());
+         marker.setPosition(e.latLng);
+      });
+
+      google.maps.event.addListener(marker,
+                                    'dragend',
+                                    function() {
+                                       console.log("Marker at: " + marker.getPosition().toString());
+                                    });
+
+      // show the geolocation link, if we have a target for sending a post message to request the geolocation
+      if (postMessagePeer != null) {
+         $("#map_geolocation").show();
+      }
+   }
+
+   function selectFeed(feed) {
+      var feedElement = $("#feed_list_item_" + feed.id);
+      if (selectedFeed == null) {
+         selectedFeed = feed;
+         feedElement
+               .addClass("selected_feed")
+               .find(".checkmark_icon_container").show()
+               .addClass("checkmark_white");
+      }
+      else {
+         // deselect the existing feed
+         $("#feed_list_item_" + selectedFeed.id)
+               .removeClass("selected_feed")
+               .find(".checkmark_icon_container").hide()
+               .removeClass("checkmark_white");
+
+         if (selectedFeed.id == feed.id) {
+            selectedFeed = null;
+         }
+         else {
+            selectedFeed = feed;
+            feedElement
+                  .addClass("selected_feed")
+                  .find(".checkmark_icon_container").show()
+                  .addClass("checkmark_white");
+         }
+      }
+      $("#choose_existing_feed_button").prop('disabled', selectedFeed == null);
+   }
+
+   function uploadToFeed(targetFeed) {
+      updateProgressBar(3);
+
+      console.log("Need to tell the Speck to upload to this feed: " + JSON.stringify(targetFeed, null, 3));
+      showPanel('saving_changes_panel');
+      sendMessage('set-feed-api-key-request', { apiKey : targetFeed.apiKey })
+   }
+
+   function showFinishedPanel(wasSuccessful) {
+      updateProgressBar(4);
+      if (wasSuccessful) {
+         showPanel('finished_success_panel');
+      } else {
+         showPanel('finished_failure_panel');
+      }
+   }
+
+   function showPanel(panelElementId) {
+      $(".upload_panel").hide();
+      $("#" + panelElementId).show();
+   }
+
+   function doGeolocation() {
+      $(".map_geolocation_prompt").hide();
+      $("#map_geolocation_status_please_wait").show();
+
+      sendMessage('geolocation-request', {});
+
+      return false;
+   }
+
+</script>
+<div id="upload_panel" class="content_container">
+   <h2>Upload Setup</h2>
+   <div id="upload_progress_bar">
+      <table border="0" cellpadding="0" cellspacing="0" align="center">
+         <tr>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div class="marker_spacer"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div class="marker_spacer"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div class="marker_spacer"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div class="marker_spacer"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+         </tr>
+         <tr>
+            <td><div class="half_bar_spacer"></div></td>
+            <td><div id="progress_marker_0" class="progress_marker marker_off"></div></td>
+            <td colspan="2"><div id="progress_bar_1" class="progress_bar bar_off"></div></td>
+            <td><div id="progress_marker_1" class="progress_marker marker_off"></div></td>
+            <td colspan="2"><div id="progress_bar_2" class="progress_bar bar_off"></div></td>
+            <td><div id="progress_marker_2" class="progress_marker marker_off"></div></td>
+            <td colspan="2"><div id="progress_bar_3" class="progress_bar bar_off"></div></td>
+            <td><div id="progress_marker_3" class="progress_marker marker_off"></div></td>
+            <td><div class="half_bar_spacer"></div></td>
+         </tr>
+         <tr align="center">
+            <td colspan="3"><span id="progress_label_0" class="progress_label label_off">Login</span></td>
+            <td colspan="3"><span id="progress_label_1" class="progress_label label_off">Registration</span></td>
+            <td colspan="3"><span id="progress_label_2" class="progress_label label_off">Location Info</span></td>
+            <td colspan="3"><span id="progress_label_3" class="progress_label label_off">Done!</span></td>
+         </tr>
+      </table>
+   </div>
+</div>
+
+<div id="begin_registration_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      You can view and explore data uploaded from your Speck on specksensor.com.  To enable uploads, you must
+      first register your Speck with your specksensor.com account. This section will walk you through the registration
+      process.
+   </div>
+   <form id="login_form" class="big_form" onsubmit="showLogInPanel(); return false;">
+      <div class="form-group">
+         <button type="submit" class="btn btn-primary pull-right">Start</button>
+      </div>
+   </form>
+</div>
+<div id="login_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      You must be logged in to specksensor.com in order to register your Speck and configure it for uploads.  Please
+      log in using the form below.
+   </div>
+   <form id="login_form" class="big_form" onsubmit="return submitLoginForm('login_form','login_email','login_password','login_messages',null,handleLoginSuccess,handleLoginUnauthorized);">
+      <div id="login_messages" class="form_messages alert alert-danger"></div>
+      <div class="form-group">
+         <input type="email" class="form-control" id="login_email" name="login_email" placeholder="Email address"/>
+      </div>
+      <div class="form-group">
+         <input type="password" class="form-control" id="login_password" name="login_password" placeholder="Password"/>
+      </div>
+      <div class="form-group">
+         <button type="submit" class="btn btn-primary pull-right">Log In</button>
+         Need an account? <a href="#" onclick="showSignUpPanel(); return false;">Sign up!</a>
+      </div>
+   </form>
+</div>
+<div id="already_logged_in_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      <p>
+         You are already logged in to specksensor.com with your <span id="already_logged_in_email"></span> account.
+         You may simply continue on to the next step.
+      </p>
+      <p>
+         Or, if you would prefer to register this Speck with
+         a different account, then please Log Out and start over.
+      </p>
+   </div>
+   <form id="login_form" class="big_form" onsubmit="getDevice(); return false;">
+      <div id="login_messages" class="form_messages alert alert-danger"></div>
+      <div class="form-group pull-right">
+         <button type="submit" class="btn btn-default" onclick="logout();window.location.reload();return false;">Log Out</button>
+         <button type="submit" class="btn btn-primary">Continue...</button>
+      </div>
+   </form>
+</div>
+<div id="signup_panel" class="content_container upload_panel">
+   <div class="page_instructions">If you need a specksensor.com account, please submit the form below to sign up.</div>
+   <div id="signup_error_messages" class="form_messages alert alert-danger"></div>
+   <div id="signup_success_messages" class="form_messages alert alert-success"></div>
+   <form id="signup_form" class="big_form" onsubmit="return submitSignUpForm('signup_form', 'signup_email', 'signup_password', 'signup_error_messages', 'signup_success_messages', 'Come back here once your account is active to log in and complete your upload setup.');">
+      <div class="form-group">
+         <input type="email" class="form-control" id="signup_email" name="signup_email" placeholder="Email address"/>
+      </div>
+      <div class="form-group">
+         <input type="password" class="form-control" id="signup_password" name="signup_password" placeholder="Password"/>
+      </div>
+      <div class="form-group">
+         <button type="submit" class="btn btn-primary pull-right">Sign Up</button>
+         Already have an account? <a href="#" onclick="showLogInPanel(); return false;">Log in!</a>
+      </div>
+   </form>
+</div>
+<div id="create_device_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      <p>Registered Specks must be given a name. You may change the default name below, if you wish.</p>
+      <p>
+         In the next step, you will also be asked to provide a name for the location where you are installing your Speck.
+         So, for example, if you are installing it in your kitchen, you might register the Speck
+         with this form under the name <i>My Speck</i>, but, in the next step, give it a location name of <i>Kitchen</i>.
+      </p>
+   </div>
+   <div id="create_device_error_messages" class="form_messages alert alert-danger"></div>
+   <form id="create_device_form" class="big_form" onsubmit="return submitCreateDeviceForm();">
+      <div class="form-group">
+         <input type="text" class="form-control" id="create_device_device_name" name="create_device_device_name" placeholder="Device Name"/>
+      </div>
+      <div class="form-group">
+         <button type="submit" class="btn btn-primary pull-right">Register</button>
+      </div>
+   </form>
+</div>
+<div id="choose_feed_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      <div id="choose_feed_panel_instructions_multiple_feeds" class="choose_feed_panel_instructions" style="display:none">
+         There are multiple installation location datasets associated with this Speck. Please select the one which
+         should receive future uploads. Or, if you are moving the Speck to a new location, you can
+         <a href="#" onclick="return showCreateFeedPanel();">create a new installation location</a>.
+      </div>
+      <div id="choose_feed_panel_instructions_one_feed" class="choose_feed_panel_instructions" style="display:none">
+         This Speck has already been configured for upload to the location shown below. To continue uploading to the
+         same installation location dataset, simply click the Save button below. Or, if you are moving the Speck to a new
+         location, you can <a href="#" onclick="return showCreateFeedPanel();">create a new installation location</a>.
+      </div>
+   </div>
+   <form id="choose_feed_form" class="big_form" onsubmit="uploadToFeed(selectedFeed); return false;">
+      <div id="existing_feeds" class="feed_list"></div>
+      <div class="form-group">
+         <button id="choose_existing_feed_button" type="submit" class="btn btn-primary pull-right" disabled="disabled">Save</button>
+      </div>
+   </form>
+   <div id="create_feed_panel">
+      <div class="page_instructions">
+         Please provide details about where you will install this Speck. You will need to provide a name for the
+         location, specify the location on the map, specify whether it will be indoors or outdoors, and choose
+         whether you want it to be public or private.
+      </div>
+      <div id="create_feed_error_messages" class="form_messages alert alert-danger"></div>
+      <form id="create_feed_form" class="big_form" onsubmit="return submitCreateFeedForm('create_feed_form',deviceId,'create_feed_location_name',{latitude:marker.getPosition().lat(),longitude:marker.getPosition().lng()},$('#create_feed_is_public_true').prop('checked'),$('#create_feed_is_outdoor_true').prop('checked'),'create_feed_error_messages', esdr, uploadToFeed)">
+         <div class="form-group">
+            <input type="text" class="form-control" id="create_feed_location_name" name="create_feed_location_name" placeholder="Location name (e.g. Kitchen)"/>
+         </div>
+         <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;">
+            <tr valign="top">
+               <td rowspan="2">
+                  <div id="map_area">
+                     <div id="map_geolocation" style="display:none;">
+                        <div id="map_geolocation_link" class="map_geolocation_prompt" style="display:block;">
+                           <a href="#" onclick="return doGeolocation();">Place the marker at my current location</a>
+                        </div>
+                        <div id="map_geolocation_status_please_wait" class="map_geolocation_prompt">Determining your current location, please wait...</div>
+                        <div id="map_geolocation_status_fail" class="map_geolocation_prompt">Sorry, your current location could not be determined.</div>
+                     </div>
+                     <div id="map_canvas"></div>
+                     <div class="map_instructions">Double-click the map or drag the marker to set the marker's location.</div>
+                  </div>
+               </td>
+               <td rowspan="2"><div style="width:10px;"></div></td>
+               <td>
+                  <div id="create_feed_form_extra_controls">
+                     <div>This Speck will be installed:</div>
+                     <div class="form-group">
+                        <div class="radio">
+                           <label>
+                              <input type="radio" id="create_feed_is_outdoor_false" name="create_feed_is_outdoor" value="false" checked="checked">
+                              Indoors
+                           </label>
+                        </div>
+                        <div class="radio">
+                           <label>
+                              <input type="radio" id="create_feed_is_outdoor_true" name="create_feed_is_outdoor" value="true">
+                              Outdoors
+                           </label>
+                        </div>
+                     </div>
+                     <div>Keep all data associated with this installation location:</div>
+                     <div class="form-group">
+                        <div class="radio">
+                           <label>
+                              <input type="radio" id="create_feed_is_public_false" name="create_feed_is_public" value="false" checked="checked">
+                              Private &mdash; visible only to me
+                           </label>
+                        </div>
+                        <div class="radio">
+                           <label>
+                              <input type="radio" id="create_feed_is_public_true" name="create_feed_is_public" value="true">
+                              Public &mdash; visible to all users
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+               </td>
+            </tr>
+            <tr valign="bottom">
+               <td>
+                  <div class="form-group">
+                     <button type="submit" class="btn btn-primary pull-right">Save</button>
+                  </div>
+               </td>
+            </tr>
+         </table>
+      </form>
+   </div>
+</div>
+<div id="saving_changes_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      <p>Configuring your Speck for the specified installation location...</p>
+   </div>
+</div>
+<div id="finished_success_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      <p>Success! Your Speck is now configured for uploading.</p>
+   </div>
+   <form class="big_form" onsubmit="window.location.reload(); return false;">
+      <div class="form-group">
+         <button type="submit" class="btn btn-primary pull-right">OK</button>
+      </div>
+   </form>
+</div>
+<div id="finished_failure_panel" class="content_container upload_panel">
+   <div class="page_instructions">
+      <p>Sorry, an error occurred while configuring your Speck for uploading.</p>
+   </div>
+   <form class="big_form" onsubmit="window.location.reload(); return false;">
+      <div class="form-group">
+         <button type="submit" class="btn btn-primary pull-right">Start Over</button>
+      </div>
+   </form>
+</div>
+<div id="no_serial_number_available" class="content_container upload_panel">
+   <div class="page_instructions">
+      <p>Sorry, an error occurred while communicating with the Speck.</p>
+   </div>
+</div>

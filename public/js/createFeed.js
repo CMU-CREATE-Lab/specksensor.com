@@ -1,4 +1,4 @@
-function submitCreateFeedForm(formElementId, deviceId, locationNameElementId, locationLatLong, isPublic, errorMessagesElementId, esdr, successCallback) {
+function submitCreateFeedForm(formElementId, deviceId, locationNameElementId, locationLatLong, isPublic, isOutdoor, errorMessagesElementId, esdr, successCallback) {
    var messages = new com.specksensor.Messages();
    var form = $("#" + formElementId);
    var errorMessagesElement = $("#" + errorMessagesElementId);
@@ -9,7 +9,7 @@ function submitCreateFeedForm(formElementId, deviceId, locationNameElementId, lo
 
    var feed = {
       name : locationName,
-      exposure : "indoor",
+      exposure : (!!isOutdoor) ? "outdoor" : "indoor",
       latitude : locationLatLong.latitude,
       longitude : locationLatLong.longitude,
       isPublic : !!isPublic,
