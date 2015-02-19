@@ -1,6 +1,6 @@
 {
   "name": "specksensor.com",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "The specksensor.com web site.",
   "main": "app.js",
   "scripts": {
