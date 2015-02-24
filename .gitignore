@@ -3,5 +3,7 @@
 node_modules
 out
 logs/*.log
+resources
+todo.txt
 
 config-prod.json
