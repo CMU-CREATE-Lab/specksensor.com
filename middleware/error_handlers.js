@@ -37,8 +37,6 @@ var handleError = function(req, res, message, data, statusCode) {
 
 module.exports = {
    http404 : function(req, res, next) {
-      log.error("In 404 error handler: " + req.url + " AND METHOD=" + req.method);
-
       var message = "Resource not found";
       var statusCode = httpStatus.NOT_FOUND;
 
