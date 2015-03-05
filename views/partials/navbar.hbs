@@ -5,12 +5,10 @@
       if ($(document).scrollTop() >= 50 && !navbarElement.hasClass('shrink')) {
          bodyElement.addClass('shrink');
          navbarElement.addClass('shrink');
-         console.log("Added shrink");
       }
       else if ($(document).scrollTop() < 50 && navbarElement.hasClass('shrink')) {
          bodyElement.removeClass('shrink');
          navbarElement.removeClass('shrink');
-         console.log("Removed shrink");
       }
    });
 </script>
