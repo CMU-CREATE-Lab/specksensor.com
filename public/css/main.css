@@ -161,6 +161,16 @@ body.shrink {
   margin: 5px 0 5px 0;
   cursor: pointer; }
 
+.account_table {
+  display: table; }
+  .account_table .account_row {
+    display: table-row; }
+    .account_table .account_row .account_header_cell {
+      font-weight: bold; }
+    .account_table .account_row .account_cell {
+      display: table-cell;
+      padding-right: 5px; }
+
 footer {
   margin: 50px 0 15px 0; }
   footer .footer_piece {
