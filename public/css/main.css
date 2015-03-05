@@ -55,6 +55,8 @@ body.shrink {
   -moz-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
   transition: all 0.2s ease; }
+  #main_navbar .active {
+    color: white; }
   #main_navbar .navbar-brand {
     position: relative;
     display: block;

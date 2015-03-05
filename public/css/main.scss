@@ -136,6 +136,10 @@ body.shrink {
    min-height: $NAVBAR_HEIGHT_DEFAULT;
    @include easing;
 
+   .active {
+      color: white;
+   }
+
    .navbar-brand {
       position: relative;
       display: block;
