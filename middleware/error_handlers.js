@@ -28,7 +28,6 @@ var handleError = function(req, res, message, data, statusCode) {
    }
    else {
       res.status(statusCode).render('error', {
-         layout : "error-layout",
          title : "HTTP " + statusCode,
          message : message
       });
@@ -45,7 +44,6 @@ module.exports = {
       }
       else {
          res.status(statusCode).render('error', {
-            layout : "error-layout",
             title : "HTTP " + statusCode,
             message : message
          });

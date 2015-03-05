@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
       res.redirect('/dashboard');
    }
    else {
-      res.render('index', { section : "home" });
+      res.render('index', { section : "home", hero_image : {filename: "home.png", css_class: "anchor_right"} });
    }
 });
 

@@ -1,13 +1,26 @@
-<div id="footer" class="noselect">
-   <div class="fill_line"></div>
-   <div id="footer_content">
-      <div id="footer_left">
-         <span>&copy;2015 speck</span>
+<footer class="noselect">
+   <hr>
+   <div class="row">
+      <div class="footer_piece col-sm-4">
+         <a href="https://twitter.com/specksensor" target="_blank" class="social_media_link"><span class="fa-stack fa-lg">
+           <i class="fa fa-square-o fa-stack-2x"></i>
+           <i class="fa fa-twitter fa-stack-1x"></i>
+         </span></a>
+         <a href="https://www.facebook.com/SpeckSensor" target="_blank" class="social_media_link"><span class="fa-stack fa-lg">
+           <i class="fa fa-square-o fa-stack-2x"></i>
+           <i class="fa fa-facebook fa-stack-1x"></i>
+         </span></a>
       </div>
-      <div id="footer_right">
-         {{!--<div class="link">{{#ifEqual section 'software'}}Software{{else}}<a href="/software">Software</a>{{/ifEqual}}</div>--}}
-         <div class="link">{{#ifEqual section 'terms'}}Terms{{else}}<a href="/terms">Terms</a>{{/ifEqual}}</div>
-         <div class="link">{{#ifEqual section 'about-us'}}About Us{{else}}<a href="/about-us">About Us</a>{{/ifEqual}}</div>
+      <div class="footer_piece col-sm-4">
+         <div class="link">
+            {{#ifEqual section 'terms'}}Terms{{else}}<a href="/terms">Terms</a>{{/ifEqual}}
+         </div>
+         <div class="link">
+            {{#ifEqual section 'about-us'}}About Us{{else}}<a href="/about-us">About Us</a>{{/ifEqual}}
+         </div>
+      </div>
+      <div class="footer_piece col-sm-4">
+         <p>&copy; specksensor.com 2015</p>
       </div>
    </div>
-</div>
+</footer>

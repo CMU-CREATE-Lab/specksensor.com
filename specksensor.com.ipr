@@ -108,7 +108,6 @@
         <option name="HTML_ELEMENTS_TO_INSERT_NEW_LINE_BEFORE" value="" />
         <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="html,body,pre" />
         <option name="HTML_DO_NOT_ALIGN_CHILDREN_OF_MIN_LINES" value="5000" />
-        <option name="HTML_KEEP_WHITESPACES_INSIDE" value="span,pre,textarea,div" />
         <option name="HTML_INLINE_ELEMENTS" value="abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,kbd,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var,li,td,option,label,input,a" />
         <option name="HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT" value="title,h1,h2,h3,h4,h5,h6,p,tr,td,span,div" />
         <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />

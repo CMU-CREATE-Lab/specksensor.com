@@ -124,7 +124,7 @@ flow.series([
                            app.set('views', viewsDir);
                            var handlebars = expressHandlebars.create({
                                                                         extname : '.hbs',
-                                                                        defaultLayout : 'main-layout',
+                                                                        defaultLayout : 'responsive',
                                                                         layoutsDir : path.join(viewsDir, "layouts"),
                                                                         partialsDir : path.join(viewsDir, "partials"),
                                                                         helpers : {

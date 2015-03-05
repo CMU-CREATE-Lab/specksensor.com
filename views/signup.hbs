@@ -4,25 +4,29 @@
    });
 </script>
 <script src="/js/signup.js" type="text/javascript"></script>
-<div id="signup_page" class="content_container">
-   <h2>
-      Sign Up
-   </h2>
-   <div class="page_instructions">
-      Welcome to Speck. Use this form to create an account.
+<div class="row">
+   <div class="col-md-3"></div>
+   <div class="col-md-6">
+      <h2>
+         Sign Up
+      </h2>
+      <div class="page_instructions">
+         Welcome to Speck. Use this form to create an account.
+      </div>
+      <div id="signup_error_messages" class="form_messages alert alert-danger"></div>
+      <div id="signup_success_messages" class="form_messages alert alert-success"></div>
+      <form id="signup_form" class="big_form" onsubmit="return submitSignUpForm('signup_form', 'signup_email', 'signup_password', 'signup_error_messages', 'signup_success_messages');">
+         <div class="form-group">
+            <input type="email" class="form-control" id="signup_email" name="signup_email" placeholder="Email address"/>
+         </div>
+         <div class="form-group">
+            <input type="password" class="form-control" id="signup_password" name="signup_password" placeholder="Password"/>
+         </div>
+         <div class="form-group">
+            <button type="submit" class="btn btn-primary pull-right">Sign Up</button>
+            Have an account? <a href="/login">Log in!</a>
+         </div>
+      </form>
    </div>
-   <div id="signup_error_messages" class="form_messages alert alert-danger"></div>
-   <div id="signup_success_messages" class="form_messages alert alert-success"></div>
-   <form id="signup_form" class="big_form" onsubmit="return submitSignUpForm('signup_form', 'signup_email', 'signup_password', 'signup_error_messages', 'signup_success_messages');">
-      <div class="form-group">
-         <input type="email" class="form-control" id="signup_email" name="signup_email" placeholder="Email address"/>
-      </div>
-      <div class="form-group">
-         <input type="password" class="form-control" id="signup_password" name="signup_password" placeholder="Password"/>
-      </div>
-      <div class="form-group">
-         <button type="submit" class="btn btn-primary pull-right">Sign Up</button>
-         Already have an account? <a href="/login">Log in!</a>
-      </div>
-   </form>
+   <div class="col-md-3"></div>
 </div>

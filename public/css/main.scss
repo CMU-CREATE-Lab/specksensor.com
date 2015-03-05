@@ -1,116 +1,63 @@
-$TRANSLUCENT_WHITE_BODY_BACKGROUND: rgba(255, 255, 255, .8);
-$LINK_COLOR: #6699B6;
-$ROUNDED_CONTAINER_BACKGROUND_COLOR: #6699B6;
-$FILL_LINE_COLOR: #90b6ce;
-$BODY_TEXT_COLOR: #1c1c1e;
-$CONTENT_WIDTH: 1130px;
-
 // =====================================================================================================================
-// Bootstrap overrides
+// Based on Start Bootstrap - Modern Business HTML Template (http://startbootstrap.com)
+// Code licensed under the Apache License v2.0.
+// For details, see http://www.apache.org/licenses/LICENSE-2.0.
 // =====================================================================================================================
 
-a:hover {
-   text-decoration: none;
-}
-
-.h2, h2 {
-   margin-bottom: 20px;
-}
+$SIDEBAR_WIDTH: 250px;
+$NAVBAR_HEIGHT_DEFAULT: 75px;
+$NAVBAR_HEIGHT_SHRUNKEN: 50px;
+$MOBILE_WIDTH: 767px;
+$EASING: all 0.2s ease;
 
 // =====================================================================================================================
-// Main containers
+// Global
 // =====================================================================================================================
 
 html, body {
-   font-family: 'Open Sans', 'Helvetica', sans-serif !important;
-   font-weight: 400 !important;
-   font-size: 16px !important;
-   color: $BODY_TEXT_COLOR;
-   background: white;
-   background-size: 100%;
-   margin: 0;
-   padding: 0;
    height: 100%;
 }
 
-#body_container {
-   height: 100%;
-   min-height: 100%;
-   width: 100%;
-   padding-left: 10px;
-   padding-right: 10px;
-   margin: 0;
-   position: relative;
+@mixin shrunken_body_padding {
+   // Required padding for .navbar-fixed-top.
+   // Remove if using .navbar-static-top.
+   // Change if height of navigation changes.
+   padding-top: $NAVBAR_HEIGHT_SHRUNKEN;
 }
 
-#wrapper {
-   min-height: 100%;
-   position: relative;
-   width: $CONTENT_WIDTH;
-   margin-left: auto;
-   margin-right: auto;
-}
+body {
+   // Required padding for .navbar-fixed-top.
+   // Remove if using .navbar-static-top.
+   // Change if height of navigation changes.
+   padding-top: $NAVBAR_HEIGHT_DEFAULT;
 
-#content {
-   padding-bottom: 80px; /* this must equal the height of the footer, including margins */
-
-   .content_container {
-      margin: 20px;
+   @media(max-width: $MOBILE_WIDTH) {
+      @include shrunken_body_padding;
    }
 }
 
-.overlay_container {
-   height: 420px;
-   overflow: hidden;
-   position: relative;
+body.shrink {
+   @include shrunken_body_padding;
 }
 
-.rounded_container {
-   position: relative;
-   display: inline-block;
-   border-radius: 0px;
-   height: 344px;
-   background-color: $ROUNDED_CONTAINER_BACKGROUND_COLOR;
-   color: #fff;
-   text-align: left;
-   padding: 1px 22px 37px 23px;
-   font-size: 16px;
-   line-height: 25px;
+.img-portfolio {
+   margin-bottom: 30px;
 }
 
-.rounded_container2 {
-   position: relative;
-   border-radius: 5px;
-   height: 100%;
-   background-color: $ROUNDED_CONTAINER_BACKGROUND_COLOR;
-   color: #fff;
-   text-align: left;
-   padding: 35px;
-   font-size: 16px;
-   line-height: 25px;
-}
-
-.rounded_container_title {
-   text-align: center;
-   font-weight: bold;
-   padding-top: 22px;
-}
-
-.rounded_container_content {
-   font-size: 15px;
-}
-
-.rounded_container_end {
-   bottom: 10px;
-   position: absolute;
-   width: 220px;
-   text-decoration: underline;
-   text-align: center;
+.img-hover:hover {
+   opacity: 0.8;
 }
 
 // =====================================================================================================================
 // Rotations and Misc
 // =====================================================================================================================
+
+@mixin easing {
+   -webkit-transition: $EASING;
+   -moz-transition: $EASING;
+   -o-transition: $EASING;
+   transition: $EASING;
+}
 
 @mixin rotate($degrees) {
    transform: rotate(#{$degrees}deg);
@@ -136,60 +83,9 @@ html, body {
 // Typography
 // =====================================================================================================================
 
-a {
-   color: $LINK_COLOR;
-   text-decoration: none;
-
-   img {
-      border: none;
-   }
-}
-
-a:hover, a:focus {
-   opacity: 0.6;
-   filter: alpha(opacity=60);
-}
-
-li {
-   margin: 20px 0;
-}
-
-.page_title {
-   color: black;
-   font-size: 24px !important;
-   margin-bottom: 20px;
-}
-
-.page_subtitle {
-   color: black;
-   font-size: 18px !important;
-   margin-bottom: 10px;
-}
-
 .page_instructions {
    color: black;
    margin-bottom: 20px;
-}
-
-// =====================================================================================================================
-// Decorations
-// =====================================================================================================================
-
-.vertical_shadows {
-   box-shadow: 8px 0 10px -5px #cccccc, -8px 0 10px -5px #cccccc;
-}
-
-.fill_line {
-   background-color: $FILL_LINE_COLOR;
-   height: 5px;
-}
-
-.fill_line_with_top_margin {
-   // TODO: remove this
-}
-
-.fill_line_header {
-   min-width: $CONTENT_WIDTH !important;
 }
 
 // =====================================================================================================================
@@ -211,107 +107,89 @@ li {
 }
 
 // =====================================================================================================================
-// Header
+// Navigation Bar
 // =====================================================================================================================
 
-#header {
-   padding-top: 12px;
-   line-height: 60px;
-   min-width: $CONTENT_WIDTH;
+.navbar-inverse .navbar-toggle.collapsed .icon-bar {
+   // make sure the hamburger is dark grey--not white--when collapsed
+   background-color: #9d9d9d;
+}
 
-   #header_logo_container {
-      text-align: left;
+@mixin shrunken_navbar {
+   min-height: $NAVBAR_HEIGHT_SHRUNKEN;
+
+   .nav > li > a {
+      padding-top: 15px;
+      font-size: 14px;
+      @include easing;
    }
 
-   #header_link_container {
-      position: absolute;
-      right: 20px;
-      top: 42px;
-      line-height: 16px;
-      text-transform: uppercase;
-
-      a {
-         color: $LINK_COLOR;
-      }
-
-      .link {
-         font-size: 17px;
-         display: inline-block;
-         margin-left: 40px;
-
-         .active {
-         }
-      }
-   }
-
-   #logo {
-      font-family: Lato, sans-serif !important;
-      font-weight: normal !important;
-      font-size: 60px !important;
-      color: black !important;
-      margin-right: 0 !important;
-      margin-left: 20px !important;
-   }
-
-   #logo:hover {
-      opacity: 1 !important;
-      filter: alpha(opacity=100) !important;
-   }
-
-   .trademark_logo {
-      display: none; // cleaner without it, but...
-      position: relative;
-      top: -30px;
-      right: -2px;
-      color: #cccccc;
-   }
-
-   .fill_line {
-      margin-top: 10px;
+   .navbar-brand {
+      font-size: 24px;
+      line-height: 46px;
+      @include easing;
    }
 }
 
-// =====================================================================================================================
-// Footer
-// =====================================================================================================================
+#main_navbar {
+   margin-bottom: 0;
+   min-height: $NAVBAR_HEIGHT_DEFAULT;
+   @include easing;
 
-#footer {
-   position: absolute;
-   bottom: 0;
-   width: 100%;
-   min-width: $CONTENT_WIDTH;
-   line-height: 15px;
-   margin-top: 20px;
-   padding: 0 0 20px 0;
-   //   background-color: #f5f5f5;
-
-   .fill_line {
-      margin-bottom: 20px;
+   .navbar-brand {
+      position: relative;
+      display: block;
+      float: none;
+      font-family: Lato, sans-serif !important;
+      font-size: 36px;
+      line-height: 67px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      width: 70px;
+      padding: 0;
+      @include easing;
    }
 
-   #footer_content {
-      position: relative;
+   .nav > li > a {
+      padding-top: 27px;
+      font-size: 16px;
+      @include easing;
+   }
 
-      #footer_left {
-         text-align: left;
-         margin-left: 20px
-      }
+   @media(max-width: $MOBILE_WIDTH) {
+      @include shrunken_navbar;
+   }
+}
 
-      #footer_right {
-         position: absolute;
-         right: 20px;
-         bottom: 0;
+#main_navbar.shrink {
+   @include shrunken_navbar;
+}
 
-         .link {
-            font-size: 15px;
-            display: inline-block;
-            margin-left: 40px;
+// =====================================================================================================================
+// Hero Image
+// =====================================================================================================================
 
-            .active {
-               font-weight: bold;
-            }
-         }
-      }
+#hero_image {
+   height: 400px;
+
+   .fill {
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-size: cover;
+   }
+
+   .anchor_left {
+      background-position: left;
+   }
+
+   .anchor_right {
+      background-position: right;
+   }
+
+   @media(max-width: $MOBILE_WIDTH) {
+      height: 300px;
    }
 }
 
@@ -337,264 +215,81 @@ li {
    margin-bottom: 15px;
 }
 
-.form_error_messages {
-   border: 1px solid #A75B4E;
-   background: #FAD3C4;
-   display: none;
-}
-
-.form_success_messages {
-   border: 1px solid #598800;
-   background: #E2F1BB;
-}
-
-// =====================================================================================================================
-// Home Page
-// =====================================================================================================================
-
-#home_page {
-   #home_page_image_overlay {
-      position: absolute;
-      margin-left: auto;
-      margin-right: auto;
-      left: -575px;
-      right: 0;
-      top: 87px;
-      color: white;
-      font-size: 30px;
-      width: 407px;
-      text-align: left;
-
-   }
-
-   #main_points {
-      margin: 20px 0 0px 0;
-      text-align: left;
-      width: $CONTENT_WIDTH;
-      max-width: $CONTENT_WIDTH;
-
-      .content_cell {
-         width: 266px;
-         max-width: 266px;
-      }
-      .spacer_cell {
-         width: 22px;
-         max-width: 22px;
-      }
-
-   }
-}
-
-// =====================================================================================================================
-// Login Page
-// =====================================================================================================================
-
-#login_page {
-   form {
-      width: 50%;
-   }
-}
-
-// =====================================================================================================================
-// Sign Up Page
-// =====================================================================================================================
-
-#signup_page {
-   form {
-      width: 50%;
-   }
-}
-
-// =====================================================================================================================
-// Sign Up Page
-// =====================================================================================================================
-
-#password_reset_page {
-   form {
-      width: 50%;
-   }
-}
-
-// =====================================================================================================================
-// Verification Page
-// =====================================================================================================================
-
-#verification_page {
-   form {
-      width: 50%;
-   }
-}
-
-// =====================================================================================================================
-// Software
-// =====================================================================================================================
-
-#software_page {
-   .version_number {
-      font-size: 11px;
-   }
-}
-
 // =====================================================================================================================
 // About Us
 // =====================================================================================================================
 
 #about_us_page {
-
-   #narrative {
+   #logos {
+      margin-left: 10px;
    }
 
-   #logos {
-      float: right;
-      text-align: right;
-      margin: 0 0 200px 20px;
+   img {
+      max-width: 340px;
+   }
 
-      a:hover {
-         opacity: 1 !important;
-         filter: alpha(opacity=100) !important;
+   @media(max-width: $MOBILE_WIDTH) {
+      #logos {
+         margin-left: 0;
+      }
+      img {
+         max-width: 50%;
       }
    }
 }
 
 // =====================================================================================================================
-// Dashboard
+// Footer
 // =====================================================================================================================
 
-$DASHBOARD_MENU_PANEL_WIDTH: 190px;
-$DASHBOARD_MENU_PANEL_PADDING: 5px;
-#dashboard {
-   background: $TRANSLUCENT_WHITE_BODY_BACKGROUND;
-   margin: 0 auto 0px auto;
+footer {
+   margin: 50px 0 15px 0;
 
-   #menu_panel {
-      position: absolute;
-      width: $DASHBOARD_MENU_PANEL_WIDTH - (2*$DASHBOARD_MENU_PANEL_PADDING);
-      margin-top: 72px;
-      padding: $DASHBOARD_MENU_PANEL_PADDING;
-
-      font-size: 12px;
-
-      .title {
-         font-size: 14px;
-         font-weight: bold;
-      }
-
-      #devices_and_feeds {
-         overflow-y: scroll;
-
-         .device_and_feeds {
-            margin-top: 5px;
-
-            .device {
-               font-weight: bold;
-            }
-
-            .feed {
-               white-space: nowrap;
-               overflow: hidden;
-
-               label {
-                  margin-left: 3px;
-               }
-            }
-         }
-      }
-   }
-
-   #content_area {
-      position: relative;
-      margin-left: $DASHBOARD_MENU_PANEL_WIDTH;
-
-      #time_range_switcher_panel, #time_range_switcher_panel_placeholder {
-         display: none;
-         font-size: 12px;
-         text-align: center;
+   .footer_piece {
+      line-height: 32px;
+      @media(max-width: $MOBILE_WIDTH) {
          margin-bottom: 10px;
       }
+   }
 
-      #map_area {
-         margin-top: 10px;
-         border: 1px solid black;
-         width: 880px;
-         height: 400px;
-      }
+   .footer_piece:nth-child(1) {
+      text-align: left;
 
-      #no_geolocation {
-         position: absolute;
-         width: 350px;
+      @media(max-width: $MOBILE_WIDTH) {
          text-align: center;
-         padding: 2px;
-         top: 1px;
-         left: 50%;
-         margin: 0 auto 0 -175px;
-         background-color: rgba(255, 200, 200, 0.75);
-         display: none;
+      }
+
+   }
+
+   .footer_piece:nth-child(2) {
+      text-align: center;
+   }
+
+   .footer_piece:nth-child(3) {
+      text-align: right;
+
+      @media(max-width: $MOBILE_WIDTH) {
+         text-align: center;
       }
    }
-}
 
-// =====================================================================================================================
-// Devices
-// =====================================================================================================================
-
-.device_list {
-   .device_list_item {
-      border: 1px solid $BODY_TEXT_COLOR;
-      border-radius: 3px;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      color: $BODY_TEXT_COLOR;
-      padding: 10px;
-      margin: 5px 0 5px 0;
-      cursor: pointer;
-   }
-}
-
-// =====================================================================================================================
-// Feeds
-// =====================================================================================================================
-
-.feed_list {
-   .feed_list_item {
-      border: 1px solid $BODY_TEXT_COLOR;
-      border-radius: 3px;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      color: $BODY_TEXT_COLOR;
-      padding: 10px;
-      margin: 5px 0 5px 0;
-      cursor: pointer;
+   .social_media_link {
+      font-size: smaller;
+      color: #9d9d9d;
    }
 
-   .feed_list_item:hover {
-      border: 1px solid $LINK_COLOR;
+   .social_media_link:hover {
+      color: black;
    }
 
-   .selected_feed {
-      color: white;
-      background-color: $LINK_COLOR;
-   }
-}
+   .link {
+      display: inline-block;
+      margin-left: 20px;
+      margin-right: 20px;
 
-// =====================================================================================================================
-// Account
-// =====================================================================================================================
-
-.account_table {
-   display: table;
-
-   .account_row {
-      display: table-row;
-
-      .account_header_cell {
+      .active {
          font-weight: bold;
       }
-
-      .account_cell {
-         display: table-cell;
-         padding-right: 5px;
-      }
    }
 }
 
-// =====================================================================================================================

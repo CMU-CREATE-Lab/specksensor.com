@@ -12,7 +12,6 @@ router.get('/',
                     log.error("GET /account error: " + JSON.stringify(err, null, 3))
                     res.render('error',
                                {
-                                  layout : "error-layout",
                                   title : "Unexpected Error",
                                   section : "account",
                                   message : "Sorry, an unexpected error has occurred. Please try again later or contact us for help."

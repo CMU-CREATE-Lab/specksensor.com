@@ -86,26 +86,30 @@
       {{/unless}}
 
 </script>
-<div id="verification_page" class="content_container">
-   <h2>Account Verification</h2>
-   {{#if verificationToken}}
-      <div id="verificationSuccess" class="page_instructions" style="display:none">Thank you for verifying your account. You may now
-         <a href="/login">log in</a>.
-      </div>
-      <div id="verificationFailure" class="page_instructions" style="display:none">Sorry, we could not verify the account.</div>
-   {{else}}
-      <div class="page_instructions">
-         Please enter your email address. We will send you an email with instructions on how to verify your account.
-      </div>
-      <div id="verification_error_messages" class="form_messages alert alert-danger"></div>
-      <div id="verification_success_messages" class="form_messages alert alert-success"></div>
-      <form role="form" id="verification_form" class="big_form" onsubmit="return submitVerificationForm();">
-         <div class="form-group">
-            <input type="email" class="form-control" id="verification_email" name="verification_email" placeholder="Email address"/>
+<div class="row">
+   <div class="col-md-3"></div>
+   <div class="col-md-6">
+      <h2>Account Verification</h2>
+      {{#if verificationToken}}
+         <div id="verificationSuccess" class="page_instructions" style="display:none">Thank you for verifying your account. You may now
+            <a href="/login">log in</a>.
          </div>
-         <div class="pull-right">
-            <button type="submit" class="btn btn-primary">{{#if resetPasswordToken}}Change Password{{else}}Submit{{/if}}</button>
+         <div id="verificationFailure" class="page_instructions" style="display:none">Sorry, we could not verify the account.</div>
+      {{else}}
+         <div class="page_instructions">
+            Please enter your email address. We will send you an email with instructions on how to verify your account.
          </div>
-      </form>
-   {{/if}}
+         <div id="verification_error_messages" class="form_messages alert alert-danger"></div>
+         <div id="verification_success_messages" class="form_messages alert alert-success"></div>
+         <form role="form" id="verification_form" class="big_form" onsubmit="return submitVerificationForm();">
+            <div class="form-group">
+               <input type="email" class="form-control" id="verification_email" name="verification_email" placeholder="Email address"/>
+            </div>
+            <div class="pull-right">
+               <button type="submit" class="btn btn-primary">{{#if resetPasswordToken}}Change Password{{else}}Submit{{/if}}</button>
+            </div>
+         </form>
+      {{/if}}
+   </div>
+   <div class="col-md-3"></div>
 </div>
