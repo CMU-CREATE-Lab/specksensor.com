@@ -1,4 +1,4 @@
-$LINK_COLOR: #6699B6;
+$LINK_COLOR: #337ab7;
 
 .date_axis {
    height: 42px;
@@ -38,9 +38,8 @@ $LINK_COLOR: #6699B6;
       cursor: pointer;
       color: $LINK_COLOR;
    }
-
-   a {
-      text-decoration: none;
+   .unselected:hover {
+      text-decoration: underline;
    }
 }
 
@@ -52,12 +51,10 @@ $LINK_COLOR: #6699B6;
    display: inline-block;
    text-align: left;
    font-size: 12px;
-   float: left;
-   margin-right: 20px;
+   float: right;
 }
 
-#autoScaleLock {
-   float: right;
-   font-size: 12px;
-   margin-right: 5px;
+#auto_scale_toggle_button {
+   margin-bottom: 7px;
+   padding: 4px 7px;
 }

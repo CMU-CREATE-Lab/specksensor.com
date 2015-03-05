@@ -8,7 +8,8 @@
 
    var PRODUCT_ID = '{{speckProductId}}';
 
-   var LIGHT_BLUE_COLOR = "#428bca";
+   //var LIGHT_BLUE_COLOR = "#428bca";
+   var LIGHT_BLUE_COLOR = "#337ab7";
    var DARK_BLUE_COLOR = "#2e68a3";
    var POINT_RADIUS_HAS_DATA = 6;
    var POINT_RADIUS_NO_DATA = 4;
@@ -29,6 +30,7 @@
    // map stuff
    var map = null;
    var mapProjection;
+   var mapCenter; // keep track of the map's center point so we can recenter the map upon resizing the browser
    var canvasLayer;
    var context;
    var isCanvasInitialized = false;
@@ -229,6 +231,17 @@
                // nothing to do
             }
       ));
+
+      // keep track of the map's center so that we can recenter it upon resize of the browser (found at http://stackoverflow.com/q/8792676/703200)
+      google.maps.event.addDomListener(map, 'idle', function() {
+         mapCenter = map.getCenter();
+      });
+
+      // when detecting a browser resize, kick the map to resize itself and then recenter using the center point obtained during idle
+      google.maps.event.addDomListener(window, 'resize', function() {
+         google.maps.event.trigger(map, 'resize');
+         map.setCenter(mapCenter);
+      });
    }
 
    function initializeGrapher() {
@@ -276,6 +289,9 @@
       $("#menu_panel").show();
 
       setSizes();
+
+      // set up window resize handler
+      $(window).resize(setSizes);
    }
 
    function createCanvasFeatureDetectingMouseEventHandler(featureDetectedCallback, featureNotDetectedCallback) {
@@ -341,13 +357,6 @@
       canvasLayer = new CanvasLayer(canvasLayerOptions);
       context = canvasLayer.canvas.getContext('2d');
       isCanvasInitialized = true;
-
-      // Poke google maps and trigger a resize whenever we detect a browser resize
-      window.addEventListener('resize',
-                              function() {
-                                 google.maps.event.trigger(map, 'resize')
-                              },
-                              false);
    }
 
    function initializeMarkers() {
@@ -679,7 +688,7 @@
    }
 
    function autoScaleLockChange() {
-      isAutoScaleOn = $("#autoScaleLockCheckbox").is(":checked");
+      isAutoScaleOn = $("#auto_scale_lock_checkbox").is(":checked");
       if (isAutoScaleOn) {
          autoScaleYAxes();
          $("#autoScaleYAxesButton").attr("disabled", "disabled");
@@ -687,6 +696,19 @@
       else {
          $("#autoScaleYAxesButton").removeAttr("disabled");
       }
+   }
+
+   function toggleYAxisAutoScaling() {
+      var autoScaleToggleButton = $("#auto_scale_toggle_button");
+      isAutoScaleOn = !autoScaleToggleButton.hasClass("active");
+      if (isAutoScaleOn) {
+         autoScaleYAxes();
+         autoScaleToggleButton.addClass("active");
+      }
+      else {
+         autoScaleToggleButton.removeClass("active");
+      }
+      console.log("toggleYAxisAutoScaling: " + isAutoScaleOn);
    }
 
    function autoScaleYAxes() {
@@ -731,6 +753,10 @@
       dateAxis.setSize(plotContainerWidth, $("#date_axis").height(), SequenceNumber.getNext());
       plotContainer.setSize(plotContainerWidth, $("#plot").height(), SequenceNumber.getNext());
       grapher.updateYAxesSizes();
+
+      // update the map so it's the same width at the grapher
+      $("#map_area").width($("#grapher").width() - 2);   // subtract 2 to account for the borders
+      google.maps.event.trigger(map, 'resize');
    }
 
    function setRangeFromSecondsAgoToNow(numSecondsAgo) {
@@ -742,7 +768,7 @@
 
 </script>
 
-<div id="dashboard" class="content_container">
+<div id="dashboard">
    <div id="loading_panel" style="height: 262px">Loading...</div>
    <div id="has_no_devices_panel" style="display:none">
       <h2>Dashboard</h2>
@@ -772,25 +798,24 @@
                      <div id="date_axis" class="date_axis"></div>
                   </div>
                </td>
-               <td>&nbsp;</td>
+               <td align="center" valign="bottom">
+                  {{!--<a id="auto_scale_toggle_button" class="btn btn-default" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling"><i class="fa fa-arrows-v fa-sm"></i></a>--}}
+                  <a id="auto_scale_toggle_button" class="btn btn-default" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling"><span class="glyphicon glyphicon-resize-vertical" aria-hidden="true"></span></a>
+               </td>
             </tr>
             <tr>
                <td>
-                  <div id="plot" class="plot" style="height:200px; border: 1px solid black;"></div>
+                  <div id="plot" class="plot" style="height:250px; border: 1px solid black;"></div>
                </td>
                <td>
-                  <div id="y_axis" class="y_axis" style="position:relative;height:200px">
+                  <div id="y_axis" class="y_axis" style="position:relative;height:250px">
                      <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
                   </div>
                </td>
             </tr>
             <tr>
                <td colspan="2" align="right">
-                  <div id="autoScaleLock">
-                     <input id="autoScaleLockCheckbox" name="autoScaleLockCheckbox" type="checkbox" onchange="autoScaleLockChange()" value="true">
-                     <label for="autoScaleLockCheckbox">Auto Scale Y Axis</label>
-                     <div id="value_and_time"></div>
-                  </div>
+                  <div id="value_and_time"></div>
                   <div id="channel_switcher_panel"></div>
                </td>
             </tr>

@@ -27,9 +27,9 @@
     font-weight: bold; }
   .channel_link .unselected, .time_range_link .unselected {
     cursor: pointer;
-    color: #6699B6; }
-  .channel_link a, .time_range_link a {
-    text-decoration: none; }
+    color: #337ab7; }
+  .channel_link .unselected:hover, .time_range_link .unselected:hover {
+    text-decoration: underline; }
 
 .channel_link:last-of-type, .time_range_link:last-of-type {
   margin-right: 0; }
@@ -38,10 +38,8 @@
   display: inline-block;
   text-align: left;
   font-size: 12px;
-  float: left;
-  margin-right: 20px; }
+  float: right; }
 
-#autoScaleLock {
-  float: right;
-  font-size: 12px;
-  margin-right: 5px; }
+#auto_scale_toggle_button {
+  margin-bottom: 7px;
+  padding: 4px 7px; }

@@ -9,6 +9,7 @@ $NAVBAR_HEIGHT_DEFAULT: 75px;
 $NAVBAR_HEIGHT_SHRUNKEN: 50px;
 $MOBILE_WIDTH: 767px;
 $EASING: all 0.2s ease;
+$LINK_COLOR: #337ab7;
 
 // =====================================================================================================================
 // Global
@@ -238,6 +239,82 @@ body.shrink {
       }
       img {
          max-width: 50%;
+      }
+   }
+}
+
+// =====================================================================================================================
+// Dashboard
+// =====================================================================================================================
+
+$DASHBOARD_MENU_PANEL_WIDTH: 190px;
+$DASHBOARD_MENU_PANEL_PADDING: 5px;
+#dashboard {
+   margin: 0 auto 0 auto;
+
+   #menu_panel {
+      position: absolute;
+      width: $DASHBOARD_MENU_PANEL_WIDTH - (2*$DASHBOARD_MENU_PANEL_PADDING);
+      margin-top: 72px;
+      padding: $DASHBOARD_MENU_PANEL_PADDING;
+
+      font-size: 12px;
+
+      .title {
+         font-size: 14px;
+         font-weight: bold;
+      }
+
+      #devices_and_feeds {
+         overflow-y: scroll;
+
+         .device_and_feeds {
+            margin-top: 5px;
+
+            .device {
+               font-weight: bold;
+            }
+
+            .feed {
+               white-space: nowrap;
+               overflow: hidden;
+
+               label {
+                  margin-left: 3px;
+               }
+            }
+         }
+      }
+   }
+
+   #content_area {
+      position: relative;
+      margin-left: $DASHBOARD_MENU_PANEL_WIDTH;
+
+      #time_range_switcher_panel, #time_range_switcher_panel_placeholder {
+         display: none;
+         font-size: 12px;
+         text-align: center;
+         margin-bottom: 10px;
+      }
+
+      #map_area {
+         margin-top: 10px;
+         border: 1px solid black;
+         width: 880px;
+         height: 400px;
+      }
+
+      #no_geolocation {
+         position: absolute;
+         width: 350px;
+         text-align: center;
+         padding: 2px;
+         top: 1px;
+         left: 50%;
+         margin: 0 auto 0 -175px;
+         background-color: rgba(255, 200, 200, 0.75);
+         display: none;
       }
    }
 }
