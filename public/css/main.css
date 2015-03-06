@@ -237,5 +237,13 @@ footer {
     display: inline-block;
     margin-left: 20px;
     margin-right: 20px; }
+    @media (max-width: 992px) {
+      footer .link {
+        margin-left: 10px;
+        margin-right: 10px; } }
+    @media (max-width: 767px) {
+      footer .link {
+        margin-left: 20px;
+        margin-right: 20px; } }
     footer .link .active {
       font-weight: bold; }

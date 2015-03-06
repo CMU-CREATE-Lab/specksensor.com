@@ -8,6 +8,8 @@ $SIDEBAR_WIDTH: 250px;
 $NAVBAR_HEIGHT_DEFAULT: 75px;
 $NAVBAR_HEIGHT_SHRUNKEN: 50px;
 $MOBILE_WIDTH: 767px;
+$MEDIUM_DEVICE_WIDTH: 992px;
+$LARGE_DEVICE_WIDTH: 1200px;
 $EASING: all 0.2s ease;
 $LINK_COLOR: #337ab7;
 
@@ -391,6 +393,16 @@ footer {
       display: inline-block;
       margin-left: 20px;
       margin-right: 20px;
+      
+      @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+         margin-left: 10px;
+         margin-right: 10px;
+      }
+
+      @media(max-width: $MOBILE_WIDTH) {
+         margin-left: 20px;
+         margin-right: 20px;
+      }
 
       .active {
          font-weight: bold;
