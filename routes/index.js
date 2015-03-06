@@ -32,28 +32,17 @@ router.get('/pathways_to_better_air', function(req, res) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-router.get('/software', function(req, res) {
-   res.render('software', { title : "Software", section : "software" });
-});
-
-//----------------------------------------------------------------------------------------------------------------------
-
 router.get('/about-us', function(req, res) {
    res.render('about-us', { title : "About Us", section : "about-us" });
 });
-//----------------------------------------------------------------------------------------------------------------------
+
+router.get('/buy', function(req, res) {
+   res.render('buy', { title : "Buy", section : "buy" });
+});
 
 router.get('/contact', function(req, res) {
    res.render('contact', { title : "Contact", section : "contact" });
 });
-
-//----------------------------------------------------------------------------------------------------------------------
-
-router.get('/terms', function(req, res) {
-   res.render('terms', { title : "Terms and Conditions", section : "terms" });
-});
-
-//----------------------------------------------------------------------------------------------------------------------
 
 router.get('/data', function(req, res) {
    res.render('data', { title : "Data", section : "data" });
@@ -61,6 +50,14 @@ router.get('/data', function(req, res) {
 
 router.get('/signup', function(req, res) {
    res.render('signup', { title : "Sign Up", section : "login" });
+});
+
+router.get('/software', function(req, res) {
+   res.render('software', { title : "Software", section : "software" });
+});
+
+router.get('/terms', function(req, res) {
+   res.render('terms', { title : "Terms and Conditions", section : "terms" });
 });
 
 //======================================================================================================================
