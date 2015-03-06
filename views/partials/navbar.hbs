@@ -1,6 +1,6 @@
 <script type="text/javascript">
    $(document).ready(function() {
-      $("#preorder_link").click(
+      $(".preorder_link").click(
             function() {
                $("#paypal_form").submit();
                return false;
@@ -56,9 +56,6 @@
                </li>
             {{else}}
                <li>
-                  <a href="/buy" id="preorder_link">Preorder</a>
-               </li>
-               <li>
                   <a href="#">Speck Info</a>
                </li>
                <li class="dropdown">
@@ -74,6 +71,9 @@
                         <a href="#">Pathways to Better Air</a>
                      </li>
                   </ul>
+               </li>
+               <li>
+                  <a href="/buy" class="preorder_link">Preorder</a>
                </li>
                <li>
                   <a href="/login">My Data</a>
