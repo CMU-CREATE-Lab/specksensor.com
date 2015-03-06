@@ -41,6 +41,11 @@ router.get('/software', function(req, res) {
 router.get('/about-us', function(req, res) {
    res.render('about-us', { title : "About Us", section : "about-us" });
 });
+//----------------------------------------------------------------------------------------------------------------------
+
+router.get('/contact', function(req, res) {
+   res.render('contact', { title : "Contact", section : "contact" });
+});
 
 //----------------------------------------------------------------------------------------------------------------------
 
