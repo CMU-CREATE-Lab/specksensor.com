@@ -1,7 +1,6 @@
 <script language="JavaScript" type="text/javascript">
    var PRODUCT_ID = '{{speckProductId}}';
    var ESDR_USER_ID = '{{esdrUserId}}' || null;
-   //var ESDR_API_
 
    var accessToken = null;
    var esdr = null;
@@ -474,7 +473,7 @@
 
 </script>
 <div id="upload_panel" class="content_container">
-   <h2>Upload Setup</h2>
+   <h2>Upload Configuration</h2>
    <div id="upload_progress_bar">
       <table border="0" cellpadding="0" cellspacing="0" align="center">
          <tr>
@@ -578,7 +577,7 @@
    <div class="page_instructions">If you need a specksensor.com account, please submit the form below to sign up.</div>
    <div id="signup_error_messages" class="form_messages alert alert-danger"></div>
    <div id="signup_success_messages" class="form_messages alert alert-success"></div>
-   <form id="signup_form" onsubmit="return submitSignUpForm('signup_form', 'signup_email', 'signup_password', 'signup_error_messages', 'signup_success_messages', 'Come back here once your account is active to log in and complete your upload setup.');">
+   <form id="signup_form" onsubmit="return submitSignUpForm('signup_form', 'signup_email', 'signup_password', 'signup_error_messages', 'signup_success_messages', 'Come back here once your account is active to log in and complete your upload configuration.');">
       <div class="form-group">
          <input type="email" class="form-control input-lg" id="signup_email" name="signup_email" placeholder="Email address"/>
       </div>
