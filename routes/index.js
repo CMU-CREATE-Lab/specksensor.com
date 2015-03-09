@@ -102,8 +102,8 @@ router.get('/get_message/', function(req, res) {
    res.set('Content-Type', 'text/plain').send("get_message=NULL\r\n");
 });
 
-router.get('/get_scaler/', function(req, res) {
-   res.set('Content-Type', 'text/plain').send("get_scaler=408\r\n");
+router.get('/get_scalar/', function(req, res) {
+   res.set('Content-Type', 'text/plain').send("get_scalar=408\r\n");
 });
 
 router.get('/get_version/', function(req, res) {
