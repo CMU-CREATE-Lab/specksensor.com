@@ -1,9 +1,10 @@
-$BODY_TEXT_COLOR: #1c1c1e;
+$LINK_COLOR: #337ab7;
 
 body {
    background: white !important;
    max-height: 760px;
    overflow-y: hidden;
+   padding-top: 0;
 }
 
 .upload_panel {
@@ -66,6 +67,31 @@ body {
    margin-top: 12px;
 }
 
+.feed_list {
+   overflow-y: scroll;
+   max-height: 350px;
+   margin-bottom: 20px;
+
+   .feed_list_item {
+      border: 1px solid black;
+      border-radius: 3px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      padding: 10px;
+      margin: 5px 0 5px 0;
+      cursor: pointer;
+   }
+
+   .feed_list_item:hover {
+      border: 1px solid $LINK_COLOR;
+   }
+
+   .selected_feed {
+      color: white;
+      background-color: $LINK_COLOR;
+   }
+}
+
 // =====================================================================================================================
 // Map
 // =====================================================================================================================
@@ -75,7 +101,7 @@ body {
    #map_canvas {
       width: 423px;
       height: 230px;
-      border: 1px solid $BODY_TEXT_COLOR;
+      border: 1px solid black;
       margin: 0;
       padding: 0;
    }

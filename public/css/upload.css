@@ -1,7 +1,8 @@
 body {
   background: white !important;
   max-height: 760px;
-  overflow-y: hidden; }
+  overflow-y: hidden;
+  padding-top: 0; }
 
 .upload_panel {
   display: none; }
@@ -44,10 +45,28 @@ body {
   width: 425px;
   margin-top: 12px; }
 
+.feed_list {
+  overflow-y: scroll;
+  max-height: 350px;
+  margin-bottom: 20px; }
+  .feed_list .feed_list_item {
+    border: 1px solid black;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 10px;
+    margin: 5px 0 5px 0;
+    cursor: pointer; }
+  .feed_list .feed_list_item:hover {
+    border: 1px solid #337ab7; }
+  .feed_list .selected_feed {
+    color: white;
+    background-color: #337ab7; }
+
 #map_area #map_canvas {
   width: 423px;
   height: 230px;
-  border: 1px solid #1c1c1e;
+  border: 1px solid black;
   margin: 0;
   padding: 0; }
 #map_area .map_instructions {
