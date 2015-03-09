@@ -8,18 +8,41 @@ router.get('/', function(req, res) {
       res.redirect('/dashboard');
    }
    else {
-      res.render('index', { section : "home", hero_image : {filename : "home.png", css_class : "anchor_right"}, hero_text : {css_class : "home-hero-text", text : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality."} });
+      res.render('index', {
+         section : "home",
+         hero_image : { filename : "home.png", css_class : "anchor_right" },
+         hero_text : {
+            css_class : "home-hero-text",
+            text : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality."
+         }
+      });
    }
 });
 
 //----------------------------------------------------------------------------------------------------------------------
 
 router.get('/what-is-speck', function(req, res) {
-   res.render('about/what-is-speck', { title : "What is Speck?", section : "what-is-speck", hero_image : {filename : "what-is-speck.png", css_class : "anchor_left"}, hero_text : {css_class : "what-is-speck-hero-text", text : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration."} });
+   res.render('about/what-is-speck', {
+      title : "What is Speck?",
+      section : "what-is-speck",
+      hero_image : { filename : "what-is-speck.png", css_class : "anchor_left" },
+      hero_text : {
+         css_class : "what-is-speck-hero-text",
+         text : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration."
+      }
+   });
 });
 
 router.get('/particles', function(req, res) {
-   res.render('about/particles', { title : "What is PM?", section : "what-is-pm", hero_image : {filename : "what-is-pm.png", css_class : "anchor_left"}, hero_text : {css_class : "what-is-speck-hero-text", text : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration."} });
+   res.render('about/particles', {
+      title : "What is PM?",
+      section : "what-is-pm",
+      hero_image : { filename : "what-is-pm.png", css_class : "anchor_left" },
+      hero_text : {
+         css_class : "what-is-speck-hero-text",
+         text : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration."
+      }
+   });
 });
 
 //----------------------------------------------------------------------------------------------------------------------
