@@ -486,8 +486,8 @@
     </library>
     <library name="jQuery 1.11.2" type="javaScript">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.2.js" />
         <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.2.min.js" />
+        <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.2.js" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
