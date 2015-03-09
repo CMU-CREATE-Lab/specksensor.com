@@ -42,7 +42,7 @@ function setTestimonials(changeInstantly) {
   testimonialContainers.push(testimonialContainer);
   testimonialContainer = $(testimonialContainer);
   testimonialContainer.fadeOut(fadeTimeout, function(){
-    testimonialContainer.html('<span style="font-size: 34px;">"</span>' + testimonial + '<span style="font-size: 34px; position: absolute; bottom: -10px">"</span>');
+    testimonialContainer.html('<span class="big_quote">"</span>' + testimonial + '<span class="big_quote">"</span>');
     testimonialContainer.fadeIn(fadeTimeout, function() {
       // Set the timeout to trigger again in 3, 5, 7, or 10 seconds
       window.clearInterval(testimonialInterval);

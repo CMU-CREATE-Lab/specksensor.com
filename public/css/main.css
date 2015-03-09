@@ -191,10 +191,13 @@ body.shrink {
   text-align: right; }
 
 .testimonals {
-  font-family: Verdanna;
+  font-family: "Times New Roman", serif;
   font-size: 20px;
   position: relative;
-  height: 220px; }
+  height: 220px;
+  line-height: 28px; }
+  .testimonals .big_quote {
+    font-size: 34px; }
 
 .ts1 {
   top: -10px;
@@ -202,7 +205,7 @@ body.shrink {
   width: 550px; }
 
 .ts2 {
-  top: 100px;
+  top: 120px;
   left: 270px;
   position: absolute;
   width: 550px; }
