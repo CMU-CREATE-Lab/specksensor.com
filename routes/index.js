@@ -8,26 +8,18 @@ router.get('/', function(req, res) {
       res.redirect('/dashboard');
    }
    else {
-      res.render('index', { section : "home", hero_image : {filename: "home.png", css_class: "anchor_right"} });
+      res.render('index', { section : "home", hero_image : {filename : "home.png", css_class : "anchor_right"}, hero_text : {css_class : "home-hero-text", text : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality."} });
    }
 });
 
 //----------------------------------------------------------------------------------------------------------------------
 
-router.get('/what_is_speck', function(req, res) {
-   res.render('about/what-is-speck', { title : "What is Speck?", section : "what-is-speck" });
+router.get('/what-is-speck', function(req, res) {
+   res.render('about/what-is-speck', { title : "What is Speck?", section : "what-is-speck", hero_image : {filename : "what-is-speck.png", css_class : "anchor_left"}, hero_text : {css_class : "what-is-speck-hero-text", text : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration."} });
 });
 
-router.get('/what_is_pm', function(req, res) {
-   res.render('about/what-is-pm', { title : "What Are Fine Particles?", section : "what-is-pm" });
-});
-
-router.get('/pm_sources', function(req, res) {
-   res.render('about/particle-sources', { title : "Particle Sources", section : "particle-sources" });
-});
-
-router.get('/pathways_to_better_air', function(req, res) {
-   res.render('about/pathways-to-better-air', { title : "Pathways to Better Air", section : "pathways-to-better-air" });
+router.get('/particles', function(req, res) {
+   res.render('about/particles', { title : "What is PM?", section : "what-is-pm", hero_image : {filename : "what-is-pm.png", css_class : "anchor_left"}, hero_text : {css_class : "what-is-speck-hero-text", text : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration."} });
 });
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -71,6 +63,28 @@ router.get('/verification/:verificationToken', function(req, res) {
 
 router.get('/verification', function(req, res) {
    res.render('verification', { title : "Resend Account Verification Email" });
+});
+
+//======================================================================================================================
+
+router.get('/get_time/', function(req, res) {
+   res.set('Content-Type', 'text/plain').send("get_time=" + parseInt(Date.now() / 1000) + "\r\n");
+});
+
+router.get('/get_outdoor_aqi/', function(req, res) {
+   res.set('Content-Type', 'text/plain').send("get_outdoor_aqi=-1\r\n");
+});
+
+router.get('/get_message/', function(req, res) {
+   res.set('Content-Type', 'text/plain').send("get_message=NULL\r\n");
+});
+
+router.get('/get_scaler/', function(req, res) {
+   res.set('Content-Type', 'text/plain').send("get_scaler=408\r\n");
+});
+
+router.get('/get_version/', function(req, res) {
+   res.set('Content-Type', 'text/plain').send("get_version=10\r\n");
 });
 
 //======================================================================================================================

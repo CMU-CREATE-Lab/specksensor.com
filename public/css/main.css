@@ -16,6 +16,28 @@ body.shrink {
 .img-hover:hover {
   opacity: 0.8; }
 
+.panel-body {
+  height: 180px !important; }
+
+@media (max-width: 1200px) {
+  .panel-body {
+    height: 230px !important; }
+  .what-is-speck-hero-text {
+    font-size: 25px !important;
+    left: 475px !important; } }
+
+@media (max-width: 992px) {
+  .panel-body {
+    height: 140px !important; }
+  .what-is-speck-hero-text {
+    font-size: 24px !important;
+    left: 328px !important;
+    width: 392px !important; } }
+
+@media (max-width: 530px) {
+  .panel-body {
+    height: 260px !important; } }
+
 .rotate_90 {
   transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -143,6 +165,207 @@ body.shrink {
     margin-left: 0; }
   #about_us_page img {
     max-width: 50%; } }
+
+.home-hero-text {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: -730px;
+  right: 0;
+  top: 120px;
+  color: white;
+  font-size: 30px;
+  width: 407px;
+  text-align: left; }
+
+.what-is-speck-hero-text {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 665px;
+  right: 0px;
+  top: 120px;
+  color: white;
+  font-size: 30px;
+  width: 480px;
+  text-align: right; }
+
+.testimonals {
+  font-family: Verdanna;
+  font-size: 20px;
+  position: relative;
+  height: 220px; }
+
+.ts1 {
+  top: -10px;
+  position: absolute;
+  width: 550px; }
+
+.ts2 {
+  top: 100px;
+  left: 270px;
+  position: absolute;
+  width: 550px; }
+
+.ts3 {
+  top: -10px;
+  left: 600px;
+  position: absolute;
+  width: 550px; }
+
+.col-circle1 {
+  width: 38% !important;
+  padding-left: 0px; }
+
+.col-circle2 {
+  width: 37% !important;
+  padding-left: 0px; }
+
+.col-circle3 {
+  width: 0% !important;
+  padding-left: 0px; }
+
+.main-circle1 {
+  background-color: #93D0B1;
+  border: 1px solid #53B985;
+  height: 256px;
+  width: 256px;
+  -moz-border-radius: 256px;
+  -webkit-border-radius: 256px;
+  border-radius: 256px;
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  padding-top: 44px;
+  padding-bottom: 64px;
+  padding-left: 46px;
+  padding-right: 46px; }
+
+.main-circle2 {
+  background-color: #FCC98A;
+  border: 1px solid #F2AF5C;
+  height: 256px;
+  width: 256px;
+  -moz-border-radius: 256px;
+  -webkit-border-radius: 256px;
+  border-radius: 256px;
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  padding-top: 44px;
+  padding-bottom: 64px;
+  padding-left: 37px;
+  padding-right: 37px; }
+
+.main-circle3 {
+  background-color: #9B9ECF;
+  border: 1px solid #8085CD;
+  height: 256px;
+  width: 256px;
+  -moz-border-radius: 256px;
+  -webkit-border-radius: 256px;
+  border-radius: 256px;
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  padding-top: 44px;
+  padding-bottom: 64px;
+  padding-left: 27px;
+  padding-right: 27px; }
+
+@media (max-width: 1200px) {
+  .ts1 {
+    width: 500px; }
+  .ts2 {
+    width: 500px;
+    left: 0px; }
+  .ts3 {
+    width: 425px;
+    left: 550px;
+    top: 40px; }
+  .home-hero-text {
+    left: -530px; } }
+
+@media (max-width: 1045px) {
+  .col-circle1 {
+    width: 36% !important; }
+  .col-circle2 {
+    width: 35% !important; }
+  .ts3 {
+    width: 400px; } }
+
+@media (max-width: 992px) {
+  .col-circle1 {
+    padding-left: 30%; }
+  .col-circle2 {
+    padding-left: 30%; }
+  .col-circle3 {
+    padding-left: 30%; }
+  .ts1 {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    position: relative; }
+  .ts2 {
+    top: 15px;
+    left: 0px;
+    width: 100%;
+    position: relative; }
+  .ts3 {
+    top: 30px;
+    left: 0px;
+    width: 100%;
+    position: relative; }
+  .testimonals {
+    top: -10px;
+    height: 100%; }
+  .home-hero-text {
+    left: -310px; } }
+
+@media (max-width: 960px) {
+  .home-hero-text {
+    left: -390px;
+    top: 100px;
+    font-size: 25px;
+    width: 326px; } }
+
+@media (max-width: 767px) {
+  .home-hero-text {
+    left: -330px;
+    font-size: 3vw;
+    top: 70px;
+    width: 40%; }
+  .what-is-speck-hero-text {
+    top: 66px !important;
+    font-size: 2.7vw !important;
+    left: 293px !important;
+    width: 362px !important; } }
+
+@media (max-width: 680px) {
+  .what-is-speck-hero-text {
+    left: 166px !important; } }
+
+@media (max-width: 610px) {
+  .home-hero-text {
+    left: -310px; } }
+
+@media (max-width: 545px) {
+  .col-circle1 {
+    padding-left: 15%; }
+  .col-circle2 {
+    padding-left: 15%; }
+  .col-circle3 {
+    padding-left: 15%; }
+  .home-hero-text, .what-is-speck-hero-text {
+    display: none; } }
+
+@media (max-width: 340px) {
+  .col-circle1 {
+    padding-left: 5%; }
+  .col-circle2 {
+    padding-left: 5%; }
+  .col-circle3 {
+    padding-left: 5%; } }
 
 #dashboard {
   margin: 0 auto 0 auto; }

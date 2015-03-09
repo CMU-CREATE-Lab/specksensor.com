@@ -63,7 +63,7 @@
   </component>
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{specksensor.com node_modules}" />
-    <file url="PROJECT" libraries="{Handlebars Runtime 2.0.0, Superagent, googlemaps-DefinitelyTyped, jQuery 1.11.1, mocha-DefinitelyTyped, nconf-DefinitelyTyped, should-DefinitelyTyped, specksensor.com node_modules}" />
+    <file url="PROJECT" libraries="{Handlebars Runtime 2.0.0, Superagent, googlemaps-DefinitelyTyped, jQuery 1.11.2, mocha-DefinitelyTyped, nconf-DefinitelyTyped, should-DefinitelyTyped, specksensor.com node_modules}" />
     <includedPredefinedLibrary name="Node.js Globals" />
   </component>
   <component name="ProjectCodeStyleSettingsManager">
@@ -484,10 +484,10 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="jQuery 1.11.1" type="javaScript">
+    <library name="jQuery 1.11.2" type="javaScript">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.1.js" />
-        <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.1.min.js" />
+        <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.2.js" />
+        <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.2.min.js" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
