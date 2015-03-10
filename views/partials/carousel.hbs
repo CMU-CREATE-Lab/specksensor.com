@@ -1,0 +1,38 @@
+{{#if carousel}}
+   <script type="text/javascript">
+      $(document).ready(function() {
+         $('.carousel').carousel({
+                                    interval : 0 //changes the speed
+                                 });
+      });
+
+   </script>
+   <div id="myCarousel" class="carousel slide">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+
+         {{#each carousel}}
+            <li data-target="#myCarousel" data-slide-to="{{@index}}" {{#if isActive}}class="active"{{/if}}></li>
+         {{/each}}
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner">
+         {{#each carousel}}
+            <div class="item {{#if isActive}}active{{/if}}">
+               <div class="fill {{imageCssClass}}" style="background-image:url('/images/hero_images/{{url}}');"></div>
+               <div class="{{captionCssClass}}">{{caption}}</div>
+            </div>
+         {{/each}}
+      </div>
+
+      <!-- Controls -->
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+         <span class="icon-prev"></span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next">
+         <span class="icon-next"></span>
+      </a>
+   </div>
+
+{{/if}}

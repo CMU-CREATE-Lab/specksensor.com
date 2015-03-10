@@ -11,11 +11,21 @@ router.get('/', function(req, res) {
    else {
       res.render('index', {
          section : "home",
-         hero_image : { filename : "home.png", css_class : "anchor_right" },
-         hero_text : {
-            css_class : "home-hero-text",
-            text : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality."
-         }
+         carousel : [
+            {
+               caption : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality.",
+               captionCssClass : "home-hero-text",
+               url : "home.png",
+               imageCssClass : "anchor_right",
+               isActive : true
+            },
+            {
+               caption : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration.",
+               url : "what-is-speck.png",
+               captionCssClass : "what-is-speck-hero-text",
+               imageCssClass : "anchor_left"
+            }
+         ]
       });
    }
 });
