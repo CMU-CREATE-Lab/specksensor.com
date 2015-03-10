@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var config = require('../config');
 
 //======================================================================================================================
 
@@ -99,15 +100,15 @@ router.get('/get_outdoor_aqi/', function(req, res) {
 });
 
 router.get('/get_message/', function(req, res) {
-   res.set('Content-Type', 'text/plain').send("get_message=NULL\r\n");
+   res.set('Content-Type', 'text/plain').send("get_message=" + config.get("firmware:message") + "\r\n");
 });
 
 router.get('/get_scalar/', function(req, res) {
-   res.set('Content-Type', 'text/plain').send("get_scalar=408\r\n");
+   res.set('Content-Type', 'text/plain').send("get_scalar=" + config.get("firmware:scalar") + "\r\n");
 });
 
 router.get('/get_version/', function(req, res) {
-   res.set('Content-Type', 'text/plain').send("get_version=10\r\n");
+   res.set('Content-Type', 'text/plain').send("get_version=" + config.get("firmware:version") + "\r\n");
 });
 
 //======================================================================================================================

@@ -60,6 +60,11 @@ config.defaults({
                       "pool" : {
                          "connectionLimit" : 10
                       }
+                   },
+                   "firmware" : {
+                      "message" : "NULL",
+                      "scalar" : 408,
+                      "version" : 8
                    }
                 });
 
