@@ -152,20 +152,6 @@ flow.series([
                         app.use(favicon(path.join(__dirname, 'public/favicon.ico')));     // favicon serving
                         app.use(compress());                // enables gzip compression
                         app.use(express.static(path.join(__dirname, 'public')));          // static file serving
-
-                        // static file serving for the firmware hex files (they need to be served as text/plain, not application/octet-stream)
-                        app.use('/firmware',
-                                express.static(path.join(__dirname, 'public-firmware'),
-                                               {
-                                                  dotfiles : 'ignore',
-                                                  etag : false,
-                                                  index : false,
-                                                  redirect : false,
-                                                  setHeaders : function(res, path, stat) {
-                                                     res.set('Content-Type', "text/plain")
-                                                  }
-                                               }));
-
                         if (RunMode.isProduction()) {
                            // create a write stream (in append mode)
                            var fs = require('fs');
