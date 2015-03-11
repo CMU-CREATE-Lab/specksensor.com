@@ -8,6 +8,8 @@
 
    var PRODUCT_ID = '{{speckProductId}}';
 
+   var DEFAULT_CHANNEL_NAME = "particle_concentration";
+
    //var LIGHT_BLUE_COLOR = "#428bca";
    var LIGHT_BLUE_COLOR = "#337ab7";
    var DARK_BLUE_COLOR = "#2e68a3";
@@ -19,7 +21,7 @@
 
    var feedsById = {};
    var selectedFeed = null;
-   var selectedChannelName = "particle_concentration";
+   var selectedChannelName = DEFAULT_CHANNEL_NAME;
 
    // grapher stuff
    var dateAxis;
@@ -552,6 +554,18 @@
    function addFeedToGrapher(feed, willPreserveDateAxis) {
       if (feed) {
          willPreserveDateAxis = !!willPreserveDateAxis;
+
+         // Since different feeds can have different sets of channels, we need to make sure that the selectedChannelName
+         // actually exists in the new feed.  If not, try the DEFAULT_CHANNEL_NAME or, if that fails too, then just use
+         // the first channel (alphabetically)
+         if (!(selectedChannelName in feed.channelBounds.channels)) {
+            if (DEFAULT_CHANNEL_NAME in feed.channelBounds.channels) {
+               selectedChannelName = DEFAULT_CHANNEL_NAME;
+            }
+            else {
+               selectedChannelName = Object.keys(feed.channelBounds.channels).sort()[0];
+            }
+         }
 
          if (!willPreserveDateAxis) {
             var channelMinTimeSecs = feed.channelBounds.channels[selectedChannelName].minTimeSecs;
