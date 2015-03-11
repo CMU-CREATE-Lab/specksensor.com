@@ -10,7 +10,6 @@
 
    var DEFAULT_CHANNEL_NAME = "particle_concentration";
 
-   //var LIGHT_BLUE_COLOR = "#428bca";
    var LIGHT_BLUE_COLOR = "#337ab7";
    var DARK_BLUE_COLOR = "#2e68a3";
    var POINT_RADIUS_HAS_DATA = 6;
@@ -581,14 +580,8 @@
          }
 
          var isParticleConcentrationChannel = (selectedChannelName == "particle_concentration");
-         //Mike bonus
          var isParticleCountChannel = (selectedChannelName == "particle_count");
-         var needsWhite = (isParticleConcentrationChannel || isParticleCountChannel);
-
-         console.log("SELECTEDCHANNELNAME = [" + selectedChannelName + "]");
-         console.log("isParticleConcentrationChannel = [" + isParticleConcentrationChannel + "]");
-         console.log("isParticleCountChannel         = [" + isParticleCountChannel + "]");
-         console.log("needsWhite                     = [" + needsWhite + "]");
+         var isShowingColoredRanges = (isParticleConcentrationChannel || isParticleCountChannel);
 
          var theChannel = {
             "min" : feed.channelBounds.channels[selectedChannelName].minValue,
@@ -600,14 +593,14 @@
                      "type" : "line",
                      "lineWidth" : 1,
                      "show" : true,
-                     "color" : (needsWhite ? 'white' : DARK_BLUE_COLOR)
+                     "color" : (isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR)
                   },
                   {
                      "type" : "circle",
                      radius : 1,
                      "lineWidth" : 1,
                      "show" : true,
-                     "color" : needsWhite ? 'white' : DARK_BLUE_COLOR,
+                     "color" : isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR,
                      fill : true
                   }
                ],
@@ -617,23 +610,23 @@
                      {
                         "show" : true,
                         "type" : "lollipop",
-                        "color" : needsWhite ? 'white' : LIGHT_BLUE_COLOR,
+                        "color" : isShowingColoredRanges ? 'white' : '#ff0000',
                         "radius" : 0,
                         "lineWidth" : 1,
                         "fill" : false
                      },
                      {
                         "type" : "circle",
-                        radius : 2,
+                        radius : 3,
                         "lineWidth" : 0.5,
                         "show" : true,
-                        "color" : needsWhite ? 'white' : LIGHT_BLUE_COLOR,
+                        "color" : isShowingColoredRanges ? 'white' : '#ff0000',
                         fill : false
                      },
                      {
                         "show" : true,
                         "type" : "value",
-                        "fillColor" : needsWhite ? 'white' : LIGHT_BLUE_COLOR,
+                        "fillColor" : isShowingColoredRanges ? 'white' : '#ff0000',
                         "marginWidth" : 10,
                         "font" : "7pt Helvetica,Arial,Verdana,sans-serif",
                         "verticalOffset" : 7,
