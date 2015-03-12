@@ -49,11 +49,12 @@
    //Mike
    var cbmode = 0;
    var boxen = {};
-   boxenColors = ['#1a9850', '#91cf60', '#d9ef8b', '#fee08b', '#fc8d59', '#d73027'];
-   boxenConcentrationLevels = [0, 20, 40, 80, 160, 320];
+   var boxenColors = ['#1a9850', '#91cf60', '#d9ef8b', '#fee08b', '#fc8d59', '#d73027'];
+   var boxenConcentrationLevels = [0, 20, 40, 80, 160, 320];
 
-   boxenCBColors = ["#4575b4", "#91bfdb", "#e0f3f8", "#fee090", "#fc8d59", "#d73027"];
-   boxenCountLevels = [0, 500, 1000, 2000, 4000, 8000];
+   var boxenCBColors = ["#4575b4", "#91bfdb", "#e0f3f8", "#fee090", "#fc8d59", "#d73027"];
+   var boxenCountLevels = [0, 500, 1000, 2000, 4000, 8000];
+   var boxenAxisChangeListener = null;
 
    var availablePlotColors = ["#990000", "#009900", "#000099", "#999900", "#6600ff"];
    var usedPlotColorsByDeviceId = {};
@@ -539,6 +540,14 @@
    function removeFeedFromGrapher(feed) {
       if (feed) {
          var plotId = feed.id;
+
+         // make sure to remove the Y axis change listener (if we don't, then it'll hang around and still get called
+         // when moving the mouse outside the window)
+         var yAxis = grapher.getYAxis(plotId);
+         if (yAxis != null) {
+            yAxis.removeAxisChangeListener(boxenAxisChangeListener);
+         }
+
          plotContainer.removePlot(grapher.getPlot(plotId));
          grapher.removePlot(plotId);
 
@@ -726,33 +735,36 @@
             boxen.colors = boxenColors;
          }
 
+         var yAxis = grapher.getYAxis(plotId);
+         yAxis.removeAxisChangeListener(boxenAxisChangeListener);
+         boxenAxisChangeListener = null;
          if (isParticleConcentrationChannel) {
             boxen.levels = boxenConcentrationLevels;
-            grapher.getYAxis(plotId).setMaxRange(0, 640);
-            grapher.getYAxis(plotId).addAxisChangeListener(function() {
-               // TODO: is this getting added multiple times?
+            yAxis.setMaxRange(0, 640);
+            var num = Math.round(Math.random() * 1000);
+            boxenAxisChangeListener = function() {
                var theAxis = grapher.getYAxis(plotId);
-               boxenAdjust(boxen, "#plot", theAxis);
-            });
+               adjustBoxen(boxen, "#plot", theAxis);
+            };
+            yAxis.addAxisChangeListener(boxenAxisChangeListener);
+         }
+         else if (isParticleCountChannel) {
+            boxen.levels = boxenCountLevels;
+            yAxis.setMaxRange(0, 16000);
+            var num = Math.round(Math.random() * 1000);
+            boxenAxisChangeListener = function() {
+               var theAxis = grapher.getYAxis(plotId);
+               adjustBoxen(boxen, "#plot", theAxis);
+            };
+            yAxis.addAxisChangeListener(boxenAxisChangeListener);
          }
          else {
-            if (isParticleCountChannel) {
-               boxen.levels = boxenCountLevels;
-               grapher.getYAxis(plotId).setMaxRange(0, 16000);
-               grapher.getYAxis(plotId).addAxisChangeListener(function() {
-                  // TODO: is this getting added multiple times?
-                  var theAxis = grapher.getYAxis(plotId);
-                  boxenAdjust(boxen, "#plot", theAxis);
-               });
-            }
-            else {
-               grapher.getYAxis(plotId).setMaxRange(-1 * Number.MAX_VALUE, Number.MAX_VALUE);
-            }
+            yAxis.setMaxRange(-1 * Number.MAX_VALUE, Number.MAX_VALUE);
          }
 
          removeBoxen();
-         if (isParticleConcentrationChannel || isParticleCountChannel) {
-            drawBoxen(boxen, "#plot"); //#plot should be whatever div the grapher is in
+         if (isShowingColoredRanges) {
+            drawBoxen(boxen, "#plot");
          }
 
          setSizes();
@@ -841,44 +853,39 @@
       dateAxis.setRange(min, max);
    }
 
-   //Mike has left you a pile of strange functions
+   // Mike has left you a pile of strange functions
    function drawBoxen(boxen, plotArea) {
       removeBoxen();
-      var i = 0;
-      boxen.levels.forEach(function(level) {
-         // TODO: use a template
-         var color = boxen.colors[i];
-         var theBox = $('<div id="level_' + level.toString() + '" class="color_box" style="background-color:' + color + '; z-index:' + (i - boxen.levels.length) + ';"></div>')
-         $(plotArea).prepend(theBox);
-         i++;
+      var boxTemplate = Handlebars.templates['grapher_value_range_color_box'];
+      boxen.levels.forEach(function(level, index) {
+         var boxElement = boxTemplate({
+                                         level : level,
+                                         color : boxen.colors[index],
+                                         zIndex : index - boxen.levels.length
+                                      });
+         $(plotArea).prepend(boxElement);
       })
-   }
-
-   function hideBoxen() {
-      $('.color_box').hide();
-   }
-
-   function showBoxen() {
-      $('.color_box').show();
    }
 
    function removeBoxen() {
       $('.color_box').remove();
    }
 
-   function boxenAdjust(boxen, plotArea, axis) {
+   function adjustBoxen(boxen, plotArea, axis) {
+      var plotAreaElement = $(plotArea);
       boxen.levels.forEach(function(level) {
-         $("#level_" + level.toString())
-               .height((axis.getMax() - level) / (axis.getMax() - axis.getMin()) * $(plotArea).height())
-               .css("max-height", $(plotArea).height());
+         $("#level_" + level)
+               .height((axis.getMax() - level) / (axis.getMax() - axis.getMin()) * plotAreaElement.height())
+               .css("max-height", plotAreaElement.height());
       })
    }
 
    function sizeBoxen(boxen, plotArea, extra) {
+      var plotAreaElement = $(plotArea);
       boxen.levels.forEach(function(level) {
-         $("#level_" + level.toString())
-               .width($("#plot").width() + extra + 1)
-               .css("left", $("#plot").css("left"));
+         $("#level_" + level)
+               .width(plotAreaElement.width() + extra + 1)
+               .css("left", plotAreaElement.css("left"));
       })
    }
 
