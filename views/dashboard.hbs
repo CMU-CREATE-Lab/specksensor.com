@@ -60,21 +60,10 @@
 
    var timeRangeOptions = [
       {
-         "label" : "past hour",
+         "label" : "all data",
          "handler" : function() {
-            setRangeFromSecondsAgoToNow(3600);
-         }
-      },
-      {
-         "label" : "past 12 hours",
-         "handler" : function() {
-            setRangeFromSecondsAgoToNow(43200);
-         }
-      },
-      {
-         "label" : "past 24 hours",
-         "handler" : function() {
-            setRangeFromSecondsAgoToNow(86400);
+            dateAxis.setMaxRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
+            dateAxis.setRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
          }
       },
       {
@@ -84,10 +73,21 @@
          }
       },
       {
-         "label" : "all data",
+         "label" : "past 24 hours",
          "handler" : function() {
-            dateAxis.setMaxRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
-            dateAxis.setRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
+            setRangeFromSecondsAgoToNow(86400);
+         }
+      },
+      {
+         "label" : "past 12 hours",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(43200);
+         }
+      },
+      {
+         "label" : "past hour",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(3600);
          }
       }
    ];
