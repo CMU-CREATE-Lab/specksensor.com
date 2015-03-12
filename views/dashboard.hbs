@@ -715,7 +715,6 @@
          plotContainer.addPlot(grapher.getPlot(plotId));
 
          //Mike keeps breaking code
-
          if (cbmode) {
             boxen.colors = boxenCBColors;
          }
@@ -843,11 +842,10 @@
       removeBoxen();
       var i = 0;
       boxen.levels.forEach(function(level) {
+         // TODO: use a template
          var color = boxen.colors[i];
-         //console.log(level)
          var theBox = $('<div id="level_' + level.toString() + '" class="color_box" style="background-color:' + color + '; z-index:' + (i - boxen.levels.length) + ';"></div>')
-         //console.log('<div id="level_' + level.toString() + ';" class="color_box"; background-color:' + color + '; z-index:-1;"')
-         $(plotArea).prepend(theBox)
+         $(plotArea).prepend(theBox);
          i++;
       })
    }
@@ -866,15 +864,17 @@
 
    function boxenAdjust(boxen, plotArea, axis) {
       boxen.levels.forEach(function(level) {
-         $("#level_" + level.toString()).height((axis.getMax() - level) / (axis.getMax() - axis.getMin()) * $(plotArea).height());
-         $("#level_" + level.toString()).css("max-height", $(plotArea).height());
+         $("#level_" + level.toString())
+               .height((axis.getMax() - level) / (axis.getMax() - axis.getMin()) * $(plotArea).height())
+               .css("max-height", $(plotArea).height());
       })
    }
 
    function sizeBoxen(boxen, plotArea, extra) {
       boxen.levels.forEach(function(level) {
-         $("#level_" + level.toString()).width($("#plot").width() + extra + 1);
-         $("#level_" + level.toString()).css("left", $("#plot").css("left"));
+         $("#level_" + level.toString())
+               .width($("#plot").width() + extra + 1)
+               .css("left", $("#plot").css("left"));
       })
    }
 
