@@ -660,10 +660,14 @@
                selectedChannelName = availableChannels[0];
             }
 
+            var channelNameTemplate = Handlebars.templates['grapher_channel_name'];
             availableChannels.forEach(function(channelName) {
                var prettyChannelName = feed['channelSpecs'][channelName]['prettyName'];
                var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
-               var element = $('<div class="channel_link"><span class="' + selectionStateClass + '">' + prettyChannelName + '</span></div>');
+               var element = $(channelNameTemplate({
+                                                      channelName : prettyChannelName,
+                                                      cssClass : selectionStateClass
+                                                   }));
 
                // add click event handler to the channel change links
                if (channelName != selectedChannelName) {
@@ -911,7 +915,6 @@
                   </div>
                </td>
                <td align="center" valign="bottom">
-                  {{!--<a id="auto_scale_toggle_button" class="btn btn-default" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling"><i class="fa fa-arrows-v fa-sm"></i></a>--}}
                   <a id="auto_scale_toggle_button" class="btn btn-default" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling"><span class="glyphicon glyphicon-resize-vertical" aria-hidden="true"></span></a>
                </td>
             </tr>

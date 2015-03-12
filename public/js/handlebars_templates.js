@@ -58,4 +58,13 @@ templates['grapher'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
     + ((stack1 = ((helper = (helper = helpers.yAxisLabel || (depth0 != null ? depth0.yAxisLabel : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"yAxisLabel","hash":{},"data":data}) : helper))) != null ? stack1 : "")
     + "</div>\n         </div>\n      </td>\n   </tr>\n</table>\n";
 },"useData":true});
+templates['grapher_channel_name'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "<div class=\"channel_link\"><span class=\""
+    + alias3(((helper = (helper = helpers.cssClass || (depth0 != null ? depth0.cssClass : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"cssClass","hash":{},"data":data}) : helper)))
+    + "\">"
+    + alias3(((helper = (helper = helpers.channelName || (depth0 != null ? depth0.channelName : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"channelName","hash":{},"data":data}) : helper)))
+    + "</span></div>";
+},"useData":true});
 })();
