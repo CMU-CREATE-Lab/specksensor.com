@@ -773,17 +773,6 @@
       }
    }
 
-   function autoScaleLockChange() {
-      isAutoScaleOn = $("#auto_scale_lock_checkbox").is(":checked");
-      if (isAutoScaleOn) {
-         autoScaleYAxes();
-         $("#autoScaleYAxesButton").attr("disabled", "disabled");
-      }
-      else {
-         $("#autoScaleYAxesButton").removeAttr("disabled");
-      }
-   }
-
    function toggleYAxisAutoScaling() {
       var autoScaleToggleButton = $("#auto_scale_toggle_button");
       isAutoScaleOn = !autoScaleToggleButton.hasClass("active");
