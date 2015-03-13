@@ -6,6 +6,8 @@
 <script language="JavaScript" type="text/javascript">
    var DEVICE_PIXEL_RATIO = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
 
+   var ESDR_API_ROOT_URL = '{{esdrUrl}}/api/v1';
+
    var PRODUCT_ID = '{{speckProductId}}';
 
    var DEFAULT_CHANNEL_NAME = "particle_concentration";
@@ -61,32 +63,38 @@
 
    var timeRangeOptions = [
       {
-         "label" : "all data",
+         "label" : "All Data",
          "handler" : function() {
             dateAxis.setMaxRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
             dateAxis.setRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
          }
       },
       {
-         "label" : "past 7 days",
+         "label" : "Past 30 Days",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(2592000);
+         }
+      },
+      {
+         "label" : "Past 7 Days",
          "handler" : function() {
             setRangeFromSecondsAgoToNow(604800);
          }
       },
       {
-         "label" : "past 24 hours",
+         "label" : "Past 24 Hours",
          "handler" : function() {
             setRangeFromSecondsAgoToNow(86400);
          }
       },
       {
-         "label" : "past 12 hours",
+         "label" : "Past 12 Hours",
          "handler" : function() {
             setRangeFromSecondsAgoToNow(43200);
          }
       },
       {
-         "label" : "past hour",
+         "label" : "Past Hour",
          "handler" : function() {
             setRangeFromSecondsAgoToNow(3600);
          }
@@ -259,8 +267,9 @@
       console.log("In initializeGrapher()");
 
       // render the time range options
+      var timeRangeOptionTemplate = Handlebars.templates['grapher_time_range_choice'];
       timeRangeOptions.forEach(function(timeRangeOption) {
-         var timeRangeElement = $('<div class="time_range_link"><a href="#" onclick="return false;">' + timeRangeOption.label + '</a></div>');
+         var timeRangeElement = $(timeRangeOptionTemplate({ label : timeRangeOption.label }));
          timeRangeElement.click(timeRangeOption.handler);
          $("#time_range_switcher_panel").append(timeRangeElement);
       });
@@ -299,10 +308,25 @@
       $("#grapher_container").show();
       $("#menu_panel").show();
 
+      $("#export_this_channel_button").click(function() {
+         doExport(false);
+      });
+      $("#export_all_channels_button").click(function() {
+         doExport(true);
+      });
+
       setSizes();
 
       // set up window resize handler
       $(window).resize(setSizes);
+   }
+
+   function doExport(willExportAllChannels) {
+      if (selectedFeed) {
+         var idOrApiKey = selectedFeed.isPublic ? selectedFeed.id : selectedFeed.apiKeyReadOnly;
+         var channels = willExportAllChannels ? Object.keys(selectedFeed.channelBounds.channels).sort().join(',') : selectedChannelName;
+         window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxis.getMin() + "&to=" + dateAxis.getMax(), '_blank');
+      }
    }
 
    function createCanvasFeatureDetectingMouseEventHandler(featureDetectedCallback, featureNotDetectedCallback) {
@@ -456,7 +480,6 @@
       }
 
       drawCircle(markerCoords, radius, "rgba(10, 10, 10, 0.6)");
-      // TODO: drawCircle(markerCoords, radius, isNoData ? "rgba(10, 10, 10, 0.6)" : getColorForValue(marker['value']));
    }
 
    function drawCircle(centerPoint, radius, color) {
@@ -465,30 +488,6 @@
       context.fillStyle = color;
       context.fill();
    }
-
-   //function getColorForValue(value) {
-   //   if (value) {
-   //      return getParticleConcentrationIndex(value)['color'];
-   //   }
-   //   return "rgba(255, 126, 0, 0.6)";
-   //}
-   //
-   //function getParticleConcentrationIndex(value) {
-   //   if (value <= PARTICLE_CONCENTRATION_INDEX[0]['max']) {
-   //      return PARTICLE_CONCENTRATION_INDEX[0];
-   //   }
-   //   else if (value > PARTICLE_CONCENTRATION_INDEX[PARTICLE_CONCENTRATION_INDEX.length - 2]['max']) {
-   //      return PARTICLE_CONCENTRATION_INDEX[PARTICLE_CONCENTRATION_INDEX.length - 1];
-   //   }
-   //   else {
-   //      for (var i = 1; i < PARTICLE_CONCENTRATION_INDEX.length - 1; i++) {
-   //         if (value <= PARTICLE_CONCENTRATION_INDEX[i]['max']) {
-   //            return PARTICLE_CONCENTRATION_INDEX[i];
-   //         }
-   //      }
-   //   }
-   //   return PARTICLE_CONCENTRATION_INDEX[PARTICLE_CONCENTRATION_INDEX.length - 1];
-   //}
 
    // Add a marker to the map and push to the array.
    function addMarker(id, location) {
@@ -553,6 +552,8 @@
 
          $("#y_axis_label").empty();
          $("#channel_switcher_panel").empty();
+         $("#grapher_bottom_toolbar").hide();
+         $(".color_box").hide();
 
          // TODO: figure out a better way to remove the contents of the y axis
          $("#y_axis").find("canvas").remove();
@@ -690,6 +691,7 @@
                $("#channel_switcher_panel").append(element);
             });
          }
+         $("#grapher_bottom_toolbar").show();
 
          var plotId = feed.id;
          grapher.addPlot(plotId,
@@ -718,10 +720,10 @@
          grapher.addDataPointListener(plotId, function(val) {
             var valueAndTimeElement = $("#value_and_time");
             if (val == null) {
-               valueAndTimeElement.empty();
+               valueAndTimeElement.empty().hide();
             }
             else {
-               valueAndTimeElement.html(val.valueString + (channelUnits == null ? "" : " " + channelUnits) + " at " + val.dateString);
+               valueAndTimeElement.html(val.valueString + (channelUnits == null ? "" : " " + channelUnits) + " at " + val.dateString).show();
             }
          });
 
@@ -927,7 +929,9 @@
             </tr>
             <tr>
                <td>
-                  <div id="plot" class="plot" style="height:250px; border: 1px solid black;"></div>
+                  <div id="plot" class="plot" style="height:250px; border: 1px solid black;">
+                     <div id="value_and_time"></div>
+                  </div>
                </td>
                <td>
                   <div id="y_axis" class="y_axis" style="position:relative;height:250px">
@@ -937,8 +941,20 @@
             </tr>
             <tr>
                <td colspan="2" align="right">
-                  <div id="value_and_time"></div>
-                  <div id="channel_switcher_panel"></div>
+                  <div id="grapher_bottom_toolbar">
+                     <div class="pull-left">
+                        <div id="channel_switcher_panel"></div>
+                     </div>
+                     <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                           Export <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                           <li><a id="export_this_channel_button" href="#">This Channel</a></li>
+                           <li><a id="export_all_channels_button" href="#">All Channels</a></li>
+                        </ul>
+                     </div>
+                  </div>
                </td>
             </tr>
          </table>

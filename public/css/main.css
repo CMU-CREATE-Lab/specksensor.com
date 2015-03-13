@@ -415,11 +415,12 @@ body.shrink {
   #dashboard #content_area {
     position: relative;
     margin-left: 190px; }
+    #dashboard #content_area #grapher_bottom_toolbar {
+      margin-top: 5px; }
     #dashboard #content_area #time_range_switcher_panel, #dashboard #content_area #time_range_switcher_panel_placeholder {
       display: none;
       font-size: 12px;
-      text-align: center;
-      margin-bottom: 10px; }
+      margin-bottom: 5px; }
     #dashboard #content_area #map_area {
       margin-top: 10px;
       border: 1px solid black;
