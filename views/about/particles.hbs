@@ -1,185 +1,275 @@
-<style type="text/css">
-  ul.nav-tabs {
-    width: 190px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
-  }
-
-  ul.nav-tabs li {
-    margin: 0;
-    border-top: 1px solid #ddd;
-  }
-
-  ul.nav-tabs li:first-child {
-    border-top: none;
-  }
-
-  ul.nav-tabs li a {
-    margin: 0;
-    padding: 8px 16px;
-    border-radius: 0;
-  }
-
-  ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover, ul.nav-tabs li.active a:focus {
-    color: #fff;
-    background: #626465;
-    border: 1px solid #5A5F61;
-  }
-
-  ul.nav-tabs li a {
-    color: #5E5C5C;
-  }
-
-  ul.nav-tabs li:first-child a {
-    border-radius: 4px 4px 0 0;
-  }
-  ul.nav-tabs li:last-child a {
-    border-radius: 0 0 4px 4px;
-  }
-  ul.nav-tabs.affix {
-    top: 475px; /* Set the top position of pinned element */
-  }
-
-  #myScrollspy {
-    width: 210px !important;
-  }
-
-  .jumbotron {
-    padding: 0px !important;
-  }
-
-  #hero_image {
-    height: 400px !important;
-    position: fixed !important;
-    width: 100% !important;
-    z-index: 99 !important;
-  }
-
-  #white-blocker {
-    height: 20px;
-    width: 100%;
-    background-color: white;
-    z-index: 9999;
-    position: fixed;
-    top: 475px;
-  }
-
-  h2 {
-    margin-top: 0px;
-  }
-</style>
-
-<script>
-  var hero_backgrounds = [{path: "what-is-pm.png", css_class: "anchor_left", hero_text: ""},
-                          {path: "particle-sources.png", css_class: "", hero_text: ""},
-                          {path: "pathways-to-better-air.png", css_class: "anchor_right", hero_text: ""}]
-
-  function scroll_if_anchor(href) {
-    href = typeof(href) == "string" ? href : $(this).attr("href");
-
-    // If href missing, ignore
-    if (!href) return;
-
-    var fromTop = parseInt($('ul.nav-tabs.affix').css("top")) + 5 || 495;
-    // If our Href points to a valid, non-empty anchor, and is on the same page (e.g. #foo)
-    // Legacy jQuery and IE7 may have issues: http://stackoverflow.com/q/1593174
-    var $target = $(href);
-
-    // Older browsers without pushState might flicker here, as they momentarily
-    // jump to the wrong position (IE < 10)
-    if ($target.length) {
-      $('html, body').animate({ scrollTop: $target.offset().top - fromTop });
-      if (history && "pushState" in history) {
-          history.pushState({}, document.title, window.location.pathname + href);
-          return false;
-      }
-    }
-  }
-
-  $(function() {
-    // When our page loads, check to see if it contains an anchor
-    scroll_if_anchor(window.location.hash);
-
-    // Intercept all anchor clicks
-    $("body").on("click", "a[href^='#']", scroll_if_anchor);
-
-    // TODO: onhashchange to fix the dropdown menu bug?
-
-    // TODO
-    $(".what-is-speck-hero-text").hide();
-
-    $('body').scrollspy({ target: '#myScrollspy', offset: 515 })
-
-    $('#myScrollspy').on("activate.bs.scrollspy", function () {
-      var elm = $(this).find('li.active')[0];
-      var elmIndex = $("#myScrollspy li").index(elm);
-      $("#hero_image .fill").css({'background-image': "url(/images/hero_images/" + hero_backgrounds[elmIndex].path + ")"});
-      $("#hero_image .fill").removeClass("anchor_left anchor_right").addClass(hero_backgrounds[elmIndex].css_class);
-    })
-  });
-
-  $(window).scroll(function () {
-    // TODO: Breaks on responsive design
-    if ($(window).scrollTop() >= 50) {
-      $("#white-blocker").css("top", "450px");
-      $("ul.nav-tabs").css("margin-top", "7px");
-      $("ul.nav-tabs.affix").css("top", "463px");
-    } else {
-      $("#white-blocker").css("top", "475px");
-      $("ul.nav-tabs").css("margin-top", "");
-      $("ul.nav-tabs.affix").css("top", "");
-    }
-  });
-</script>
-
-<div id="white-blocker"></div>
-<div id="page-top">
-  <div class="container" style="margin-top: 420px">
-    <div class="row">
-      <div class="col-xs-3" id="myScrollspy">
-        <ul class="nav nav-tabs nav-stacked affix-top" data-spy="affix" data-offset-top="20">
-          <li class="active"><a href="#what-is-pm">Fine Particles</a></li>
-          <li><a href="#pm-sources">Particle Sources</a></li>
-          <li><a href="#pathways-to-better-air">Pathways to Better Air</a></li>
-        </ul>
-      </div>
-      <div class="col-xs-9">
-                  <h2 id="what-is-pm">Fine Particles</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <h2 id="pm-sources">Particle Sources</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <h2 id="pathways-to-better-air">Pathways to Better Air</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-                  <p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-                  <hr>
+<div id="particles">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Fine Particles</h4>
         </div>
+        <div class="panel-body">
+          <p>
+            Fine particles (PM<sub>2.5</sub>) are invisible to the naked eye, but can have very harmful impacts on your health.
+            These pollutants can lodge deep into your lungs because they are only about 1/30th the size of a human hair.
+          </p>
+          <a href="#fine-particles" class="btn btn-default">Go To Section</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Particle Sources</h4>
+        </div>
+        <div class="panel-body">
+          <p>
+            Fine particles are produced by many sources, including household activities such as cooking and cleaning.
+            Understanding how these particles are generated can help you take better control of the air you breathe at home.
+          </p>
+          <a href="#particle-sources" class="btn btn-default">Go To Section</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>Pathways to Better Air</h4>
+        </div>
+        <div class="panel-body">
+          <p>
+            By monitoring readings on the Speck you can become an expert about your air quality, and run experiments to test a
+            variety of approaches to reduce fine particle concentration in your home.
+          </p>
+          <a href="#pathways-to-better-air" class="btn btn-default">Go To Section</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="fine-particles">
+    <div class="col-lg-12">
+      <h1 class="page-header">
+        Fine Particles
+      </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <img src="images/whatispm_1.png" width="100%" height="100%" alt="what are fine particles" />
+    </div>
+    <div class="col-lg-7 padd-bottom">
+      <h4 style="margin-top: 0px"><strong>What are fine particles?</strong></h4>
+      <p>
+        Fine Particulate Matter or PM<sub>2.5</sub> refers to particles of matter suspended in the air that are 2.5 micrometers in diameter or smaller.
+        That's 30 times smaller than the diameter of a single human hair!
+      </p>
+      <a class="btn btn-default" href="http://www.epa.gov/airquality/particlepollution/basic.html" target="_blank">Learn More</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <img src="images/whatispm_2.png" width="100%" height="100%" alt="health effects of fine particles" />
+    </div>
+    <div class="col-lg-7 padd-bottom">
+      <h4 style="margin-top: 0px"><strong>What are the health effects of fine particles?</strong></h4>
+      <p>
+        Fine particles have been identified by the Environmental Protection Agency and the American Lung Association as an air pollutant that can be
+        very harmful to your health. Inhaling PM<sub>2.5</sub> can cause coughing or wheezing. Exposure over extended periods of time can contribute to or worsen
+        illnesses such as asthma, heart disease, chronic bronchitis, emphysema and pneumonia.
+      </p>
+      <a class="btn btn-default" href="http://www.epa.gov/airquality/particulatematter/health.html" target="_blank">Learn More</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <img src="images/whatispm_3.png" width="100%" height="100%" alt="how can fine particles affect me" />
+    </div>
+    <div class="col-lg-7" >
+      <h4 style="margin-top: 0px"><strong>How can fine particles affect me?</strong></h4>
+      <p>
+        Coarse particles that are between 2.5 and 10 micrometers in size are generally trapped by hairs and mucus in the nose and throat,
+        but never make it as far as your lungs. Fine particles, on the other hand, are dangerous because they are small enough penetrate
+        deep into the lungs, blocking the air sacs where oxygen enters the bloodstream. While particulates are generally not toxic, airborne
+        toxic chemicals can attach to PM<sub>2.5</sub> and enter your bloodstream. Fine particulate pollution can also have environmental impacts
+        including soil and water contamination.
+      </p>
+      <a class="btn btn-default" href="http://www.epa.gov/airquality/particulatematter/fastfacts.html" target="_blank">Learn More</a>
+    </div>
+  </div>
+  <div class="row" id="particle-sources">
+    <div class="col-lg-12">
+       <h1 class="page-header">
+          Particle Sources
+       </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel-group accordion">
+        <div class="panel panel-default" id="panel1">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne" class="collapsed">
+                Indoor sources of fine particles
+              </a>
+            </h4>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body">
+              <em>Below are a few examples of indoor air pollutants that generate fine particulate matter.</em>
+              <br/><br/>
+              <ul>
+                <li><h4><strong>Gas and Oil Heating</strong></h4> These can sometimes release particulates. Pay attention to where furnace vents are or if you have an oil heater. For example, in one case where the oil heater vented below the window of a child's bedroom, pollution levels were elevated compared to the rest of the house.</li><br/>
+                <li><h4><strong>Forced-Air Heating & Air Conditioning</strong></h4> These systems can be major sources of air pollution if the ductwork is dirty, or if there are no filters in the system to filter out particles as they move large volumes of air throughout the house. On the other hand, with proper HEPA filters in place, a forced-air system can significantly clean indoor air.</li><br/>
+                <li><h4><strong>Fireplace</strong></h4> Try to make sure the fireplace is well ventilated, and avoid burning if drafts are coming down the chimney.</li><br/>
+                <li><h4><strong>Furniture</strong></h4> Sitting down on dusty chairs, pillows, or beds can free trapped dust.</li><br/>
+                <li><h4><strong>Wood-burning stoves</strong></h4> Although wood-burning stoves can be a more economical way to heat your home, they can greatly increase indoor pollution levels because of the toxins contained in wood smoke.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default" id="panel2">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-target="#collapseTwo" href="#collapseTwo" class="collapsed">
+              Outdoor sources of fine particles
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+          <div class="panel-body">
+            <em>Below are a few examples of outdoor air pollutants that generate fine particulate matter.</em>
+            <br/><br/>
+            <ul>
+              <li><h4><strong>Diesel Emissions</strong></h4> Trains, buses, and trucks, which use diesel fuel, can release large plumes of harmful particulates. Pay attention to whether any vehicles are idling near your home - depending on the wind and terrain, such vehicle idling can be a major source of indoor pollution. Many cities have anti-idling laws, and you can look up your local rules governing maximum idling time - often 3 or 5 minutes.</li><br/>
+              <li><h4><strong>Cars and other vehicles</strong></h4> All fossil fuel vehicles release particulates, which may enter the home from nearby roads.</li><br/>
+              <li><h4><strong>Factories and Power Plants</strong></h4> These are major sources of atmospheric pollution. Look for regular changes in particulate concentrations, and see if you can identify industrial smells when the pollution is high in your home.</li><br/>
+              <li><h4><strong>Nearby Fires</strong></h4> Wildfires, open burns, and accidents can cause large increases in particle counts.</li><br/>
+              <li><h4><strong>Inversion layers, winds, etc.</strong></h4> Changes in atmospheric conditions, while not a source of particulate matter, can bring particles closer to the ground or blow them into houses.</li><br/>
+              <li><h4><strong>Outside air</strong></h4> The air outside your home mixes more rapidly with your indoor space than you might imagine. In a typical home, the indoor air has been wholly exchanged in less than 2 hours, all day every day! Always compare your indoor reading to the outside air quality - compare the AQI color, or take the Speck to your porch for a few hours, to see if your indoor air is cleaner or dirtier than the air outside your home.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default" id="panel3">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-target="#collapseThree" href="#collapseThree" class="collapsed">
+              Activity sources of fine particles
+            </a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+          <div class="panel-body">
+            <em>Below are a few examples of activities that generate fine particulate matter.</em>
+            <br/><br/>
+            <ul>
+              <li><h4><strong>Cooking</strong></h4> Preparing food, especially frying or using skillets, can cause particulates to be released into the air. Oily or burnt foods can produce large plumes. What's more, you will find different cooking oils behave differently according to their smoke point. Click here to see a chart which includes the smoke points for various cooking oils. Extra light olive oil is a good high-temperature oil choice, but extra virgin olive oil generates smoke at much lower temperatures, and butter and peanut oil have even lower smoke points. In particular, cooking without using a hood that exhausts the air out of the house is often a major source of indoor air pollution.</li><br/>
+              <li><h4><strong>Vacuuming and Dusting</strong></h4> These actions release dust from furniture, walls, and shelves and can cause large spikes in particulate counts. Vacuums of different models behave extraordinarily differently, with some vacuums dirtying the air significantly, while other vacuums have such good HEPA filters that using them actually cleans the air significantly!</li><br/>
+              <li><h4><strong>Second-Hand Smoke</strong></h4> Smoking inside the home or near windows and doors will cause particulate counts to rise. Many are surprised to see that smoking outdoors, on the porch, can increase particulate counts inside the house, even in a child's bedroom one floor away to the rear of the house!</li><br/>
+              <li><h4><strong>Incense and Candles</strong></h4> Smoke, especially after extinguishing, is a trade-off for using these items.</li><br/>
+              <li><h4><strong>Grills and Barbecues</strong></h4> Try to cook outside away from windows, or close them when cooking is occurring. Again, the exact position of the barbecue from the house and the wind direction matters greatly in whether the barbecue pollutes the house or not.</li><br/>
+              <li><h4><strong>Home Renovations</strong></h4> Any major work can free a variable amount of dust and dirt from old walls, floors, and ceilings. Be careful doing work in old houses where asbestos or soot may be present.</li><br/>
+              <li><h4><strong>Showers, humidifiers, and boiling water</strong></h4> Increased humidity will increase the size of particles through hydroscopic growth, which will cause a measurable increase in particle density. These increases, while not strictly as bad as other forms of heightened pollution, aggravate conditions such as allergies and asthma.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default" id="panel4">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-target="#collapseFour" href="#collapseFour" class="collapsed">
+              Speck readings that you may encounter
+            </a>
+          </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse">
+          <div class="panel-body">
+            <em>Below are examples of types of historical graphs you may see on the Speck - the shape of these data plots can help you figure out the sources of particulates.</em>
+            <br/><br/>
+            <ul>
+              <li><h4><strong>Brief spikes</strong></h4> If an event lasts for only a few hours and is not periodic, it may indicate a single release of particulates from something like cooking, or an idling vehicle near your home.</li><br/>
+              <li><h4><strong>Sustained changes</strong></h4> If the average particulate reading increases or decreases and remains this way for more than a day, something may have changed inside your home or outside with regard to ambient air quality.</li><br/>
+              <li><h4><strong>Periodic changes</strong></h4> If the same signal shape shows up every day at the same time, consider traffic patterns, forced air systems, nearby factory or power plant activity, or daily habits that may be causing repeat events.</li><br/>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="pathways-to-better-air">
+    <div class="col-lg-12">
+      <h1 class="page-header">
+        Pathways to Better Air
+      </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel-group accordion">
+        <div class="panel panel-default" id="panel5">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-target="#collapseFive" href="#collapseFive" class="collapsed">
+                Indoor sources of fine particles
+              </a>
+            </h4>
+          </div>
+          <div id="collapseFive" class="panel-collapse collapse">
+            <div class="panel-body">
+              <em>General strategies to improve your indoor air quality</em>
+              <br/><br/>
+              <ul>
+                <li><h4><strong>Add a HEPA air purifier</strong></h4> HEPA purifiers can drastically reduce the amount of particles in a closed space. Be sure to size the purifier appropriately to the space it is intended for, and change the filter regularly. Information on recommended room sizes and filter replacement is typically included on the filter packaging. Make sure that doors to the room with the purifier are closed when it is in use to preserve the cleaned air! Keep in mind that HEPA purifiers are generally more effective than ionic purifiers (with no filter). Also, HEPA purifiers do not generate ozone emissions that can be harmful to breathe.</li><br/>
+                <li><h4><strong>Clean regularly</strong></h4> Open windows, vacuum, and remove dust from any frequently occupied space. This will keep particulate matter from repeatedly being disturbed and re-settling. When vacuuming, use a vacuum with a built-in HEPA filter so that you are not blowing particulates from the carpet or floor back into the air. Also remember to change this HEPA filter regularly, even though some vacuums neglect to mention this necessity.</li><br/>
+                <li><h4><strong>Open or close windows</strong></h4> See how the Speck responds to opening or closing different windows. Whether this helps or hurts may depend on the time of day and wind conditions, so watch carefully!</li><br/>
+                <li><h4><strong>Change cooking oils and techniques</strong></h4> When possible, try to find cooking oils that generate fewer fine particles (oils that have a higher smoke point are good candidates). Also, always use the range hood to ventilate the kitchen, or open windows and aim a fan to direct particulates outside. Make sure the range hood is exhausting outside and not just back into the kitchen!</li><br/>
+                <li><h4><strong>Join organizations and communities that care about air quality</strong></h4> Join those who are petitioning for cleaner air and let your voice be heard. Cleaner air is possible through changes in community, industry, and legislature. The Breathe Project, SWPA-EHP, GASP and CWA are great groups to start with.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default" id="panel6">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-target="#collapseSix" href="#collapseSix" class="collapsed">
+              Experiments to test your ideas for ways to improve the air you breathe
+            </a>
+          </h4>
+        </div>
+        <div id="collapseSix" class="panel-collapse collapse">
+          <div class="panel-body">
+            <em>Below are a few examples of mini explorations you can run at home to investigate ways to reduce your fine particulate concentration levels.</em>
+            <br/><br/>
+            <ul>
+              <li><h4><strong>Bedroom</strong></h4> Are you waking up with allergies or red eyes? Are your children coughing at night but not during the day? You can make several material changes that may help improve the air quality in bedrooms. If the Speck reading is increasing when your kids get in bed, try hypoallergenic dust covers on their pillows, mattress and/or comforter. Bedding can collect dust, mold spores and other allergens; hypoallergenic covers stop these sources of pollution from dispersing into the air when you disturb the bed. Consider an inexpensive HEPA purifier, meant for a small room, but be sure to shut the doors to the room, as these filters only clean a small space effectively. Run the Speck and see if the air quality clearly improves, and monitor coughing or allergic reactions to determine whether they improve as well.</li><br/>
+              <li><h4><strong>Kitchen</strong></h4> Investigate your kitchen ventilation hood to see if it effectively moves particulates outside or just recycles them back into the kitchen. If you are seeing poor air quality readings for long periods after/during meals, try leaving the hood on for much longer (if it vents outside). Try cooking at lower temperatures, use high-temperature-burning oils (such as extra light olive oil), or try steaming instead of frying. Start the hood even before the oil is hot, to start making the air flow correctly. Experiment with when and how high to run the hood fan to get the best air quality.</li><br/>
+              <li><h4><strong>Cleaning</strong></h4> Vacuum instead of dusting. Try using a vacuum with a HEPA filter that actually cleans the air. Also, rather than dusting surfaces like fireplace mantles, use the handheld extension on the vacuum to suck up the dust rather than just spreading it into the air.</li><br/>
+              <li><h4><strong>HVAC</strong></h4> Replace the HEPA filter if you have a forced-air system. If your filter is missing or expired, you may notice that the air quality does not get better when the forced-air turns on.</li><br/>
+              <li><h4><strong>Large living spaces</strong></h4> If you have large spaces with bad air quality, like a dining room or living room that you often use, consider a HEPA purifier meant for continuous use and large flow rates from a reputable brand. There are many reviews available online to help you choose the best purifier for your home.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default" id="panel7">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-target="#collapseSeven" href="#collapseSeven" class="collapsed">
+              Other resources to help you improve your air quality
+            </a>
+          </h4>
+        </div>
+        <div id="collapseSeven" class="panel-collapse collapse">
+          <div class="panel-body">
+            <em>Below are a few links to external resources that can help as you investigate ways to reduce levels of fine particulates in your home.</em>
+            <br/><br/>
+            <ul>
+              <li><h4><a href="http://www.npr.org/blogs/thesalt/2013/09/10/219012757/kitchen-range-hoods-may-not-be-as-effective-as-they-claim" target="_blank" class="link_underline">Fixing Stove Hoods To Keep Pollution Out Of The Kitchen</a></h4></li>
+              <li><h4><a href="http://www.epa.gov/pmdesignations/faq.htm#0" target="_blank" class="link_underline">EPA FAQs on Fine Particles (PM<sub>2.5</sub>)</a></h4></li>
+              <li><h4><a href="http://en.wikipedia.org/wiki/Smoke_point" target="_blank" class="link_underline">Smoke Point Reference</a></h4></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

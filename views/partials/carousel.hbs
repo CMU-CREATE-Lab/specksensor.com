@@ -2,15 +2,13 @@
    <script type="text/javascript">
       $(document).ready(function() {
          $('.carousel').carousel({
-                                    interval : 0 //changes the speed
-                                 });
+          interval : 7000 //changes the speed
+         });
       });
-
    </script>
    <div id="myCarousel" class="carousel slide">
       <!-- Indicators -->
       <ol class="carousel-indicators">
-
          {{#each carousel}}
             <li data-target="#myCarousel" data-slide-to="{{@index}}" {{#if isActive}}class="active"{{/if}}></li>
          {{/each}}
@@ -21,7 +19,7 @@
          {{#each carousel}}
             <div class="item {{#if isActive}}active{{/if}}">
                <div class="fill {{imageCssClass}}" style="background-image:url('/images/hero_images/{{url}}');"></div>
-               <div class="{{captionCssClass}}">{{caption}}</div>
+               <div class="{{captionCssClass}}">{{{caption}}}</div>
             </div>
          {{/each}}
       </div>
@@ -34,5 +32,4 @@
          <span class="icon-next"></span>
       </a>
    </div>
-
 {{/if}}

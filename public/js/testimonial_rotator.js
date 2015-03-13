@@ -20,7 +20,7 @@ var testimonialInterval;
 var timeoutMillis = [3000, 5000, 7000, 10000];
 
 function initialize() {
-  testimonialContainers = $(".testimonals > p").toArray();
+  testimonialContainers = $(".testimonials > p").toArray();
   testimonialsToCycle = testimonials.slice(0);
   for (var i = 0; i < testimonialContainers.length; i++) {
     setTestimonials(true);

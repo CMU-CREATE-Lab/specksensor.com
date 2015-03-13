@@ -55,25 +55,15 @@
                   <a href="/logout">Log Out</a>
                </li>
             {{else}}
-               <!-- <li>
-                  <a href="/what-is-speck">Speck Info</a>
+               <li>
+                  <a href="/what-is-speck" {{#ifEqual section 'what-is-speck'}}class="active"{{/ifEqual}}>Speck Info</a>
                </li>
                <li class="dropdown">
-                  <a href="/particles" class="dropdown-toggle" data-toggle="dropdown">Particles <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                     <li>
-                        <a href="/particles#what-is-pm">Fine Particles</a>
-                     </li>
-                     <li>
-                        <a href="/particles#pm-sources">Particle Sources</a>
-                     </li>
-                     <li>
-                        <a href="/particles#pathways-to-better-air">Pathways to Better Air</a>
-                     </li>
-                  </ul>
-               </li> -->
-               <li>
-                  <a href="/buy" class="preorder_link">Preorder</a>
+                  <a href="/particles" {{#ifEqual section 'particles'}}class="active"{{/ifEqual}}>Fine Particles</a>
+               </li>
+               <li style="padding-left: 35px">
+                  <img id="tiny_buy_icon" src="images/tiny_buy_icon.png" alt="buy now" />
+                  <a href="/buy" {{#ifEqual section 'buy'}}class="active"{{/ifEqual}}>Preorder</a>
                </li>
                <li>
                   <a href="/login">My Data</a>
