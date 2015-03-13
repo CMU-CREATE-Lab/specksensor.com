@@ -1,15 +1,14 @@
 <script type="text/javascript">
    $(document).ready(function() {
       $("#zip_code_form").submit(function(e) {
-        e.preventDefault();
-        var url = $(this).prop('action') + "?zip=" + $("#zip_code").val();
-        window.location.href = url;
+         e.preventDefault();
+         window.location.href = $(this).prop('action') + "?zip=" + $("#zip_code").val();
       });
 
       $("#zip_code").keypress(function(e) {
-        if (e.which == 13) {
-          $("#zip_code_form").submit();
-        }
+         if (e.which == 13) {
+            $("#zip_code_form").submit();
+         }
       });
 
       $(window).scroll(function() {
@@ -58,8 +57,8 @@
                </li>
             {{else}}
                <li id="zip_code_container">
-                 <input type="text" class="form-control input-sm" id="zip_code" name="zip_code" placeholder="Zip Code" />
-                 <div style="color: white">See air quality for your zip code</div>
+                  <input type="text" class="form-control input-sm" id="zip_code" name="zip_code" placeholder="Zip Code"/>
+                  <div style="color: #9d9d9d">See air quality for your zip code</div>
                </li>
                <li>
                   <a href="/what-is-speck" {{#ifEqual section 'what-is-speck'}}class="active"{{/ifEqual}}>Speck Info</a>
@@ -68,7 +67,7 @@
                   <a href="/particles" {{#ifEqual section 'particles'}}class="active"{{/ifEqual}}>Fine Particles</a>
                </li>
                <li style="padding-left: 35px">
-                  <img id="tiny_buy_icon" src="images/tiny_buy_icon.png" alt="buy now" />
+                  <img id="tiny_buy_icon" src="images/tiny_buy_icon.png" alt="buy now"/>
                   <a href="/buy" {{#ifEqual section 'buy'}}class="active"{{/ifEqual}}>Preorder</a>
                </li>
                <li>
