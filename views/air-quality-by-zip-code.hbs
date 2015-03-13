@@ -520,9 +520,6 @@
           dateAxis.setRange(parseFloat(urlMin),parseFloat(urlMax));
          }
 
-
-
-
          grapher = new org.bodytrack.grapher.MultiplotGrapher(dateAxis);
 
          plotContainer = new PlotContainer("plot", false, []);
@@ -610,6 +607,9 @@
 
          // set up window resize handler
          $(window).resize(setSizes);
+
+         // Start off showing a week of data
+         setRangeFromSecondsAgoToNow(604800);
       }
       else {
          noData.show();
