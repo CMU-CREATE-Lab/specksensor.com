@@ -172,6 +172,16 @@ body.shrink {
   #about_us_page img {
     max-width: 50%; } }
 
+#software_page #screenshot {
+  margin-left: 10px; }
+#software_page img {
+  max-width: 500px; }
+@media (max-width: 767px) {
+  #software_page #screenshot {
+    margin-left: 0; }
+  #software_page img {
+    max-width: 60%; } }
+
 .carousel {
   height: 450px; }
   @media (max-width: 992px) {
@@ -578,10 +588,13 @@ footer {
   footer .footer_piece:nth-child(2) {
     text-align: center; }
   footer .footer_piece:nth-child(3) {
-    text-align: right; }
+    text-align: right;
+    white-space: nowrap; }
     @media (max-width: 767px) {
       footer .footer_piece:nth-child(3) {
         text-align: center; } }
+  footer .copyright {
+    color: #9d9d9d; }
   footer .social_media_link {
     font-size: smaller;
     color: #9d9d9d; }
