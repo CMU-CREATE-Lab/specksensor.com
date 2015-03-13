@@ -38,9 +38,12 @@
             $("#device_list").append(deviceElement);
          });
       } else {
-         $("#device_list").append("You have not yet registered any Specks.")
+         $("#has_no_devices_panel").show();
       }
    }
 </script>
 <h2>My Specks</h2>
 <div id="device_list" class="device_list"></div>
+<div id="has_no_devices_panel" style="display:none">
+   <p>You have not yet registered any Specks.  Please download and install our <a href="/software">Speck app</a> to register your Speck.</p>
+</div>
