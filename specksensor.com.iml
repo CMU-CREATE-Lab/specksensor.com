@@ -2,10 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/mockup" />
-      <excludeFolder url="file://$MODULE_DIR$/resources" />
-    </content>
+    <content url="file://$MODULE_DIR$" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="specksensor.com node_modules" level="project" />
     <orderEntry type="library" name="jQuery 1.11.1" level="project" />
