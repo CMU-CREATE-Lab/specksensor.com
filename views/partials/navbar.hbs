@@ -1,11 +1,16 @@
 <script type="text/javascript">
    $(document).ready(function() {
-      $(".preorder_link").click(
-            function() {
-               $("#paypal_form").submit();
-               return false;
-            }
-      );
+      $("#zip_code_form").submit(function(e) {
+        e.preventDefault();
+        var url = $(this).prop('action') + "?zip=" + $("#zip_code").val();
+        window.location.href = url;
+      });
+
+      $("#zip_code").keypress(function(e) {
+        if (e.which == 13) {
+          $("#zip_code_form").submit();
+        }
+      });
 
       $(window).scroll(function() {
          var bodyElement = $('body');
@@ -23,10 +28,7 @@
 
 </script>
 <nav id="main_navbar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-   <form id="paypal_form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:none">
-      <input type="hidden" name="cmd" value="_s-xclick">
-      <input type="hidden" name="hosted_button_id" value="99EJMCK44R8QU">
-   </form>
+   <form id="zip_code_form" action="/air-quality-by-zip-code" method="get" style="display:none"></form>
    <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
@@ -55,6 +57,10 @@
                   <a href="/logout">Log Out</a>
                </li>
             {{else}}
+               <li id="zip_code_container">
+                 <input type="text" class="form-control input-sm" id="zip_code" name="zip_code" placeholder="Zip Code" />
+                 <div style="color: white">See air quality for your zip code</div>
+               </li>
                <li>
                   <a href="/what-is-speck" {{#ifEqual section 'what-is-speck'}}class="active"{{/ifEqual}}>Speck Info</a>
                </li>

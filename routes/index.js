@@ -99,6 +99,10 @@ router.get('/terms', function(req, res) {
    res.render('terms', { title : "Terms and Conditions", section : "terms" });
 });
 
+router.get('/air-quality-by-zip-code', function(req, res) {
+   res.render('air-quality-by-zip-code', { title : "Air Quality Zip Code Search", section : "air-quality-by-zip-code" });
+});
+
 //======================================================================================================================
 
 router.get('/verification/:verificationToken', function(req, res) {

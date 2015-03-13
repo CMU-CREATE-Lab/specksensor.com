@@ -135,6 +135,13 @@ body.shrink {
     left: 18px;
     width: 25px;
     height: 18px; }
+  #main_navbar.shrink #zip_code_container {
+    -ms-transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    transform: scale(0.8);
+    right: 0px; }
+  #main_navbar.shrink #zip_code {
+    margin-top: 5px; }
 
 #tiny_buy_icon {
   width: 30px;
@@ -142,6 +149,20 @@ body.shrink {
   position: absolute;
   top: 26px;
   left: 15px; }
+
+#zip_code {
+  margin-top: 20px;
+  height: 25px; }
+
+#zip_code_container {
+  right: 10px;
+  font-size: 12px; }
+  @media (max-width: 992px) {
+    #zip_code_container {
+      right: -5px !important; } }
+  @media (max-width: 767px) {
+    #zip_code_container {
+      display: none; } }
 
 #hero_image {
   height: 450px; }
