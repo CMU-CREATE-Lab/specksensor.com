@@ -1,65 +1,90 @@
 <style type="text/css">
-  .date_axis {
-     height: 42px;
-     z-index: 2;
-     border: 1px solid black;
-     border-bottom-width: 0;
-  }
+   .date_axis {
+      height: 42px;
+      z-index: 2;
+      border: 1px solid black;
+      border-bottom-width: 0;
+   }
 
-  .y_axis {
-     width: 42px;
-     border: 1px solid black;
-     border-left-width: 0;
-  }
+   .y_axis {
+      width: 42px;
+      border: 1px solid black;
+      border-left-width: 0;
+   }
 
-  .y_axis_label {
-     position: absolute;
-     text-align: center;
-     font-size: 8pt;
-     height: auto;
-  }
+   .y_axis_label {
+      position: absolute;
+      text-align: center;
+      font-size: 8pt;
+      height: auto;
+   }
 
-  .rotate_90 {
-     transform: rotate(90deg);
-     -ms-transform: rotate(90deg);
-     -webkit-transform: rotate(90deg);
-  }
+   .rotate_90 {
+      transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      -webkit-transform: rotate(90deg);
+   }
 
-  #channel_switcher_panel {
-     text-align: center;
-     margin-top: 10px;
-     margin-bottom: 20px;
-     font-size: smaller;
-  }
+   .channel_link, .time_range_link {
+      font-size: smaller;
+      display: inline-block;
+      margin-left: 10px;
+      margin-right: 10px;
+      cursor: pointer;
+   }
 
-  .channel_link, .time_range_link {
-     display: inline-block;
-     margin-left: 10px;
-     margin-right: 10px;
-     cursor: pointer;
-  }
+   .channel_link:first-of-type {
+      margin-left: 0;
+   }
 
-  #time_range_switcher_panel {
-     text-align: center;
-     margin-top: 10px;
-     margin-bottom: 20px;
-     font-size: smaller;
-  }
+   .channel_link:last-of-type {
+      margin-right: 0;
+   }
 
-  #value_and_time {
-     display: inline-block;
-     float: left;
-     text-align: left;
-     font-size: smaller;
-  }
+   .time_range_switcher_panel {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+   }
 
-  #grapher_container, #error_message, #no_data {
-    font-family: 'Open Sans', 'Helvetica', sans-serif !important;
-    font-weight: 400 !important;
-    font-size: 16px !important;
-    display:none;
-    margin-top: 40px
-  }
+   #value_and_time {
+      display: inline-block;
+      float: left;
+      text-align: left;
+      font-size: smaller;
+   }
+
+   #grapher_container, #error_message, #no_data {
+      font-family: 'Open Sans', 'Helvetica', sans-serif !important;
+      font-weight: 400 !important;
+      font-size: 16px !important;
+      display: none;
+      margin-top: 40px
+   }
+
+   #auto_scale_toggle_button {
+      margin-bottom: 7px;
+      padding: 4px 7px;
+   }
+
+   #export_button {
+      margin-top: 5px;
+      display: inline-block;
+   }
+
+   #export_button:focus {
+      outline: none;
+   }
+
+   #export_button_container {
+      text-align: right;
+   }
+
+   @media (max-width: 992px) {
+      #export_button_container {
+         text-align: center !important;
+      }
+   }
 
 </style>
 
@@ -71,8 +96,8 @@
 <div id="grapher_container" class="noselect">
    <div id="title" style="text-align: center; font-size:larger"></div>
    <div id="distance" style="text-align: center; display:none;"></div>
-   <div id="channel_switcher_panel"></div>
-   <div id="time_range_switcher_panel"></div>
+   <div id="time_range_switcher_panel"  class="time_range_switcher_panel"></div>
+   <div id="time_range_switcher_panel2" class="time_range_switcher_panel"></div>
    <table id="grapher" border="0" cellpadding="0" cellspacing="0" align="center">
       <tr>
          <td>
@@ -81,7 +106,9 @@
                <div id="value_label"></div>
             </div>
          </td>
-         <td>&nbsp;</td>
+         <td align="center" valign="bottom">
+            <a id="auto_scale_toggle_button" class="btn btn-default" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling"><span class="glyphicon glyphicon-resize-vertical" aria-hidden="true"></span></a>
+         </td>
       </tr>
       <tr>
          <td>
@@ -94,12 +121,16 @@
          </td>
       </tr>
       <tr>
-         <td colspan="2" align="right" style="font-size: smaller">
-            <input id="autoScaleLockCheckbox" name="autoScaleLockCheckbox" type="checkbox" onchange="autoScaleLockChange()" value="true"><label for="autoScaleLockCheckbox">Auto Scale Y Axis</label>
-            <div id="value_and_time"></div>
+         <td colspan="2">
          </td>
       </tr>
    </table>
+   <div class="row">
+      <div id="channel_switcher_panel" class="col-sm-10"></div>
+      <div id="export_button_container" class="col-sm-2">
+         <button id="export_button" class="btn btn-default btn-sm" onclick="doExport();">Download Data</button>
+      </div>
+   </div>
 </div>
 <div id="no_data">No data found!</div>
 <div id="error_message"></div>
@@ -136,39 +167,38 @@
    var channelList;
 
    window.grapherLoad = function() {
-     zipCode = (getQueryVariable('zip') || '').trim();
-     superagent
-        .get(zipUrl)
-        .end(function(err, res) {
-                if (err) {
-                   $("#error_message").text("Sorry, an unexpected error occurred: " + err).show();
-                }
+      zipCode = (getQueryVariable('zip') || '').trim();
+      superagent
+            .get(zipUrl)
+            .end(function(err, res) {
+                    if (err) {
+                       $("#error_message").text("Sorry, an unexpected error occurred: " + err).show();
+                    }
 
-                if (res) {
-                   if (res.status == 200) {
-                      if (res.text) {
-                        if (zipCode.length > 0) {
-                         zips = JSON.parse(res.text);
-                        }
-                        return allLoaded();
-                      }
-                      else {
-                         $("#error_message").text("Sorry, an unexpected error occurred: Missing response body from zip database.").show();
-                      }
-                   }
-                   else if (res.status == 404) {
-                      $("#error_message").text("Unknown feed.").show();
-                   }
-                   else {
-                      $("#error_message").text("Sorry, an unexpected error occurred: Unexpected response status [" + res.status + "].  Try another nearby zip code?").show();
-                   }
-                }
-                else {
-                   $("#error_message").text("Sorry, an unexpected error occurred: No response from zip database").show();
-                }
-             });
-    }
-
+                    if (res) {
+                       if (res.status == 200) {
+                          if (res.text) {
+                             if (zipCode.length > 0) {
+                                zips = JSON.parse(res.text);
+                             }
+                             return allLoaded();
+                          }
+                          else {
+                             $("#error_message").text("Sorry, an unexpected error occurred: Missing response body from zip database.").show();
+                          }
+                       }
+                       else if (res.status == 404) {
+                          $("#error_message").text("Unknown feed.").show();
+                       }
+                       else {
+                          $("#error_message").text("Sorry, an unexpected error occurred: Unexpected response status [" + res.status + "].  Try another nearby zip code?").show();
+                       }
+                    }
+                    else {
+                       $("#error_message").text("Sorry, an unexpected error occurred: No response from zip database").show();
+                    }
+                 });
+   };
 
    function setRangeFromSecondsAgoToNow(numSecondsAgo) {
       var max = Date.now() / 1000;
@@ -179,35 +209,44 @@
 
    var timeRangeOptions = [
       {
-         "label" : "Back 1 Day",
+         "label" : "All Data",
          "handler" : function() {
             dateAxis.setMaxRange(feed.minTimeSecs, feed.maxTimeSecs);
-            dateAxis.setRange(dateAxis.getMin() - 86400, dateAxis.getMax() - 86400);
+            dateAxis.setRange(feed.minTimeSecs, feed.maxTimeSecs);
          }
       },
       {
-         "label" : "past hour",
+         "label" : "Past 30 Days",
          "handler" : function() {
-            setRangeFromSecondsAgoToNow(3600);
+            setRangeFromSecondsAgoToNow(2592000);
          }
       },
       {
-         "label" : "past 24 hours",
-         "handler" : function() {
-            setRangeFromSecondsAgoToNow(86400);
-         }
-      },
-      {
-         "label" : "past 7 days",
+         "label" : "Past 7 Days",
          "handler" : function() {
             setRangeFromSecondsAgoToNow(604800);
          }
       },
       {
-         "label" : "all data",
+         "label" : "Past 24 Hours",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(86400);
+         }
+      },
+      {
+         "label" : "Past 12 Hours",
+         "handler" : function() {
+            setRangeFromSecondsAgoToNow(43200);
+         }
+      }
+   ];
+
+   var timeRangeOptions2 = [
+      {
+         "label" : "Back 1 Day",
          "handler" : function() {
             dateAxis.setMaxRange(feed.minTimeSecs, feed.maxTimeSecs);
-            dateAxis.setRange(feed.minTimeSecs, feed.maxTimeSecs);
+            dateAxis.setRange(dateAxis.getMin() - 86400, dateAxis.getMax() - 86400);
          }
       },
       {
@@ -216,14 +255,12 @@
             dateAxis.setMaxRange(feed.minTimeSecs, feed.maxTimeSecs);
             dateAxis.setRange(dateAxis.getMin() + 86400, dateAxis.getMax() + 86400);
          }
-      },
-      {
-         "label" : "export",
-         "handler" : function() {
-            window.open(ESDR_API_ROOT_URL + "/feeds/" + feed.apiKeyReadOnly + "/channels/" + channelList + "/export?from=" + dateAxis.getMin() + "&to=" + dateAxis.getMax(), '_blank');
-         }
       }
    ];
+
+   function doExport() {
+      window.open(ESDR_API_ROOT_URL + "/feeds/" + feed.id + "/channels/" + channelList + "/export?from=" + dateAxis.getMin() + "&to=" + dateAxis.getMax(), '_blank');
+   }
 
    function setTimeRange(rangeName) {
       var rangeFunction = timeRangeOptions[rangeName];
@@ -249,11 +286,17 @@
    }
 
    //window.grapherLoad = function() {
-    function allLoaded() {
+   function allLoaded() {
       timeRangeOptions.forEach(function(timeRangeOption) {
          var timeRangeElement = $('<div class="time_range_link"><a href="#" onclick="return false;">' + timeRangeOption.label + '</a></div>');
          timeRangeElement.click(timeRangeOption.handler);
          $("#time_range_switcher_panel").append(timeRangeElement);
+      });
+
+      timeRangeOptions2.forEach(function(timeRangeOption) {
+         var timeRangeElement = $('<div class="time_range_link"><a href="#" onclick="return false;">' + timeRangeOption.label + '</a></div>');
+         timeRangeElement.click(timeRangeOption.handler);
+         $("#time_range_switcher_panel2").append(timeRangeElement);
       });
 
       if (zipCode.length <= 0) {
@@ -261,103 +304,109 @@
          return keyGot();
       }
       else {
-        if (zips[zipCode]) {
-          stationName = zips[zipCode].site_name + " AirNow";
-          stationLat = zips[zipCode].aq_latitude;
-          stationLong = zips[zipCode].aq_longitude;
-          stationDist = zips[zipCode].distance;
+         if (zips[zipCode]) {
+            stationName = zips[zipCode].site_name + " AirNow";
+            stationLat = zips[zipCode].aq_latitude;
+            stationLong = zips[zipCode].aq_longitude;
+            stationDist = zips[zipCode].distance;
 
+            console.log(JSON.stringify(zips[zipCode], null, 3));
 
-        superagent
-         .get(ESDR_API_ROOT_URL + '/feeds?where=latitude=' + stationLat + ',longitude=' + stationLong + ',productId=11')
-         .end(function(err, res) {
-                 if (err) {
-                    $("#error_message").text("Broken zip entry! Error: " + err).show();
-                 }
+            superagent
+                  .get(ESDR_API_ROOT_URL + '/feeds?where=latitude=' + stationLat + ',longitude=' + stationLong + ',productId=11')
+                  .end(function(err, res) {
+                          if (err) {
+                             $("#error_message").text("Broken zip entry! Error: " + err).show();
+                          }
 
-                 if (res) {
-                    if (res.status == 200) {
-                       if (res.body) {
-                          if (res.body.data) {
-                             if (res.body.data.rows[0].apiKeyReadOnly) {
-                                selectedFeedIdOrApiKey=res.body.data.rows[0].apiKeyReadOnly;
-                                return keyGot();
-                              }
+                          if (res) {
+                             if (res.status == 200) {
+                                if (res.body) {
+                                   console.log(JSON.stringify(res.body, null, 3));
+                                   if (res.body.data && res.body.data.totalCount && res.body.data.totalCount > 0) {
+                                      if (res.body.data.rows[0].id) {
+                                         selectedFeedIdOrApiKey = res.body.data.rows[0].id;
+                                         return keyGot();
+                                      }
+                                      else {
+                                         $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
+                                      }
+                                   }
+                                   else {
+                                      console.log("Missing response data from ESDR");
+                                      $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
+                                   }
+                                }
+                                else {
+                                   console.log("Missing response body from ESDR");
+                                   $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
+                                }
+                             }
+                             else if (res.status == 404) {
+                                $("#error_message").text("Unknown feed.").show();
+                             }
                              else {
-                              $("#error_message").text("Sorry, an unexpected error occurred: Can't find this zip code").show();
-                            }
+                                //$("#error_message").text("Sorry, an unexpected error occurred: Unexpected response status [" + res.status + "].  Try another nearby zip code?").show();
+                                return backupFind();
+                             }
                           }
                           else {
-                             $("#error_message").text("Sorry, an unexpected error occurred: Missing response data from ESDR.").show();
+                             console.log("No response from ESDR");
+                             $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
                           }
-                       }
-                       else {
-                          $("#error_message").text("Sorry, an unexpected error occurred: Missing response body from ESDR.").show();
-                       }
-                    }
-                    else if (res.status == 404) {
-                       $("#error_message").text("Unknown feed.").show();
-                    }
-                    else {
-                       //$("#error_message").text("Sorry, an unexpected error occurred: Unexpected response status [" + res.status + "].  Try another nearby zip code?").show();
-                       return backupFind();
-                    }
-                 }
-                 else {
-                    $("#error_message").text("Sorry, an unexpected error occurred: No response from ESDR").show();
-                 }
-              });
-        }
-        else {
-          $("#error_message").text("Sorry, an unexpected error occurred: Can't find this zip code").show();
-        }
-
+                       });
+         }
+         else {
+            $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
+         }
       }
-    }
+   }
 
-    function backupFind() {
-          superagent
-         .get(ESDR_API_ROOT_URL + '/feeds?where=latitude=' + stationLong + ',productId=11')
-         .end(function(err, res) {
-                 if (err) {
-                    $("#error_message").text("Broken zip entry! Error: " + err).show();
-                 }
+   function backupFind() {
+      superagent
+            .get(ESDR_API_ROOT_URL + '/feeds?where=latitude=' + stationLong + ',productId=11')
+            .end(function(err, res) {
+                    if (err) {
+                       $("#error_message").text("Broken zip entry! Error: " + err).show();
+                    }
 
-                 if (res) {
-                    if (res.status == 200) {
-                       if (res.body) {
-                          if (res.body.data) {
-                             if (res.body.data.rows[0].apiKeyReadOnly) {
-                                selectedFeedIdOrApiKey=res.body.data.rows[0].apiKeyReadOnly;
-                                return keyGot();
-                              }
+                    if (res) {
+                       if (res.status == 200) {
+                          if (res.body) {
+                             if (res.body.data) {
+                                if (res.body.data.rows[0].id) {
+                                   selectedFeedIdOrApiKey = res.body.data.rows[0].id;
+                                   return keyGot();
+                                }
+                                else {
+                                   $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
+                                }
+                             }
                              else {
-                              $("#error_message").text("Sorry, an unexpected error occurred: Can't find this zip code").show();
-                            }
+                                console.log("Missing response data from ESDR");
+                                $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
+                             }
                           }
                           else {
-                             $("#error_message").text("Sorry, an unexpected error occurred: Missing response data from ESDR.").show();
+                             console.log("Missing response body from ESDR");
+                             $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
                           }
                        }
+                       else if (res.status == 404) {
+                          $("#error_message").text("Unknown feed.").show();
+                       }
                        else {
-                          $("#error_message").text("Sorry, an unexpected error occurred: Missing response body from ESDR.").show();
+                          $("#error_message").text("Sorry, an unexpected error occurred: Unexpected response status [" + res.status + "].  Try another nearby zip code?").show();
                        }
                     }
-                    else if (res.status == 404) {
-                       $("#error_message").text("Unknown feed.").show();
-                    }
                     else {
-                       $("#error_message").text("Sorry, an unexpected error occurred: Unexpected response status [" + res.status + "].  Try another nearby zip code?").show();
+                       console.log("No response from ESDR");
+                       $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
                     }
-                 }
-                 else {
-                    $("#error_message").text("Sorry, an unexpected error occurred: No response from ESDR").show();
-                 }
-              });
-        }
+                 });
+   }
 
-
-    function keyGot() {
+   function keyGot() {
       if (selectedFeedIdOrApiKey.length <= 0) {
          $("#error_message").text("No feed specified.").show();
       }
@@ -379,11 +428,13 @@
                                    return renderPlot();
                                 }
                                 else {
-                                   $("#error_message").text("Sorry, an unexpected error occurred: Missing response data from ESDR.").show();
+                                   console.log("Missing response data from ESDR");
+                                   $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
                                 }
                              }
                              else {
-                                $("#error_message").text("Sorry, an unexpected error occurred: Missing response body from ESDR.").show();
+                                console.log("Missing response body from ESDR");
+                                $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
                              }
                           }
                           else if (res.status == 404) {
@@ -394,11 +445,13 @@
                           }
                        }
                        else {
-                          $("#error_message").text("Sorry, an unexpected error occurred: No response from ESDR").show();
+                          console.log("No response from ESDR");
+                          $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
                        }
                     });
       }
-   };
+   }
+   ;
 
    function renderPlot() {
       var grapherContainer = $("#grapher_container");
@@ -413,15 +466,15 @@
 
          //console.log(JSON.stringify(feed, null, 3));
 
-        // render the links to change channels
+         // render the links to change channels
          if (feed['channelBounds'] && feed['channelBounds']['channels']) {
             availableChannels = Object.keys(feed['channelBounds']['channels']).sort();
             //console.log(availableChannels);
             if (!(selectedChannelName in feed['channelBounds']['channels'])) {
                selectedChannelName = DEFAULT_CHANNEL_2;
                if (!(selectedChannelName in feed['channelBounds']['channels'])) {
-                selectedChannelName = availableChannels[0];
-              }
+                  selectedChannelName = availableChannels[0];
+               }
             }
 
             // var isDefault = 0;
@@ -436,16 +489,15 @@
             //   selectedChannelName = DEFAULT_CHANNEL_2;
             // }
 
-
             availableChannels.forEach(function(channelName) {
 
                var prettyChannelName = channelName;
                if (channelList) {
-                  channelList=channelList + channelName + ',';
-                }
-                else {
+                  channelList = channelList + channelName + ',';
+               }
+               else {
                   channelList = channelName + ',';
-                }
+               }
 
                if (feed['channelSpecs'] && feed['channelSpecs'][channelName] && feed['channelSpecs'][channelName]['prettyName']) {
                   prettyChannelName = feed['channelSpecs'][channelName]['prettyName'];
@@ -460,7 +512,9 @@
                }
                linkHtml = '<div class="channel_link">' + linkHtml + '</div>';
                var linkElement = $(linkHtml);
-               linkElement.click(function () {window.location = (window.location.pathname + '?feed=' + selectedFeedIdOrApiKey + '&channel=' + channelName + '&min=' + dateAxis.getMin() + '&max=' + dateAxis.getMax())});
+               linkElement.click(function() {
+                  window.location = (window.location.pathname + '?feed=' + selectedFeedIdOrApiKey + '&channel=' + channelName + '&min=' + dateAxis.getMin() + '&max=' + dateAxis.getMax())
+               });
                $("#channel_switcher_panel").append(linkElement);
 
             });
@@ -486,12 +540,24 @@
          //console.log(selectedChannelName)
 
          if (yAxisLabel == null) {
-          if (selectedChannelName == "PM2_5") {yAxisLabel="Particle Mass, ug/m^3";}
-          if (selectedChannelName == "PM10") {yAxisLabel="Particle Mass, ug/m^3";}
-          if (selectedChannelName == "RHUM") {yAxisLabel="Percent Relative Humidity";}
-          if (selectedChannelName == "TEMP") {yAxisLabel="Temperature, Degrees Celcius";}
-          if (selectedChannelName == "BARPR") {yAxisLabel="Barometric Pressure, hPa";}
-          if (yAxisLabel == null) {yAxisLabel="Units to be added soon";}
+            if (selectedChannelName == "PM2_5") {
+               yAxisLabel = "Particle Mass, ug/m^3";
+            }
+            if (selectedChannelName == "PM10") {
+               yAxisLabel = "Particle Mass, ug/m^3";
+            }
+            if (selectedChannelName == "RHUM") {
+               yAxisLabel = "Percent Relative Humidity";
+            }
+            if (selectedChannelName == "TEMP") {
+               yAxisLabel = "Temperature, Degrees Celcius";
+            }
+            if (selectedChannelName == "BARPR") {
+               yAxisLabel = "Barometric Pressure, hPa";
+            }
+            if (yAxisLabel == null) {
+               yAxisLabel = "Units to be added soon";
+            }
          }
 
          $("#y_axis_label").html(yAxisLabel == null ? "" : yAxisLabel);
@@ -517,7 +583,7 @@
          urlMin = (getQueryVariable('min') || '').trim();
          urlMax = (getQueryVariable('max') || '').trim();
          if (urlMin && urlMax) {
-          dateAxis.setRange(parseFloat(urlMin),parseFloat(urlMax));
+            dateAxis.setRange(parseFloat(urlMin), parseFloat(urlMax));
          }
 
          grapher = new org.bodytrack.grapher.MultiplotGrapher(dateAxis);
@@ -570,7 +636,7 @@
                          theChannel,
                          function(level, offset, successCallback) {
                             superagent
-                                  .get(ESDR_API_ROOT_URL + "/feeds/" + feed.apiKeyReadOnly + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
+                                  .get(ESDR_API_ROOT_URL + "/feeds/" + feed.id + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
                                   .end(function(err, res) {
                                           if (err) {
                                              return console.log("Error: " + res.body);
@@ -578,7 +644,7 @@
 
                                           switch (res.status) {
                                              case 200:
-                                                console.log(ESDR_API_ROOT_URL + "/feeds/" + feed.apiKeyReadOnly + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
+                                                console.log(ESDR_API_ROOT_URL + "/feeds/" + feed.id + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
                                                 return successCallback(JSON.stringify(res.body.data));
                                              case 401:
                                                 return console.log("Unauthorized");
@@ -616,9 +682,9 @@
       }
 
       if (stationDist) {
-        if (Number(stationDist)>0) {
-          $("#distance").text("Approximately " + Math.round(Number(stationDist)*10)/10 + " miles from " + zipCode).show();
-        }
+         if (Number(stationDist) > 0) {
+            $("#distance").text("Approximately " + Math.round(Number(stationDist) * 10) / 10 + " miles from " + zipCode).show();
+         }
       }
    }
 
@@ -631,6 +697,19 @@
       else {
          $("#autoScaleYAxesButton").removeAttr("disabled");
       }
+   }
+
+   function toggleYAxisAutoScaling() {
+      var autoScaleToggleButton = $("#auto_scale_toggle_button");
+      isAutoScaleOn = !autoScaleToggleButton.hasClass("active");
+      if (isAutoScaleOn) {
+         autoScaleYAxes();
+         autoScaleToggleButton.addClass("active");
+      }
+      else {
+         autoScaleToggleButton.removeClass("active");
+      }
+      console.log("toggleYAxisAutoScaling: " + isAutoScaleOn);
    }
 
    function autoScaleYAxes() {
