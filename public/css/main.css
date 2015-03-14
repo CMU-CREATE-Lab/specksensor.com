@@ -566,6 +566,13 @@ body.shrink {
   padding-left: 27px;
   padding-right: 27px; }
 
+@media (max-width: 1200px) {
+  #what_is_speck .panel-body {
+    min-height: 360px; } }
+@media (max-width: 992px) {
+  #what_is_speck .panel-body {
+    min-height: 0px; } }
+
 #particles {
   margin-top: 42px; }
   #particles .panel-heading a:before {
