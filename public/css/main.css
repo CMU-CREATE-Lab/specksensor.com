@@ -182,15 +182,14 @@ body.shrink {
   display: none;
   margin-bottom: 15px; }
 
-#about_us_page #logos {
-  margin-left: 10px; }
 #about_us_page img {
   max-width: 340px; }
 @media (max-width: 767px) {
-  #about_us_page #logos {
-    margin-left: 0; }
+  #about_us_page #about_us_logos {
+    text-align: center; }
   #about_us_page img {
-    max-width: 50%; } }
+    max-width: 50%;
+    text-align: center; } }
 
 #software_page #screenshot {
   margin-left: 10px; }

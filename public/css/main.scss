@@ -283,20 +283,17 @@ body.shrink {
 // =====================================================================================================================
 
 #about_us_page {
-   #logos {
-      margin-left: 10px;
-   }
-
    img {
       max-width: 340px;
    }
 
    @media(max-width: $MOBILE_WIDTH) {
-      #logos {
-         margin-left: 0;
+      #about_us_logos {
+         text-align: center;
       }
       img {
          max-width: 50%;
+         text-align: center;
       }
    }
 }
