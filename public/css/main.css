@@ -191,15 +191,14 @@ body.shrink {
     max-width: 50%;
     text-align: center; } }
 
-#software_page #screenshot {
-  margin-left: 10px; }
 #software_page img {
   max-width: 500px; }
 @media (max-width: 767px) {
   #software_page #screenshot {
-    margin-left: 0; }
+    text-align: center; }
   #software_page img {
-    max-width: 60%; } }
+    max-width: 60%;
+    text-align: center; } }
 
 .carousel {
   height: 450px; }

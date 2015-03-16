@@ -303,20 +303,17 @@ body.shrink {
 // =====================================================================================================================
 
 #software_page {
-   #screenshot {
-      margin-left: 10px;
-   }
-
    img {
       max-width: 500px;
    }
 
    @media(max-width: $MOBILE_WIDTH) {
       #screenshot {
-         margin-left: 0;
+         text-align: center;
       }
       img {
          max-width: 60%;
+         text-align: center;
       }
    }
 }
