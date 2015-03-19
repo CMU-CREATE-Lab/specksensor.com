@@ -67,7 +67,6 @@
       {
          "label" : "All Data",
          "handler" : function() {
-            dateAxis.setMaxRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
             dateAxis.setRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
          }
       },
@@ -610,7 +609,7 @@
                min--;
                max++;
             }
-            dateAxis.setMaxRange(channelMinTimeSecs, channelMaxTimeSecs);
+            dateAxis.setMaxRange(channelMinTimeSecs, now);
             dateAxis.setRange(min, max);
             //console.log("VISIBLE RANGE: \n   min: " + new Date(min * 1000) + "\n   max: " + new Date(max * 1000));
             //console.log("MAXIMUM RANGE: \n   min: " + new Date(channelMinTimeSecs * 1000) + "\n   max: " + new Date(channelMaxTimeSecs * 1000));
@@ -877,10 +876,10 @@
    }
 
    function setRangeFromSecondsAgoToNow(numSecondsAgo) {
-      var max = Date.now() / 1000;
-      var min = max - numSecondsAgo;
-      dateAxis.setMaxRange(Math.min(min, selectedFeed.minTimeSecs), Math.max(max, selectedFeed.maxTimeSecs));
-      dateAxis.setRange(min, max);
+      var now = Date.now() / 1000;
+      var min = now - numSecondsAgo;
+      dateAxis.setMaxRange(Math.min(min, selectedFeed.minTimeSecs), now);
+      dateAxis.setRange(min, now);
    }
 
    // Mike has left you a pile of strange functions
