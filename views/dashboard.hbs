@@ -30,6 +30,7 @@
    var plotContainer;
    var grapher;
    var isAutoScaleOn = false;
+   var isNewlyLoadedPlot = true;
 
    // map stuff
    var map = null;
@@ -299,6 +300,9 @@
          if (isAutoScaleOn && selectedFeed) {
             autoScaleYAxes();
          }
+
+         // If the user is fiddling with the date axis, then mark the plot as not newly-loaded
+         isNewlyLoadedPlot = false;
       });
       grapher = new org.bodytrack.grapher.MultiplotGrapher(dateAxis);
       plotContainer = new PlotContainer("plot", false, []);
@@ -716,6 +720,13 @@
          }
          $("#grapher_bottom_toolbar").show();
 
+         // The isNewlyLoadedPlot is a flag we need so that we can autoscale the plot after load.  We get the min and
+         // max values for the *entire* channel, but, upon first load of the channel in the grapher, we're limiting the
+         // time range to a specific window, and that window will almost certainly have different min/max values.
+         // However, since the tiles load asynchronously, we need to autoscale them as they come in, but *stop*
+         // autoscaling after the user starts changing the date axis.
+         isNewlyLoadedPlot = true;
+
          var plotId = feed.id;
          grapher.addPlot(plotId,
                          theChannel,
@@ -723,6 +734,9 @@
                             esdr.tiles.get(feed.apiKeyReadOnly, selectedChannelName, level, offset, {
                                success : function(json) {
                                   successCallback(JSON.stringify(json));
+                                  if (isNewlyLoadedPlot) {
+                                     autoScaleYAxes();
+                                  }
                                },
                                unauthorized : function() {
                                   // TODO:
