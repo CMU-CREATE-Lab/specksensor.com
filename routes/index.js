@@ -95,6 +95,10 @@ router.get('/software', function(req, res) {
    res.render('software', { title : "Software", section : "software" });
 });
 
+router.get('/legacy-software', function(req, res) {
+   res.render('legacy-software', { title : "Legacy Software", section : "software" });
+});
+
 router.get('/terms', function(req, res) {
    res.render('terms', { title : "Terms and Conditions", section : "terms" });
 });
