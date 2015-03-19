@@ -788,7 +788,7 @@
 
    function autoScaleYAxes() {
       grapher.forEachPlot(function(plot, yAxis) {
-         var stats = plot.getStatistics(dateAxis.getMin(), dateAxis.getMax());
+         var stats = plot.getSimpleStatistics(dateAxis.getMin(), dateAxis.getMax());
 
          if (typeof stats['y_min'] !== 'undefined' && typeof stats['y_max'] !== 'undefined') {
             var paddedRange = paddedYAxisRange(stats['y_min'], stats['y_max']);
