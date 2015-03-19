@@ -17,6 +17,7 @@
    var POINT_RADIUS_HAS_DATA = 6;
    var POINT_RADIUS_NO_DATA = 4;
    var TWO_PI = 2 * Math.PI;
+   var SEVEN_DAYS_IN_SECS = 604800;
 
    var esdr = null;
 
@@ -78,7 +79,7 @@
       {
          "label" : "Past 7 Days",
          "handler" : function() {
-            setRangeFromSecondsAgoToNow(604800);
+            setRangeFromSecondsAgoToNow(SEVEN_DAYS_IN_SECS);
          }
       },
       {
@@ -577,16 +578,38 @@
          }
 
          if (!willPreserveDateAxis) {
+            // If we're not preserving the time range, then try to show up to 7 days of history.  See inline comments
+            // for details about the logic...
+
+            var now = Date.now() / 1000;
+            var sevenDaysAgoBeforeMax = now - SEVEN_DAYS_IN_SECS;
+
             var channelMinTimeSecs = feed.channelBounds.channels[selectedChannelName].minTimeSecs;
             var channelMaxTimeSecs = feed.channelBounds.channels[selectedChannelName].maxTimeSecs;
 
+            // if the feed's most recent data is older than 7 days ago, then make the max time on the date axis equal
+            // to the channel's max time.  Otherwise, just set it to now.
+            var max = now;
+            if (channelMaxTimeSecs < sevenDaysAgoBeforeMax) {
+               max = channelMaxTimeSecs;
+
+               // recompute the sevenDaysAgoBeforeMax, since we've changed the max
+               sevenDaysAgoBeforeMax = max - SEVEN_DAYS_IN_SECS;
+            }
+
+            // set the date range's min to either the channel's min time, or 7 days ago before the max time computed
+            // above, whichever is more recent.
+            var min = Math.max(channelMinTimeSecs, sevenDaysAgoBeforeMax);
+
             // Grapher is not happy if min time equals max time.  Adjust them if necessary
-            if (channelMinTimeSecs == channelMaxTimeSecs) {
-               channelMinTimeSecs--;
-               channelMaxTimeSecs++;
+            if (min == max) {
+               min--;
+               max++;
             }
             dateAxis.setMaxRange(channelMinTimeSecs, channelMaxTimeSecs);
-            dateAxis.setRange(channelMinTimeSecs, channelMaxTimeSecs);
+            dateAxis.setRange(min, max);
+            //console.log("VISIBLE RANGE: \n   min: " + new Date(min * 1000) + "\n   max: " + new Date(max * 1000));
+            //console.log("MAXIMUM RANGE: \n   min: " + new Date(channelMinTimeSecs * 1000) + "\n   max: " + new Date(channelMaxTimeSecs * 1000));
          }
 
          var isParticleConcentrationChannel = (selectedChannelName == "particle_concentration");
@@ -769,6 +792,8 @@
             drawBoxen(boxen, "#plot");
          }
 
+         //setTimeout(autoScaleYAxes, 1);
+
          setSizes();
       }
    }
@@ -886,7 +911,8 @@
    <div id="loading_panel" style="height: 262px">Loading...</div>
    <div id="has_no_devices_panel" style="display:none">
       <h2>Dashboard</h2>
-      <p>You have not yet registered any Specks.  Please download and install our <a href="/software">Speck app</a> to register your Speck.</p>
+      <p>You have not yet registered any Specks. Please download and install our
+         <a href="/software">Speck app</a> to register your Speck.</p>
    </div>
    <div id="has_no_feeds_panel" style="display:none">
       <h2>Dashboard</h2>
