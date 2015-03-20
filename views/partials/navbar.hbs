@@ -5,11 +5,19 @@
          window.location.href = $(this).prop('action') + "?zip=" + $("#zip_code").val();
       });
 
-      $("#zip_code").keypress(function(e) {
-         if (e.which == 13) {
-            $("#zip_code_form").submit();
-         }
-      });
+      $("#zip_code")
+            .keypress(function(e) {
+                         if (e.which == 13) {
+                            $("#zip_code_form").submit();
+                         }
+                      })
+            .click(function() {
+                      // No, in a kind and loving world, I should not have to manually set focus on an element
+                      // when clicking on it for it to receive focus.  But, for reasons unknown to me, form text input
+                      // fields fail to receive focus after we've constructed a new PlotContainer object for the
+                      // bodytrack grapher (i.e. called new PlotContainer()). Absolute madness. Blame GWT? I do.
+                      $(this).focus();
+                   });
 
       $(window).scroll(function() {
          var bodyElement = $('body');
@@ -67,7 +75,7 @@
                <li>
                   <a href="/what-is-speck" {{#ifEqual section 'what-is-speck'}}class="active"{{/ifEqual}}>Speck Info</a>
                </li>
-               <li class="dropdown">
+               <li>
                   <a href="/particles" {{#ifEqual section 'particles'}}class="active"{{/ifEqual}}>Fine Particles</a>
                </li>
                <li style="padding-left: 35px">
