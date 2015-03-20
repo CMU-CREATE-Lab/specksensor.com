@@ -2,6 +2,7 @@
    $(document).ready(function() {
       $(".preorder_link").click(
             function() {
+               ga('send', 'event', 'link', 'click', 'paypal');
                $("#paypal_form").submit();
                return false;
             }
