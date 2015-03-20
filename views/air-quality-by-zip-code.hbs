@@ -338,7 +338,7 @@
             $("#error_message").text("Sorry, we could not find an air quality station for this zip code.").show();
          }
       }
-   }
+   };
 
    function backupFind() {
       superagent
@@ -429,7 +429,6 @@
                     });
       }
    }
-   ;
 
    function renderPlot() {
       var grapherContainer = $("#grapher_container");
@@ -558,15 +557,13 @@
             }
          });
 
-         urlMin = (getQueryVariable('min') || '').trim();
-         urlMax = (getQueryVariable('max') || '').trim();
+         var urlMin = (getQueryVariable('min') || '').trim();
+         var urlMax = (getQueryVariable('max') || '').trim();
          if (urlMin && urlMax) {
             dateAxis.setRange(parseFloat(urlMin), parseFloat(urlMax));
          }
 
          grapher = new org.bodytrack.grapher.MultiplotGrapher(dateAxis);
-
-         plotContainer = new PlotContainer("plot", false, []);
 
          var theChannel = {
             "min" : feed.channelBounds.channels[selectedChannelName].minValue,
@@ -644,6 +641,7 @@
             }
          });
 
+         plotContainer = new PlotContainer("plot", false, []);
          plotContainer.addPlot(grapher.getPlot(selectedChannelName));
 
          // set the sizes of the various plot elements
