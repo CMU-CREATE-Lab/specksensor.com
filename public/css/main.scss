@@ -191,6 +191,11 @@ body.shrink {
    }
 }
 
+// Turns off the focus outline (a ridiculous blue on my Mac) for navbar elements
+#main_navbar a:focus {
+   outline: none;
+}
+
 #main_navbar.shrink {
    @include shrunken_navbar;
 

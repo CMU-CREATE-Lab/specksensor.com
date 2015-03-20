@@ -117,6 +117,9 @@ body.shrink {
           -o-transition: all 0.2s ease;
           transition: all 0.2s ease; } } }
 
+#main_navbar a:focus {
+  outline: none; }
+
 #main_navbar.shrink {
   min-height: 50px; }
   #main_navbar.shrink .nav > li > a {
