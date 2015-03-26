@@ -779,7 +779,6 @@
          if (isParticleConcentrationChannel) {
             boxen.levels = boxenConcentrationLevels;
             yAxis.setMaxRange(0, 640);
-            var num = Math.round(Math.random() * 1000);
             boxenAxisChangeListener = function() {
                var theAxis = grapher.getYAxis(plotId);
                adjustBoxen(boxen, "#plot", theAxis);
@@ -789,7 +788,6 @@
          else if (isParticleCountChannel) {
             boxen.levels = boxenCountLevels;
             yAxis.setMaxRange(0, 16000);
-            var num = Math.round(Math.random() * 1000);
             boxenAxisChangeListener = function() {
                var theAxis = grapher.getYAxis(plotId);
                adjustBoxen(boxen, "#plot", theAxis);
