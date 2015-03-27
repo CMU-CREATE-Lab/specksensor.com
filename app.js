@@ -152,6 +152,14 @@ flow.series([
                         app.use(favicon(path.join(__dirname, 'public/favicon.ico')));     // favicon serving
                         app.use(compress());                // enables gzip compression
                         app.use(express.static(path.join(__dirname, 'public')));          // static file serving
+
+                        // enable logging of the ESDR user ID and specksensor.com user ID, if authenticated
+                        requestLogger.token('uids', function(req) {
+                                                   if (req.user) {
+                                                      return req.user.esdrUserId + " " + req.user.id;
+                                                   }
+                                                   return '- -';
+                                                });
                         if (RunMode.isProduction()) {
                            // create a write stream (in append mode)
                            var fs = require('fs');
@@ -163,10 +171,13 @@ flow.series([
                            requestLogger.token('remote-addr', function(req) {
                               return req.headers['x-forwarded-for'];
                            });
-                           app.use(requestLogger('combined', { stream : accessLogStream }));
+
+                           // This is just the "combined" format with response time and UIDs appended to the end
+                           var logFormat = ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :response-time ms :uids';
+                           app.use(requestLogger(logFormat, { stream : accessLogStream }));
                         }
                         else {
-                           app.use(requestLogger('dev'));      // simple request logging when in non-production mode
+                           app.use(requestLogger(':method :url :status :response-time ms :res[content-length] :uids'));      // simple request logging when in non-production mode
                         }
                         app.use(bodyParser.urlencoded({ extended : true }));     // form parsing
                         app.use(bodyParser.json({ limit : '5mb' }));           // json body parsing (5 MB limit)
