@@ -133,7 +133,7 @@ router.get('/get_outdoor_aqi/', function(req, res) {
    // TODO: Should probably make this a more general function in esdr.js
    var ESDR_API_ROOT_URL = 'http://esdr.cmucreatelab.org/api/v1';
    var DEMO_SPECK_SERIAL_NUMBER = "e0b9eeba821c2ccae96de9e1e76932d2";
-   var JOSH_DEV_SPECK_SERIAL_NUMBER = "4c75508ea15e7d30b18ea6be11d61c02";
+   var JOSH_DEV_SPECK_SERIAL_NUMBER = "343d7d5a668aa7eca589bf01cbc8dd17";
    var aqi_value = -1;
    if (req.headers['serialnumber'] == DEMO_SPECK_SERIAL_NUMBER) {
       var texas_api_key = "a2fd2312ef53eda80418ee63dd32a184eb708f95a51a4edeeade0bb807a7bac3";
