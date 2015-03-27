@@ -59,7 +59,7 @@ module.exports = {
    },
 
    prod : function(err, req, res, next) {
-      log.debug("In PROD error handler: " + JSON.stringify(err, null, 3));
+      log.error("Unexpected error: " + err);
       var message = "Sorry, an unexpected error occurred";
       var statusCode = err.status || httpStatus.INTERNAL_SERVER_ERROR;
 
