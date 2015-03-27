@@ -254,7 +254,7 @@ flow.series([
 
                               next();
                            },
-                           require('./middleware/accessToken').refreshAccessToken()
+                           require('./middleware/accessToken').refreshAccessToken(db.users)
                         ];
 
                         // define the various middleware required for routes which don't need (and should not have!) session support
