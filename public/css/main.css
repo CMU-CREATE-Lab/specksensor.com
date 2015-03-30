@@ -625,9 +625,6 @@ body.shrink {
     #particles .panel-body p {
       min-height: 0px !important; } }
 
-#buy_page {
-  font-size: 16px; }
-
 #dashboard {
   margin: 0 auto 0 auto; }
   #dashboard #menu_panel {
@@ -696,6 +693,11 @@ body.shrink {
 
 footer {
   margin: 50px 0 15px 0; }
+  footer #extra_footer_links {
+    display: none; }
+    @media (max-width: 767px) {
+      footer #extra_footer_links {
+        display: block; } }
   footer .footer_piece {
     line-height: 32px; }
     @media (max-width: 767px) {

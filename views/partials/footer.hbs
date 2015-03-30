@@ -12,6 +12,20 @@
          </span></a>
       </div>
       <div class="footer_piece col-sm-6">
+         <div id="extra_footer_links">
+            <div class="link">
+               {{#ifEqual section 'what-is-speck'}}Speck Info{{else}}<a href="/what-is-speck">Speck Info</a>{{/ifEqual}}
+            </div>
+            <div class="link">
+               {{#ifEqual section 'particles'}}Fine Particles{{else}}<a href="/particles">Fine Particles</a>{{/ifEqual}}
+            </div>
+            <div class="link">
+               {{#ifEqual section 'buy'}}Preorder{{else}}<a href="/buy">Preorder</a>{{/ifEqual}}
+            </div>
+            <div class="link">
+               {{#ifEqual section 'login'}}My Data{{else}}<a href="/login">My Data</a>{{/ifEqual}}
+            </div>
+         </div>
          <div class="link">
             {{#ifEqual section 'about-us'}}About Us{{else}}<a href="/about-us">About Us</a>{{/ifEqual}}
          </div>
