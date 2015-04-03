@@ -1,7 +1,7 @@
 <link href="/css/grapher.css" rel="stylesheet" type="text/css"/>
 <script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}" type="text/javascript"></script>
-<script src="{{esdrUrl}}/lib/bodytrack-grapher/org/bodytrack/grapher/gwt/grapher2.nocache.js" type="text/javascript"></script>
-<script src="{{esdrUrl}}/lib/bodytrack-grapher/org/bodytrack/grapher/MultiplotGrapher.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/bodytrack-grapher/org/bodytrack/grapher/grapher2.nocache.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/plot-manager/org/bodytrack/grapher/PlotManager.js" type="text/javascript"></script>
 <script src="/lib/canvas-layer/src/CanvasLayer.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
    var DEVICE_PIXEL_RATIO = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
@@ -10,7 +10,7 @@
 
    var PRODUCT_ID = '{{speckProductId}}';
 
-   var DEFAULT_CHANNEL_NAME = "particle_concentration";
+   var DEFAULT_CHANNEL_NAMES = ["particle_count", "particle_concentration"];
 
    var LIGHT_BLUE_COLOR = "#337ab7";
    var DARK_BLUE_COLOR = "#2e68a3";
@@ -19,18 +19,19 @@
    var TWO_PI = 2 * Math.PI;
    var SEVEN_DAYS_IN_SECS = 604800;
 
+   var MEDIUM_DEVICE_WIDTH_PIXELS = 992;
+
    var esdr = null;
 
    var feedsById = {};
    var selectedFeed = null;
-   var selectedChannelName = DEFAULT_CHANNEL_NAME;
+   var selectedChannelName = DEFAULT_CHANNEL_NAMES[0];
 
    // grapher stuff
-   var dateAxis;
-   var plotContainer;
-   var grapher;
+   var plotManager;
    var isAutoScaleOn = false;
    var isNewlyLoadedPlot = true;
+   var currentDateAxisRange = { min : null, max : null };
 
    // map stuff
    var map = null;
@@ -67,7 +68,7 @@
       {
          "label" : "All Data",
          "handler" : function() {
-            dateAxis.setRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
+            plotManager.getDateAxis().setRange(selectedFeed.minTimeSecs, selectedFeed.maxTimeSecs);
          }
       },
       {
@@ -112,90 +113,90 @@
 
          // first load the devices, sorted by name
          esdr.devices.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + "&orderBy=name&fields=id,name",
-                           {
-                              success : function(foundDevices) {
-                                 if (foundDevices && foundDevices.rows && foundDevices.rows.length > 0) {
-                                    var devices = foundDevices.rows;
-                                    // now load all the feeds
-                                    esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + ",minTimeSecs<>__null__&orderBy=-lastUpload&fields=id,userId,name,deviceId,apiKeyReadOnly,isPublic,latitude,longitude,channelSpecs,channelBounds,lastUpload,minTimeSecs,maxTimeSecs",
-                                                    {
-                                                       success : function(foundFeeds) {
-                                                          if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
+               {
+                  success : function(foundDevices) {
+                     if (foundDevices && foundDevices.rows && foundDevices.rows.length > 0) {
+                        var devices = foundDevices.rows;
+                        // now load all the feeds
+                        esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + ",minTimeSecs<>__null__&orderBy=-lastUpload&fields=id,userId,name,deviceId,apiKeyReadOnly,isPublic,latitude,longitude,channelSpecs,channelBounds,lastUpload,minTimeSecs,maxTimeSecs",
+                              {
+                                 success : function(foundFeeds) {
+                                    if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
 
-                                                             // pick the first feed as the default selected feed since
-                                                             // it received the most recent upload
-                                                             selectedFeed = foundFeeds.rows[0];
+                                       // pick the first feed as the default selected feed since
+                                       // it received the most recent upload
+                                       selectedFeed = foundFeeds.rows[0];
 
-                                                             // sort the feeds by deviceId
-                                                             var feedsByDeviceId = {};
-                                                             foundFeeds.rows.forEach(function(feed) {
-                                                                feedsById[feed.id] = feed;
-                                                                feed.lastUploadFormatted = (feed.minTimeSecs == null || feed.maxTimeSecs == null) ? "never" : new Date(feed.lastUpload).toLocaleDateString() + " at " + new Date(feed.lastUpload).toLocaleTimeString();
-                                                                if (!(feed.deviceId in feedsByDeviceId)) {
-                                                                   feedsByDeviceId[feed.deviceId] = [];
-                                                                }
-                                                                feedsByDeviceId[feed.deviceId].push(feed);
-                                                             });
+                                       // sort the feeds by deviceId
+                                       var feedsByDeviceId = {};
+                                       foundFeeds.rows.forEach(function(feed) {
+                                          feedsById[feed.id] = feed;
+                                          feed.lastUploadFormatted = (feed.minTimeSecs == null || feed.maxTimeSecs == null) ? "never" : new Date(feed.lastUpload).toLocaleDateString() + " at " + new Date(feed.lastUpload).toLocaleTimeString();
+                                          if (!(feed.deviceId in feedsByDeviceId)) {
+                                             feedsByDeviceId[feed.deviceId] = [];
+                                          }
+                                          feedsByDeviceId[feed.deviceId].push(feed);
+                                       });
 
-                                                             // build the devices and feeds menu
-                                                             var deviceAndFeedsTemplate = Handlebars.templates['dashboard_device_and_feeds'];
-                                                             devices.forEach(function(device) {
-                                                                device.feeds = feedsByDeviceId[device.id];
+                                       // build the devices and feeds menu
+                                       var deviceAndFeedsTemplate = Handlebars.templates['dashboard_device_and_feeds'];
+                                       devices.forEach(function(device) {
+                                          device.feeds = feedsByDeviceId[device.id];
 
-                                                                // don't show devices here which have no feeds
-                                                                if (device.feeds && device.feeds.length > 0) {
-                                                                   var deviceAndFeedsElement = $(deviceAndFeedsTemplate(device));
-                                                                   $("#devices_and_feeds").append(deviceAndFeedsElement);
-                                                                }
-                                                             });
+                                          // don't show devices here which have no feeds
+                                          if (device.feeds && device.feeds.length > 0) {
+                                             var deviceAndFeedsElement = $(deviceAndFeedsTemplate(device));
+                                             $("#devices_and_feeds").append(deviceAndFeedsElement);
+                                          }
+                                       });
 
-                                                             // add the click handler for the checkboxes
-                                                             $(".feed_checkbox").click(function() {
-                                                                var feedId = $(this).val();
-                                                                setFeedSelected(feedId, $(this).is(':checked'));
-                                                             });
+                                       // add the click handler for the checkboxes
+                                       $(".feed_checkbox").click(function() {
+                                          var feedId = $(this).val();
+                                          setFeedSelected(feedId, $(this).is(':checked'));
+                                       });
 
-                                                             initializeMap();
-                                                          }
-                                                          else {
-                                                             showHasNoDataMessage('has_no_feeds_panel');
-                                                          }
-                                                       },
-                                                       validationError : function(errors) {
-                                                          // TODO
-                                                          console.log("Validation error while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(errors, null, 3));
-                                                       },
-                                                       error : function(responseBody, httpStatusCode) {
-                                                          // TODO: some other error
-                                                          console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(responseBody, null, 3));
-                                                       },
-                                                       failure : function(err, httpStatusCode) {
-                                                          // TODO: some other error
-                                                          console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + err);
-                                                       }
-                                                    });
+                                       initializeMap();
+                                    }
+                                    else {
+                                       showHasNoDataMessage('has_no_feeds_panel');
+                                    }
+                                 },
+                                 validationError : function(errors) {
+                                    // TODO
+                                    console.log("Validation error while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(errors, null, 3));
+                                 },
+                                 error : function(responseBody, httpStatusCode) {
+                                    // TODO: some other error
+                                    console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(responseBody, null, 3));
+                                 },
+                                 failure : function(err, httpStatusCode) {
+                                    // TODO: some other error
+                                    console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + err);
                                  }
-                                 else {
-                                    showHasNoDataMessage('has_no_devices_panel');
-                                 }
-                              },
-                              unauthorized : function() {
-                                 // TODO:
-                                 console.log("Unauthorized");
-                              },
-                              validationError : function(errors) {
-                                 // TODO
-                                 console.log("Validation error while trying to load devices owned by the user: " + JSON.stringify(errors, null, 3));
-                              },
-                              error : function(responseBody, httpStatusCode) {
-                                 // TODO: some other error
-                                 console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load devices owned by the user: " + JSON.stringify(responseBody, null, 3));
-                              },
-                              failure : function(err, httpStatusCode) {
-                                 // TODO: some other error
-                                 console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load devices owned by the user: " + err);
-                              }
-                           });
+                              });
+                     }
+                     else {
+                        showHasNoDataMessage('has_no_devices_panel');
+                     }
+                  },
+                  unauthorized : function() {
+                     // TODO:
+                     console.log("Unauthorized");
+                  },
+                  validationError : function(errors) {
+                     // TODO
+                     console.log("Validation error while trying to load devices owned by the user: " + JSON.stringify(errors, null, 3));
+                  },
+                  error : function(responseBody, httpStatusCode) {
+                     // TODO: some other error
+                     console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load devices owned by the user: " + JSON.stringify(responseBody, null, 3));
+                  },
+                  failure : function(err, httpStatusCode) {
+                     // TODO: some other error
+                     console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load devices owned by the user: " + err);
+                  }
+               });
       });
    };
 
@@ -267,18 +268,32 @@
    function initializeGrapher() {
       console.log("In initializeGrapher()");
 
+      var unselectAllTimeRangeMenuItems = function() {
+         $("#time_range_switcher_menu").find(".menu_item").find(".selected").removeClass('selected').addClass('unselected');
+         $("#time_range_switcher_menu_label").text("Time Range");
+      };
+
       // render the time range options
-      var timeRangeOptionTemplate = Handlebars.templates['grapher_time_range_choice'];
-      timeRangeOptions.forEach(function(timeRangeOption) {
-         var timeRangeElement = $(timeRangeOptionTemplate({ label : timeRangeOption.label }));
-         timeRangeElement.click(timeRangeOption.handler);
-         $("#time_range_switcher_panel").append(timeRangeElement);
+      var timeRangeMenuItemTemplate = Handlebars.templates['grapher_time_range_menu_item'];
+      timeRangeOptions.forEach(function(timeRangeOption, index) {
+         var timeRangeElement = $(timeRangeMenuItemTemplate({
+            index : index,
+            label : timeRangeOption.label,
+            cssClass : 'unselected'
+         }));
+         timeRangeElement.click(timeRangeOption.handler).click(function() {
+            unselectAllTimeRangeMenuItems();
+            var anchorElement = $(this).find('a');
+            anchorElement.removeClass('unselected').addClass('selected');
+            $("#time_range_switcher_menu_label").text(anchorElement.text());
+         });
+         $("#time_range_switcher_menu_items").append(timeRangeElement);
       });
       if (selectedFeed) {
-         $("#time_range_switcher_panel").show();
+         $("#time_range_switcher_menu").show();
       }
       else {
-         $("#time_range_switcher_panel").hide();
+         $("#time_range_switcher_menu").hide();
       }
 
       var now = new Date();
@@ -292,19 +307,40 @@
          channelMinTimeSecs--;
          channelMaxTimeSecs++;
       }
-      dateAxis = new DateAxis("date_axis", "horizontal");
-      dateAxis.setRange(channelMinTimeSecs, channelMaxTimeSecs);
-      dateAxis.addAxisChangeListener(function() {
+
+      plotManager = new org.bodytrack.grapher.PlotManager("date_axis", channelMinTimeSecs, channelMaxTimeSecs);
+      plotManager.setWillAutoResizeWidth(true, function() {
+         return $("#content_area").width()         // window width
+                - $(".y_axis").width()             // Y axis width
+                - $("#y_axis_label").height()      // the height of the Y axis label
+                - 5                                // right margin
+                - 3;                               // grapher and Y axis borders
+      });
+
+      plotManager.getDateAxis().addAxisChangeListener(function(axisChangeEvent) {
+         var hasDateRangeChanged = currentDateAxisRange.min != axisChangeEvent.min ||
+                                   currentDateAxisRange.max != axisChangeEvent.max;
+
+         // remember the new date range
+         currentDateAxisRange = {
+            min : axisChangeEvent.min,
+            max : axisChangeEvent.max
+         };
+
          // auto-scale the y-axes
-         if (isAutoScaleOn && selectedFeed) {
+         if (isAutoScaleOn && selectedFeed && hasDateRangeChanged) {
             autoScaleYAxes();
+         }
+
+         // If the user is fiddling with the date axis, then mark all time range options as unselected.  But! Don't
+         // unselect time range items if the axis range didn't change (e.g. cursor event of mousing out of the window)
+         if (hasDateRangeChanged) {
+            unselectAllTimeRangeMenuItems();
          }
 
          // If the user is fiddling with the date axis, then mark the plot as not newly-loaded
          isNewlyLoadedPlot = false;
       });
-      grapher = new org.bodytrack.grapher.MultiplotGrapher(dateAxis);
-      plotContainer = new PlotContainer("plot", false, []);
 
       addFeedToGrapher(selectedFeed);
 
@@ -329,7 +365,8 @@
       if (selectedFeed) {
          var idOrApiKey = selectedFeed.isPublic ? selectedFeed.id : selectedFeed.apiKeyReadOnly;
          var channels = willExportAllChannels ? Object.keys(selectedFeed.channelBounds.channels).sort().join(',') : selectedChannelName;
-         window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxis.getMin() + "&to=" + dateAxis.getMax(), '_blank');
+         var dateAxisRange = plotManager.getDateAxis().getRange();
+         window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxisRange.min + "&to=" + dateAxisRange.max, '_blank');
       }
    }
 
@@ -510,8 +547,7 @@
       removeFeedFromGrapher(selectedFeed);
 
       $("#no_geolocation").hide();
-      $("#time_range_switcher_panel").hide();
-      $("#time_range_switcher_panel_placeholder").hide();
+      $(".grapher_toolbar_content").hide();
 
       // uncheck all checkboxes
       $('.feed_checkbox').prop('checked', false);
@@ -526,14 +562,13 @@
             $("#no_geolocation").show();
          }
 
-         $("#time_range_switcher_panel").show();
+         $("#time_range_switcher_menu").show();
 
          // update the grapher
          addFeedToGrapher(selectedFeed);
       }
       else {
          selectedFeed = null;
-         $("#time_range_switcher_panel_placeholder").show();
       }
 
       // update markers
@@ -546,21 +581,17 @@
 
          // make sure to remove the Y axis change listener (if we don't, then it'll hang around and still get called
          // when moving the mouse outside the window)
-         var yAxis = grapher.getYAxis(plotId);
+         var yAxis = plotManager.getYAxis();
          if (yAxis != null) {
             yAxis.removeAxisChangeListener(boxenAxisChangeListener);
          }
 
-         plotContainer.removePlot(grapher.getPlot(plotId));
-         grapher.removePlot(plotId);
+         plotManager.getPlotContainer().removePlot(plotId);
 
          $("#y_axis_label").empty();
-         $("#channel_switcher_panel").empty();
-         $("#grapher_bottom_toolbar").hide();
+         $("#channel_switcher_menu_items").empty();
+         $(".grapher_toolbar_content").hide();
          $(".color_box").hide();
-
-         // TODO: figure out a better way to remove the contents of the y axis
-         $("#y_axis").find("canvas").remove();
       }
    }
 
@@ -569,11 +600,19 @@
          willPreserveDateAxis = !!willPreserveDateAxis;
 
          // Since different feeds can have different sets of channels, we need to make sure that the selectedChannelName
-         // actually exists in the new feed.  If not, try the DEFAULT_CHANNEL_NAME or, if that fails too, then just use
+         // actually exists in the new feed.  If not, try the DEFAULT_CHANNEL_NAMES or, if that fails too, then just use
          // the first channel (alphabetically)
          if (!(selectedChannelName in feed.channelBounds.channels)) {
-            if (DEFAULT_CHANNEL_NAME in feed.channelBounds.channels) {
-               selectedChannelName = DEFAULT_CHANNEL_NAME;
+            var channelNameToUse = null;
+            for (var i = 0; i < DEFAULT_CHANNEL_NAMES.length; i++) {
+               var channelName = DEFAULT_CHANNEL_NAMES[i];
+               if (channelName in feed.channelBounds.channels) {
+                  channelNameToUse = channelName;
+                  break;
+               }
+            }
+            if (channelNameToUse != null) {
+               selectedChannelName = channelNameToUse;
             }
             else {
                selectedChannelName = Object.keys(feed.channelBounds.channels).sort()[0];
@@ -609,71 +648,17 @@
                min--;
                max++;
             }
-            dateAxis.setMaxRange(channelMinTimeSecs, now);
-            dateAxis.setRange(min, max);
-            //console.log("VISIBLE RANGE: \n   min: " + new Date(min * 1000) + "\n   max: " + new Date(max * 1000));
-            //console.log("MAXIMUM RANGE: \n   min: " + new Date(channelMinTimeSecs * 1000) + "\n   max: " + new Date(channelMaxTimeSecs * 1000));
+
+            plotManager.getDateAxis().constrainRangeTo(channelMinTimeSecs, now);
+            plotManager.getDateAxis().setRange(min, max);
          }
 
          var isParticleConcentrationChannel = (selectedChannelName == "particle_concentration");
          var isParticleCountChannel = (selectedChannelName == "particle_count");
          var isShowingColoredRanges = (isParticleConcentrationChannel || isParticleCountChannel);
 
-         var theChannel = {
-            "min" : feed.channelBounds.channels[selectedChannelName].minValue,
-            "max" : feed.channelBounds.channels[selectedChannelName].maxValue,
-            "time_type" : "utc",
-            "style" : {
-               "styles" : [
-                  {
-                     "type" : "line",
-                     "lineWidth" : 1,
-                     "show" : true,
-                     "color" : (isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR)
-                  },
-                  {
-                     "type" : "circle",
-                     radius : 1,
-                     "lineWidth" : 1,
-                     "show" : true,
-                     "color" : isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR,
-                     fill : true
-                  }
-               ],
-               "highlight" : {
-                  "lineWidth" : 1,
-                  "styles" : [
-                     {
-                        "show" : true,
-                        "type" : "lollipop",
-                        "color" : isShowingColoredRanges ? 'white' : '#ff0000',
-                        "radius" : 0,
-                        "lineWidth" : 1,
-                        "fill" : false
-                     },
-                     {
-                        "type" : "circle",
-                        radius : 3,
-                        "lineWidth" : 0.5,
-                        "show" : true,
-                        "color" : isShowingColoredRanges ? 'white' : '#ff0000',
-                        fill : false
-                     },
-                     {
-                        "show" : true,
-                        "type" : "value",
-                        "fillColor" : isShowingColoredRanges ? 'white' : '#ff0000',
-                        "marginWidth" : 10,
-                        "font" : "7pt Helvetica,Arial,Verdana,sans-serif",
-                        "verticalOffset" : 7,
-                        "numberFormat" : "###,##0.##"
-                     }
-                  ]
-               }
-            }
-         };
-
          // set the Y axis label
+         var channelUnits = null;
          var yAxisLabel = null;
          if (feed['channelSpecs'] && feed['channelSpecs'][selectedChannelName]) {
             var prettyName = feed['channelSpecs'][selectedChannelName]['prettyName'];
@@ -688,36 +673,44 @@
          }
          $("#y_axis_label").html(yAxisLabel == null ? "" : yAxisLabel);
 
+         // set the channel menu button label to the currently-selected channel name
+         var currentlySelectChannelPrettyName = feed['channelSpecs'][selectedChannelName]['prettyName'];
+         if (!currentlySelectChannelPrettyName) {
+            currentlySelectChannelPrettyName = selectedChannelName;
+         }
+         $("#channel_switcher_menu_label").text(currentlySelectChannelPrettyName);
+
          // render the links to change channels
-         $("#channel_switcher_panel").empty();
+         $("#channel_switcher_menu_items").empty();
          if (feed['channelBounds'] && feed['channelBounds']['channels']) {
             var availableChannels = Object.keys(feed['channelBounds']['channels']).sort();
             if (!(selectedChannelName in feed['channelBounds']['channels'])) {
                selectedChannelName = availableChannels[0];
             }
 
-            var channelNameTemplate = Handlebars.templates['grapher_channel_name'];
+            var channelNameMenuItemTemplate = Handlebars.templates['grapher_channel_menu_item'];
             availableChannels.forEach(function(channelName) {
                var prettyChannelName = feed['channelSpecs'][channelName]['prettyName'];
                var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
-               var element = $(channelNameTemplate({
-                                                      channelName : prettyChannelName,
-                                                      cssClass : selectionStateClass
-                                                   }));
+
+               var menuItemElement = $(channelNameMenuItemTemplate({
+                  channelName : prettyChannelName,
+                  cssClass : selectionStateClass
+               }));
 
                // add click event handler to the channel change links
                if (channelName != selectedChannelName) {
-                  element.click(function() {
+                  menuItemElement.click(function() {
                      // update the grapher to show the newly selected channel
                      selectedChannelName = channelName;
                      removeFeedFromGrapher(selectedFeed);
                      addFeedToGrapher(selectedFeed, true);
                   });
                }
-               $("#channel_switcher_panel").append(element);
+               $("#channel_switcher_menu_items").append(menuItemElement);
             });
          }
-         $("#grapher_bottom_toolbar").show();
+         $(".grapher_toolbar_content").show();
 
          // The isNewlyLoadedPlot is a flag we need so that we can autoscale the plot after load.  We get the min and
          // max values for the *entire* channel, but, upon first load of the channel in the grapher, we're limiting the
@@ -727,33 +720,35 @@
          isNewlyLoadedPlot = true;
 
          var plotId = feed.id;
-         grapher.addPlot(plotId,
-                         theChannel,
-                         function(level, offset, successCallback) {
-                            esdr.tiles.get(feed.apiKeyReadOnly, selectedChannelName, level, offset, {
-                               success : function(json) {
-                                  successCallback(JSON.stringify(json));
-                                  if (isNewlyLoadedPlot) {
-                                     autoScaleYAxes();
-                                  }
-                               },
-                               unauthorized : function() {
-                                  // TODO:
-                                  console.log("Unauthorized");
-                               },
-                               forbidden : function() {
-                                  // TODO:
-                                  console.log("Forbidden");
-                               },
-                               error : function(responseBody) {
-                                  // TODO:
-                                  console.log("Error: " + responseBody);
-                               }
-                            });
-                         },
-                         "y_axis");
+         plotManager.addDataSeriesPlot(plotId,
+                                       function(level, offset, successCallback) {
+                                          esdr.tiles.get(feed.apiKeyReadOnly, selectedChannelName, level, offset, {
+                                             success : function(json) {
+                                                successCallback(JSON.stringify(json));
+                                                if (isNewlyLoadedPlot) {
+                                                   autoScaleYAxes();
+                                                }
+                                             },
+                                             unauthorized : function() {
+                                                // TODO:
+                                                console.log("Unauthorized");
+                                             },
+                                             forbidden : function() {
+                                                // TODO:
+                                                console.log("Forbidden");
+                                             },
+                                             error : function(responseBody) {
+                                                // TODO:
+                                                console.log("Error: " + responseBody);
+                                             }
+                                          });
+                                       },
+                                       "plot_container",
+                                       "y_axis",
+                                       feed.channelBounds.channels[selectedChannelName].minValue,
+                                       feed.channelBounds.channels[selectedChannelName].maxValue);
 
-         grapher.addDataPointListener(plotId, function(val) {
+         plotManager.getPlot(plotId).addDataPointListener(function(val) {
             var valueAndTimeElement = $("#value_and_time");
             if (val == null) {
                valueAndTimeElement.empty().hide();
@@ -763,7 +758,46 @@
             }
          });
 
-         plotContainer.addPlot(grapher.getPlot(plotId));
+         plotManager.getPlot(plotId).setStyle({
+            "styles" : [
+               {
+                  "type" : "line",
+                  "lineWidth" : 1,
+                  "show" : true,
+                  "color" : (isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR)
+               },
+               {
+                  "type" : "circle",
+                  radius : 1,
+                  "lineWidth" : 1,
+                  "show" : true,
+                  "color" : isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR,
+                  fill : true
+               }
+            ],
+            "highlight" : {
+               "lineWidth" : 1,
+               "styles" : [
+                  {
+                     "type" : "circle",
+                     radius : 3,
+                     "lineWidth" : 0.5,
+                     "show" : true,
+                     "color" : isShowingColoredRanges ? 'white' : 'black',
+                     fill : false
+                  },
+                  {
+                     "show" : true,
+                     "type" : "value",
+                     "fillColor" : isShowingColoredRanges ? 'white' : 'black',
+                     "marginWidth" : 10,
+                     "font" : "7pt Helvetica,Arial,Verdana,sans-serif",
+                     "verticalOffset" : 7,
+                     "numberFormat" : "###,##0.##"
+                  }
+               ]
+            }
+         });
 
          //Mike keeps breaking code
          if (cbmode) {
@@ -773,37 +807,33 @@
             boxen.colors = boxenColors;
          }
 
-         var yAxis = grapher.getYAxis(plotId);
+         var yAxis = plotManager.getYAxis();
          yAxis.removeAxisChangeListener(boxenAxisChangeListener);
          boxenAxisChangeListener = null;
          if (isParticleConcentrationChannel) {
             boxen.levels = boxenConcentrationLevels;
-            yAxis.setMaxRange(0, 640);
+            yAxis.constrainRangeTo(0, 640, true);
             boxenAxisChangeListener = function() {
-               var theAxis = grapher.getYAxis(plotId);
-               adjustBoxen(boxen, "#plot", theAxis);
+               adjustBoxen(boxen, "#plot_container");
             };
             yAxis.addAxisChangeListener(boxenAxisChangeListener);
          }
          else if (isParticleCountChannel) {
             boxen.levels = boxenCountLevels;
-            yAxis.setMaxRange(0, 16000);
+            yAxis.constrainRangeTo(0, 16000, true);
             boxenAxisChangeListener = function() {
-               var theAxis = grapher.getYAxis(plotId);
-               adjustBoxen(boxen, "#plot", theAxis);
+               adjustBoxen(boxen, "#plot_container");
             };
             yAxis.addAxisChangeListener(boxenAxisChangeListener);
          }
          else {
-            yAxis.setMaxRange(-1 * Number.MAX_VALUE, Number.MAX_VALUE);
+            yAxis.constrainRangeTo(-1 * Number.MAX_VALUE, Number.MAX_VALUE);
          }
 
          removeBoxen();
          if (isShowingColoredRanges) {
-            drawBoxen(boxen, "#plot");
+            drawBoxen(boxen, "#plot_container");
          }
-
-         //setTimeout(autoScaleYAxes, 1);
 
          setSizes();
       }
@@ -819,41 +849,25 @@
       else {
          autoScaleToggleButton.removeClass("active");
       }
-      console.log("toggleYAxisAutoScaling: " + isAutoScaleOn);
    }
 
    function autoScaleYAxes() {
-      grapher.forEachPlot(function(plot, yAxis) {
-         var stats = plot.getSimpleStatistics(dateAxis.getMin(), dateAxis.getMax());
-
-         if (typeof stats['y_min'] !== 'undefined' && typeof stats['y_max'] !== 'undefined') {
-            var paddedRange = paddedYAxisRange(stats['y_min'], stats['y_max']);
-            yAxis.setRange(paddedRange['min'], paddedRange['max']);
+      var plot = plotManager.getPlot();
+      if (plot) {
+         var stats = plot.getStatisticsWithinRange(plotManager.getDateAxis().getRange());
+         if (typeof stats['minValue'] !== 'undefined' && typeof stats['maxValue'] !== 'undefined') {
+            plotManager.getYAxis().setRange(stats['minValue'], stats['maxValue']);
          }
-      });
-   }
-
-   function paddedYAxisRange(min, max) {
-      var yDiff = max - min;
-      var padding = 0.5;
-      if (yDiff < 1e-10) {
-         padding = 0.5;
       }
-      else {
-         padding = 0.05 * yDiff;
-      }
-      return { min : min - padding, max : max + padding }
    }
 
    function setSizes() {
       var yAxisElement = $("#y_axis");
       var yAxisLabelElement = $("#y_axis_label");
-      var totalWidth = $("#content_area").width();
       var yAxisWidth = yAxisElement.width();
       var yAxisHeight = yAxisElement.height();
       yAxisLabelElement.width(yAxisHeight); // set the width == height since we're rotating
       var yAxisLabelHeight = yAxisLabelElement.height();
-      var plotContainerWidth = totalWidth - yAxisWidth - yAxisLabelHeight - 3 - 5;  // subtract 3 to allow for borders and another 5 for right margin
 
       // compute the position of the y-axis label
       var yAxisLabelLeft = Math.round(yAxisWidth + yAxisLabelHeight / 2 - yAxisHeight / 2 + 2);
@@ -861,23 +875,34 @@
 
       // set positions and sizes
       yAxisLabelElement.css("top", yAxisLabelTop + "px").css("left", yAxisLabelLeft + "px");
-      dateAxis.setSize(plotContainerWidth, $("#date_axis").height(), SequenceNumber.getNext());
-      plotContainer.setSize(plotContainerWidth, $("#plot").height(), SequenceNumber.getNext());
-      grapher.updateYAxesSizes();
 
       // update the map so it's the same width at the grapher
       $("#map_area").width($("#grapher").width() - 2);   // subtract 2 to account for the borders
       google.maps.event.trigger(map, 'resize');
 
       //Mike can't be stopped
-      sizeBoxen(boxen, "#plot", 0);
+      sizeBoxen(boxen, "#plot_container", 0);
+
+      // Change the UI for the time range menu and channel menu depending on window size.  If the window is large
+      // enough, show items as a horizontal list of links.  Otherwise, collapse them into a popup menu.
+      var willCollapseToMenuButton = $(window).width() < MEDIUM_DEVICE_WIDTH_PIXELS;
+      $(".horizontal_list_or_menu_button").toggleClass("btn-group", willCollapseToMenuButton);
+      $(".horizontal_list_or_menu_button_items")
+            .toggleClass("dropdown-menu", willCollapseToMenuButton)
+            .toggleClass("horizontal-list", !willCollapseToMenuButton);
+      if ($(window).width() >= MEDIUM_DEVICE_WIDTH_PIXELS) {
+         $(".menu_button").hide();
+      }
+      else {
+         $(".menu_button").show();
+      }
    }
 
    function setRangeFromSecondsAgoToNow(numSecondsAgo) {
       var now = Date.now() / 1000;
       var min = now - numSecondsAgo;
-      dateAxis.setMaxRange(Math.min(min, selectedFeed.minTimeSecs), now);
-      dateAxis.setRange(min, now);
+      plotManager.getDateAxis().constrainRangeTo(Math.min(min, selectedFeed.minTimeSecs), now);
+      plotManager.getDateAxis().setRange(min, now);
    }
 
    // Mike has left you a pile of strange functions
@@ -886,10 +911,10 @@
       var boxTemplate = Handlebars.templates['grapher_value_range_color_box'];
       boxen.levels.forEach(function(level, index) {
          var boxElement = boxTemplate({
-                                         level : level,
-                                         color : boxen.colors[index],
-                                         zIndex : index - boxen.levels.length
-                                      });
+            level : level,
+            color : boxen.colors[index],
+            zIndex : index - boxen.levels.length
+         });
          $(plotArea).prepend(boxElement);
       })
    }
@@ -898,22 +923,28 @@
       $('.color_box').remove();
    }
 
-   function adjustBoxen(boxen, plotArea, axis) {
-      var plotAreaElement = $(plotArea);
-      boxen.levels.forEach(function(level) {
-         $("#level_" + level)
-               .height((axis.getMax() - level) / (axis.getMax() - axis.getMin()) * plotAreaElement.height())
-               .css("max-height", plotAreaElement.height());
-      })
+   function adjustBoxen(boxen, plotArea) {
+      if (boxen.levels) {
+         var axis = plotManager.getYAxis();
+         var plotAreaElement = $(plotArea);
+         boxen.levels.forEach(function(level) {
+            var range = axis.getRange();
+            $("#level_" + level)
+                  .height((range.max - level) / (range.max - range.min) * plotAreaElement.height())
+                  .css("max-height", plotAreaElement.height());
+         });
+      }
    }
 
    function sizeBoxen(boxen, plotArea, extra) {
-      var plotAreaElement = $(plotArea);
-      boxen.levels.forEach(function(level) {
-         $("#level_" + level)
-               .width(plotAreaElement.width() + extra + 1)
-               .css("left", plotAreaElement.css("left"));
-      })
+      if (boxen.levels) {
+         var plotAreaElement = $(plotArea);
+         boxen.levels.forEach(function(level) {
+            $("#level_" + level)
+                  .width(plotAreaElement.width() + extra + 1)
+                  .css("left", plotAreaElement.css("left"));
+         });
+      }
    }
 
 </script>
@@ -942,42 +973,60 @@
          <table id="grapher" border="0" cellpadding="0" cellspacing="0">
             <tr>
                <td>
-                  <div id="time_range_switcher_panel"></div>
-                  <div id="time_range_switcher_panel_placeholder">&nbsp;&nbsp;&nbsp;</div>
-                  <div id="date_axis_container">
-                     <div id="date_axis" class="date_axis"></div>
+                  <div class="grapher_toolbar">
+                     <div class="grapher_toolbar_content">
+                        <div id="time_range_switcher_menu" class="horizontal_list_or_menu_button btn-group">
+                           <button type="button" class="menu_button btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                              <span id="time_range_switcher_menu_label">Time Range</span> <span class="caret"></span>
+                           </button>
+                           <ul id="time_range_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
+                        </div>
+                     </div>
                   </div>
                </td>
-               <td align="center" valign="bottom">
+               <td rowspan="2" align="center" valign="bottom">
                   <a id="auto_scale_toggle_button" class="btn btn-default" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling"><span class="glyphicon glyphicon-resize-vertical" aria-hidden="true"></span></a>
                </td>
             </tr>
             <tr>
                <td>
-                  <div id="plot" class="plot" style="height:300px; border: 1px solid black;">
+                  <div id="date_axis" class="date_axis"></div>
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <div id="plot_container" class="plot_container" style="height:300px; border: 1px solid black;">
                      <div id="value_and_time"></div>
                   </div>
                </td>
                <td>
-                  <div id="y_axis" class="y_axis" style="position:relative;height:300px">
+                  <div id="y_axis" class="y_axis" style="height:300px">
                      <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
                   </div>
                </td>
             </tr>
             <tr>
                <td colspan="2" align="right">
-                  <div id="grapher_bottom_toolbar">
-                     <div class="pull-left">
-                        <div id="channel_switcher_panel"></div>
-                     </div>
-                     <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                           Export <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                           <li><a id="export_this_channel_button" href="#">This Channel</a></li>
-                           <li><a id="export_all_channels_button" href="#">All Channels</a></li>
-                        </ul>
+                  <div id="grapher_toolbar_bottom" class="grapher_toolbar">
+                     <div class="grapher_toolbar_content">
+                        <div class="pull-left">
+                           <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group">
+                              <button type="button" class="menu_button btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                 <span id="channel_switcher_menu_label">Channels</span> <span class="caret"></span>
+                              </button>
+                              <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
+                           </div>
+                        </div>
+
+                        <div class="btn-group pull-right">
+                           <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                              Export <span class="caret"></span>
+                           </button>
+                           <ul class="dropdown-menu" role="menu">
+                              <li><a id="export_this_channel_button" href="#">This Channel</a></li>
+                              <li><a id="export_all_channels_button" href="#">All Channels</a></li>
+                           </ul>
+                        </div>
                      </div>
                   </div>
                </td>
