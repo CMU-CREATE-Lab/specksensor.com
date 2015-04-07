@@ -45,6 +45,10 @@ body.shrink {
   color: black;
   margin-bottom: 20px; }
 
+.home_page_font {
+  font-size: 20px;
+  margin: 0 0 40px; }
+
 .checkmark_icon_container {
   width: 24px;
   height: 19px;
@@ -594,6 +598,18 @@ body.shrink {
   border: 1px solid #8085CD;
   padding-left: 27px;
   padding-right: 27px; }
+
+#intro_video {
+  width: 560px;
+  height: 315px; }
+  @media (max-width: 992px) {
+    #intro_video {
+      width: 400px;
+      height: 225px; } }
+  @media (max-width: 767px) {
+    #intro_video {
+      width: 300px;
+      height: 169px; } }
 
 @media (max-width: 1200px) {
   #what_is_speck .panel-body {
