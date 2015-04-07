@@ -1,3 +1,17 @@
+<script type="text/javascript">
+   $(document).ready(function() {
+      $('.collapsible-info').click(function(e) {
+         var isExpanding = $(this).hasClass("collapsed");
+         recordAction('collapsible-info', isExpanding ? 'expand' : 'collapse', 'particles', $(this).get(0).hash)
+      });
+   });
+
+   function recordAction(category, action, label, value) {
+      ga('send', 'event', category, action, label, value);
+      return true;
+   }
+
+</script>
 <div id="particles">
    <div class="row">
       <div class="col-md-4">
@@ -60,7 +74,7 @@
             Fine Particulate Matter or PM<sub>2.5</sub> refers to particles of matter suspended in the air that are 2.5 micrometers in diameter or smaller.
             That's 30 times smaller than the diameter of a single human hair!
          </p>
-         <a class="btn btn-default" href="http://www.epa.gov/airquality/particlepollution/basic.html" target="_blank">Learn More</a>
+         <a class="btn btn-default" href="http://www.epa.gov/airquality/particlepollution/basic.html" onclick="recordAction('link', 'click', 'offsite-link', 'learn_more_what_are_fine_particles')" target="_blank">Learn More</a>
       </div>
    </div>
    <div class="row">
@@ -74,7 +88,7 @@
             very harmful to your health. Inhaling PM<sub>2.5</sub> can cause coughing or wheezing. Exposure over extended periods of time can contribute to or worsen
             illnesses such as asthma, heart disease, chronic bronchitis, emphysema and pneumonia.
          </p>
-         <a class="btn btn-default" href="http://www.epa.gov/airquality/particulatematter/health.html" target="_blank">Learn More</a>
+         <a class="btn btn-default" href="http://www.epa.gov/airquality/particulatematter/health.html" onclick="recordAction('link', 'click', 'offsite-link', 'learn_more_what_are_effects_of_fine_particles')" target="_blank">Learn More</a>
       </div>
    </div>
    <div class="row">
@@ -90,7 +104,7 @@
             toxic chemicals can attach to PM<sub>2.5</sub> and enter your bloodstream. Fine particulate pollution can also have environmental impacts
             including soil and water contamination.
          </p>
-         <a class="btn btn-default" href="http://www.epa.gov/airquality/particulatematter/fastfacts.html" target="_blank">Learn More</a>
+         <a class="btn btn-default" href="http://www.epa.gov/airquality/particulatematter/fastfacts.html" onclick="recordAction('link', 'click', 'offsite-link', 'learn_more_how_fine_particles_affect_me')" target="_blank">Learn More</a>
       </div>
    </div>
    <div class="row" id="particle-sources">
@@ -106,7 +120,7 @@
             <div class="panel panel-default" id="panel1">
                <div class="panel-heading">
                   <h4 class="panel-title">
-                     <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne" class="collapsed">
+                     <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne" class="collapsible-info collapsed">
                         Indoor sources of fine particles
                      </a>
                   </h4>
@@ -134,7 +148,7 @@
          <div class="panel panel-default" id="panel2">
             <div class="panel-heading">
                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#collapseTwo" href="#collapseTwo" class="collapsed">
+                  <a data-toggle="collapse" data-target="#collapseTwo" href="#collapseTwo" class="collapsible-info collapsed">
                      Outdoor sources of fine particles
                   </a>
                </h4>
@@ -163,7 +177,7 @@
          <div class="panel panel-default" id="panel3">
             <div class="panel-heading">
                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#collapseThree" href="#collapseThree" class="collapsed">
+                  <a data-toggle="collapse" data-target="#collapseThree" href="#collapseThree" class="collapsible-info collapsed">
                      Activity sources of fine particles
                   </a>
                </h4>
@@ -194,7 +208,7 @@
          <div class="panel panel-default" id="panel4">
             <div class="panel-heading">
                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#collapseFour" href="#collapseFour" class="collapsed">
+                  <a data-toggle="collapse" data-target="#collapseFour" href="#collapseFour" class="collapsible-info collapsed">
                      Speck readings that you may encounter
                   </a>
                </h4>
@@ -229,7 +243,7 @@
             <div class="panel panel-default" id="panel5">
                <div class="panel-heading">
                   <h4 class="panel-title">
-                     <a data-toggle="collapse" data-target="#collapseFive" href="#collapseFive" class="collapsed">
+                     <a data-toggle="collapse" data-target="#collapseFive" href="#collapseFive" class="collapsible-info collapsed">
                         General strategies to improve your indoor air quality
                      </a>
                   </h4>
@@ -257,7 +271,7 @@
          <div class="panel panel-default" id="panel6">
             <div class="panel-heading">
                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#collapseSix" href="#collapseSix" class="collapsed">
+                  <a data-toggle="collapse" data-target="#collapseSix" href="#collapseSix" class="collapsible-info collapsed">
                      Experiments to test your ideas for ways to improve the air you breathe
                   </a>
                </h4>
@@ -284,7 +298,7 @@
          <div class="panel panel-default" id="panel7">
             <div class="panel-heading">
                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-target="#collapseSeven" href="#collapseSeven" class="collapsed">
+                  <a data-toggle="collapse" data-target="#collapseSeven" href="#collapseSeven" class="collapsible-info collapsed">
                      Other resources to help you improve your air quality
                   </a>
                </h4>
