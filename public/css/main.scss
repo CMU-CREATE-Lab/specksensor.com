@@ -162,6 +162,14 @@ body.shrink {
       color: white;
    }
 
+   .dropdown-menu-active {
+      font-weight: bold;
+      @media(max-width: $MOBILE_WIDTH) {
+         font-weight: normal;
+         color: white;
+      }
+   }
+
    .navbar-brand {
       position: relative;
       display: block;
@@ -181,6 +189,12 @@ body.shrink {
       padding-top: 27px;
       font-size: 16px;
       @include easing;
+   }
+
+   .menu_icon {
+      @media(max-width: $MOBILE_WIDTH) {
+         display: none;
+      }
    }
 
    @media(max-width: $MOBILE_WIDTH) {
@@ -227,11 +241,10 @@ body.shrink {
 }
 
 #tiny_buy_icon {
+   display: inline-block;
+   margin-top:-3px;
    width: 30px;
    height: 20px;
-   position: absolute;
-   top: 26px;
-   left: 15px;
    @include easing;
 }
 

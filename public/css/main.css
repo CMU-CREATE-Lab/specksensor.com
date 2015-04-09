@@ -73,6 +73,12 @@ body.shrink {
   transition: all 0.2s ease; }
   #main_navbar .active {
     color: white; }
+  #main_navbar .dropdown-menu-active {
+    font-weight: bold; }
+    @media (max-width: 767px) {
+      #main_navbar .dropdown-menu-active {
+        font-weight: normal;
+        color: white; } }
   #main_navbar .navbar-brand {
     position: relative;
     display: block;
@@ -96,6 +102,9 @@ body.shrink {
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease; }
+  @media (max-width: 767px) {
+    #main_navbar .menu_icon {
+      display: none; } }
   @media (max-width: 767px) {
     #main_navbar {
       min-height: 50px; }
@@ -166,11 +175,10 @@ body.shrink {
     transition: all 0.2s ease; }
 
 #tiny_buy_icon {
+  display: inline-block;
+  margin-top: -3px;
   width: 30px;
   height: 20px;
-  position: absolute;
-  top: 26px;
-  left: 15px;
   -webkit-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;

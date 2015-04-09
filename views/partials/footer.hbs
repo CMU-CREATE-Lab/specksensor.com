@@ -23,7 +23,11 @@
                {{#ifEqual section 'buy'}}Buy{{else}}<a href="/buy">Buy</a>{{/ifEqual}}
             </div>
             <div class="link">
-               {{#ifEqual section 'login'}}My Data{{else}}<a href="/login">My Data</a>{{/ifEqual}}
+               {{#if isAuthenticated}}
+                  {{#ifEqual section 'dashboard'}}My Data{{else}}<a href="/dashboard">My Data</a>{{/ifEqual}}
+               {{else}}
+                  {{#ifEqual section 'login'}}My Data{{else}}<a href="/login">My Data</a>{{/ifEqual}}
+               {{/if}}
             </div>
          </div>
          <div class="link">
