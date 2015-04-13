@@ -80,7 +80,7 @@ router.get('/buy', function(req, res) {
 });
 
 router.get('/contact', function(req, res) {
-   res.render('contact', { title : "Contact", section : "contact" });
+   res.redirect('about-us');
 });
 
 router.get('/data', function(req, res) {

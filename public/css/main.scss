@@ -146,6 +146,9 @@ body.shrink {
       padding-top: 15px;
       font-size: 14px;
       @include easing;
+      @media(max-width: $SMALL_WIDTH) {
+         padding-top: 10px;
+      }
    }
 
    .navbar-brand {
@@ -162,6 +165,19 @@ body.shrink {
 
    .active {
       color: white;
+   }
+
+   .navbar-toggle {
+      float: left;
+      margin-left: 15px;
+      margin-right: 0;
+   }
+
+   .dropdown-menu > li > a {
+      @media(max-width: $SMALL_WIDTH) {
+         padding-top: 10px;
+         padding-left: 35px;
+      }
    }
 
    .dropdown-menu-active {
@@ -209,7 +225,7 @@ body.shrink {
             position: absolute;
             display: block;
             top: 15px;
-            left: 15px;
+            right: 15px;
          }
       }
 
@@ -223,9 +239,16 @@ body.shrink {
       }
    }
 
-   .hide_in_mobile_menu {
+   .hide_in_mobile_navbar {
       @media(max-width: $SMALL_WIDTH) {
          display: none;
+      }
+   }
+
+   .show_in_mobile_navbar {
+      display: none;
+      @media(max-width: $SMALL_WIDTH) {
+         display: block;
       }
    }
 
@@ -988,14 +1011,8 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 // =====================================================================================================================
 
 footer {
-   margin: 50px 0 15px 0;
+   margin: 40px 0 0 0;
 
-   #extra_footer_links {
-      display: none;
-      @media(max-width: $SMALL_WIDTH) {
-         display: block;
-      }
-   }
    .footer_piece {
       line-height: 32px;
       @media(max-width: $SMALL_WIDTH) {
@@ -1005,24 +1022,21 @@ footer {
 
    .footer_piece:nth-child(1) {
       text-align: left;
-
-      @media(max-width: $SMALL_WIDTH) {
-         text-align: center;
-      }
-
+      white-space: nowrap;
    }
 
    .footer_piece:nth-child(2) {
       text-align: center;
+
+      // hide the links for small width--they'll appear in the hamburger menu instead
+      @media(max-width: $SMALL_WIDTH) {
+         display: none;
+      }
    }
 
    .footer_piece:nth-child(3) {
       text-align: right;
       white-space: nowrap;
-
-      @media(max-width: $SMALL_WIDTH) {
-         text-align: center;
-      }
    }
 
    .copyright {
@@ -1040,18 +1054,8 @@ footer {
 
    .link {
       display: inline-block;
-      margin-left: 20px;
-      margin-right: 20px;
-
-      @media(max-width: $MEDIUM_WIDTH) {
-         margin-left: 10px;
-         margin-right: 10px;
-      }
-
-      @media(max-width: $SMALL_WIDTH) {
-         margin-left: 20px;
-         margin-right: 20px;
-      }
+      margin-left: 25px;
+      margin-right: 25px;
 
       .active {
          font-weight: bold;
