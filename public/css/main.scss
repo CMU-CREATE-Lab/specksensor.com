@@ -7,12 +7,13 @@
 $SIDEBAR_WIDTH: 250px;
 $NAVBAR_HEIGHT_DEFAULT: 75px;
 $NAVBAR_HEIGHT_SHRUNKEN: 50px;
-$MOBILE_WIDTH: 767px;
-$MEDIUM_DEVICE_WIDTH: 992px;
-$LARGE_DEVICE_WIDTH: 1200px;
+$TINY_WIDTH: 500px;
+$SMALL_WIDTH: 767px;
+$MEDIUM_WIDTH: 992px;
+$LARGE_WIDTH: 1200px;
 $EASING: all 0.2s ease;
 $LINK_COLOR: #337ab7;
-
+$NAVBAR_TEXT_COLOR: rgb(157, 157, 157);
 // =====================================================================================================================
 // Global
 // =====================================================================================================================
@@ -34,7 +35,7 @@ body {
    // Change if height of navigation changes.
    padding-top: $NAVBAR_HEIGHT_DEFAULT;
 
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       @include shrunken_body_padding;
    }
 }
@@ -53,7 +54,7 @@ body.shrink {
 
 .col-lg-12 {
    width: 100%;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       float: left;
    }
 }
@@ -110,6 +111,7 @@ body.shrink {
    font-size: 20px;
    margin: 0 0 40px;
 }
+
 // =====================================================================================================================
 // Icons
 // =====================================================================================================================
@@ -164,7 +166,7 @@ body.shrink {
 
    .dropdown-menu-active {
       font-weight: bold;
-      @media(max-width: $MOBILE_WIDTH) {
+      @media(max-width: $SMALL_WIDTH) {
          font-weight: normal;
          color: white;
       }
@@ -191,22 +193,76 @@ body.shrink {
       @include easing;
    }
 
-   .menu_icon {
-      @media(max-width: $MOBILE_WIDTH) {
+   .navbar-header {
+      .buy_icon_container {
+         display: none;
+         color: $NAVBAR_TEXT_COLOR;
+         text-decoration: none;
+         @include easing;
+
+         .tiny_buy_icon {
+            width: 25px;
+            height: 18px;
+         }
+
+         @media(max-width: $SMALL_WIDTH) {
+            position: absolute;
+            display: block;
+            top: 15px;
+            left: 15px;
+         }
+      }
+
+      .buy_icon_container.active {
+         color: white;
+      }
+
+      .buy_icon_container:hover {
+         color: white;
+         @include easing;
+      }
+   }
+
+   .hide_in_mobile_menu {
+      @media(max-width: $SMALL_WIDTH) {
          display: none;
       }
    }
 
-   @media(max-width: $MOBILE_WIDTH) {
-      @include shrunken_navbar;
+   .tiny_buy_icon {
+      position: relative;
+      display: inline-block;
+      margin-top: -3px;
+      width: 30px;
+      height: 20px;
+      @include easing;
+   }
 
-      @media(max-width: $MEDIUM_DEVICE_WIDTH) {
-         #tiny_buy_icon {
-            top: 14px;
-            @include easing;
-         }
+   #zip_code {
+      margin-top: 20px;
+      height: 25px;
+      @include easing;
+   }
+
+   #zip_code_container {
+      right: 10px;
+      font-size: 12px;
+      @include easing;
+
+      @media(max-width: $MEDIUM_WIDTH) {
+         right: -5px !important;
+      }
+
+      @media(max-width: $SMALL_WIDTH) {
+         display: none;
       }
    }
+
+   @media(max-width: $SMALL_WIDTH) {
+      @include shrunken_navbar;
+
+   }
+
 }
 
 // Turns off the focus outline (a ridiculous blue on my Mac) for navbar elements
@@ -217,9 +273,7 @@ body.shrink {
 #main_navbar.shrink {
    @include shrunken_navbar;
 
-   #tiny_buy_icon {
-      top: 16px;
-      left: 18px;
+   .tiny_buy_icon {
       width: 25px;
       height: 18px;
       @include easing;
@@ -236,35 +290,6 @@ body.shrink {
    #zip_code {
       margin-top: 5px;
       @include easing;
-   }
-
-}
-
-#tiny_buy_icon {
-   display: inline-block;
-   margin-top:-3px;
-   width: 30px;
-   height: 20px;
-   @include easing;
-}
-
-#zip_code {
-   margin-top: 20px;
-   height: 25px;
-   @include easing;
-}
-
-#zip_code_container {
-   right: 10px;
-   font-size: 12px;
-   @include easing;
-
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
-      right: -5px !important;
-   }
-
-   @media(max-width: $MOBILE_WIDTH) {
-      display: none;
    }
 
 }
@@ -291,7 +316,7 @@ body.shrink {
       background-position: right;
    }
 
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       height: 300px;
    }
 }
@@ -314,7 +339,7 @@ body.shrink {
       max-width: 340px;
    }
 
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       #about_us_logos {
          text-align: center;
       }
@@ -334,7 +359,7 @@ body.shrink {
       max-width: 500px;
    }
 
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       #screenshot {
          text-align: center;
       }
@@ -352,11 +377,11 @@ body.shrink {
 .carousel {
    height: 450px;
 
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       height: 400px;
    }
 
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       height: 300px;
    }
 
@@ -388,14 +413,14 @@ body.shrink {
    font-size: 1.6vw;
    width: 695px;
    text-align: right;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       font-size: 2vw;
       width: 585px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       width: 350px;
    }
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       margin-top: 30px;
       margin-right: 50px;
    }
@@ -416,15 +441,15 @@ body.shrink {
    font-size: 1.65vw;
    width: 655px;
    text-align: right;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       font-size: 2vw;
       width: 520px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       font-size: 2.15vw;
       width: 400px;
    }
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       margin-top: 30px;
       margin-right: 50px;
    }
@@ -448,16 +473,16 @@ body.shrink {
    font-size: 30px;
    width: 407px;
    text-align: left;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       left: -530px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       left: -390px;
       top: 50px;
       font-size: 25px;
       width: 330px;
    }
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       font-size: 2.5vw;
       left: -265px;
       width: 250px;
@@ -477,17 +502,17 @@ body.shrink {
    font-size: 28px;
    width: 407px;
    text-align: right;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       left: -530px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       left: -390px;
       top: 50px;
       font-size: 20px;
       width: 360px;
       right: 50px;
    }
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       font-size: 2.42vw;
       left: -265px;
       width: 300px;
@@ -511,17 +536,17 @@ body.shrink {
    font-size: 28px;
    width: 507px;
    text-align: left;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       left: -430px;
       font-size: 28px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       left: -385px;
       top: 50px;
       font-size: 20px;
       width: 330px;
    }
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       font-size: 2.5vw;
       left: -250px;
       top: 40px;
@@ -542,17 +567,17 @@ body.shrink {
    font-size: 28px;
    width: 507px;
    text-align: right;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       left: -530px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       left: -390px;
       top: 50px;
       font-size: 20px;
       width: 410px;
       right: 50px;
    }
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       font-size: 2.42vw;
       left: -265px;
       width: 300px;
@@ -574,7 +599,7 @@ body.shrink {
    .big_quote {
       font-size: 34px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       top: -10px;
       height: 100%;
    }
@@ -584,10 +609,10 @@ body.shrink {
    top: -10px;
    position: absolute;
    width: 550px;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       width: 500px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       top: 0px;
       left: 0px;
       width: 100%;
@@ -600,11 +625,11 @@ body.shrink {
    left: 270px;
    position: absolute;
    width: 550px;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       width: 500px;
       left: 0px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       top: 15px;
       left: 0px;
       width: 100%;
@@ -617,7 +642,7 @@ body.shrink {
    left: 600px;
    position: absolute;
    width: 550px;
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       width: 425px;
       left: 550px;
       top: 40px;
@@ -625,7 +650,7 @@ body.shrink {
    @media(max-width: 1045px) {
       width: 400px;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       top: 30px;
       left: 0px;
       width: 100%;
@@ -639,7 +664,7 @@ body.shrink {
    @media(max-width: 1045px) {
       width: 36% !important;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       padding-left: 30%;
    }
    @media(max-width: 640px) {
@@ -665,7 +690,7 @@ body.shrink {
    @media(max-width: 1045px) {
       width: 35% !important;
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       padding-left: 30%;
    }
    @media(max-width: 640px) {
@@ -688,7 +713,7 @@ body.shrink {
 .col-circle3 {
    width: 0% !important;
    padding-left: 0px;
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       padding-left: 30%;
    }
    @media(max-width: 640px) {
@@ -746,11 +771,11 @@ body.shrink {
    width: 560px;
    height: 315px;
 
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       width: 400px;
       height: 225px;
    }
-   @media(max-width: $MOBILE_WIDTH) {
+   @media(max-width: $SMALL_WIDTH) {
       width: 300px;
       height: 169px;
    }
@@ -776,7 +801,7 @@ body.shrink {
    }
 
    .fine_print {
-      margin-top:30px;
+      margin-top: 30px;
       font-size: smaller;
    }
 }
@@ -786,12 +811,12 @@ body.shrink {
 // =====================================================================================================================
 
 #what_is_speck {
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       .panel-body {
          min-height: 360px;
       }
    }
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       .panel-body {
          min-height: 0px;
       }
@@ -821,7 +846,7 @@ body.shrink {
       min-height: 110px;
    }
 
-   @media(max-width: $LARGE_DEVICE_WIDTH) {
+   @media(max-width: $LARGE_WIDTH) {
       .col-lg-7 {
          padding-top: 20px;
       }
@@ -835,7 +860,7 @@ body.shrink {
       }
    }
 
-   @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+   @media(max-width: $MEDIUM_WIDTH) {
       .panel-body p {
          min-height: 0px !important;
       }
@@ -967,13 +992,13 @@ footer {
 
    #extra_footer_links {
       display: none;
-      @media(max-width: $MOBILE_WIDTH) {
+      @media(max-width: $SMALL_WIDTH) {
          display: block;
       }
    }
    .footer_piece {
       line-height: 32px;
-      @media(max-width: $MOBILE_WIDTH) {
+      @media(max-width: $SMALL_WIDTH) {
          margin-bottom: 10px;
       }
    }
@@ -981,7 +1006,7 @@ footer {
    .footer_piece:nth-child(1) {
       text-align: left;
 
-      @media(max-width: $MOBILE_WIDTH) {
+      @media(max-width: $SMALL_WIDTH) {
          text-align: center;
       }
 
@@ -995,7 +1020,7 @@ footer {
       text-align: right;
       white-space: nowrap;
 
-      @media(max-width: $MOBILE_WIDTH) {
+      @media(max-width: $SMALL_WIDTH) {
          text-align: center;
       }
    }
@@ -1018,12 +1043,12 @@ footer {
       margin-left: 20px;
       margin-right: 20px;
 
-      @media(max-width: $MEDIUM_DEVICE_WIDTH) {
+      @media(max-width: $MEDIUM_WIDTH) {
          margin-left: 10px;
          margin-right: 10px;
       }
 
-      @media(max-width: $MOBILE_WIDTH) {
+      @media(max-width: $SMALL_WIDTH) {
          margin-left: 20px;
          margin-right: 20px;
       }
