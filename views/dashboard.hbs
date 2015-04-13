@@ -985,7 +985,15 @@
                   </div>
                </td>
                <td rowspan="2" align="center" valign="bottom">
-                  <a id="auto_scale_toggle_button" class="btn btn-default" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling"><span class="glyphicon glyphicon-resize-vertical" aria-hidden="true"></span></a>
+                  <div class="btn-group">
+                     <button id="export_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Download your data">
+                        <i class="fa fa-cloud-download"></i>
+                     </button>
+                     <ul id="export_button_menu" class="dropdown-menu pull-right" role="menu">
+                        <li><a id="export_this_channel_button" href="#">This Channel</a></li>
+                        <li><a id="export_all_channels_button" href="#">All Channels</a></li>
+                     </ul>
+                  </div>
                </td>
             </tr>
             <tr>
@@ -1012,20 +1020,14 @@
                         <div class="pull-left">
                            <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group">
                               <button type="button" class="menu_button btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                 <span id="channel_switcher_menu_label">Channels</span> <span class="caret"></span>
+                                 <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
                               </button>
                               <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
                            </div>
                         </div>
 
                         <div class="btn-group pull-right">
-                           <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                              Export <span class="caret"></span>
-                           </button>
-                           <ul class="dropdown-menu" role="menu">
-                              <li><a id="export_this_channel_button" href="#">This Channel</a></li>
-                              <li><a id="export_all_channels_button" href="#">All Channels</a></li>
-                           </ul>
+                           <a id="auto_scale_toggle_button" class="btn btn-default btn-xs" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
                         </div>
                      </div>
                   </div>

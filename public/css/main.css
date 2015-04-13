@@ -720,6 +720,12 @@ body.shrink {
   #dashboard #content_area {
     position: relative;
     margin-left: 190px; }
+    #dashboard #content_area #export_button {
+      padding: 2px 5px 2px 5px;
+      font-size: 18px;
+      margin-bottom: 7px; }
+    #dashboard #content_area #export_button_menu {
+      margin-top: -5px; }
     #dashboard #content_area #grapher_bottom_toolbar {
       margin-top: 5px; }
     #dashboard #content_area #time_range_switcher_panel, #dashboard #content_area #time_range_switcher_panel_placeholder {

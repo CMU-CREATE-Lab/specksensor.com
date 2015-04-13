@@ -938,6 +938,17 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       position: relative;
       margin-left: $DASHBOARD_MENU_PANEL_WIDTH;
 
+      #export_button {
+         padding: 2px 5px 2px 5px;
+         font-size: 18px;
+         margin-bottom: 7px;
+
+      }
+
+      #export_button_menu {
+         margin-top: -5px;
+      }
+
       #grapher_bottom_toolbar {
          margin-top: 5px;
       }
