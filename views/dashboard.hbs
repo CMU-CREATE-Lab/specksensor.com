@@ -208,7 +208,6 @@
    function initializeMap() {
       console.log("Loading map...");
       $("#content_area").show();
-      $("#map_area").show();
       var mapOptions = {
          center : new google.maps.LatLng(38.00325787792078, -95.4462277304077),
          zoom : 4,
@@ -1036,7 +1035,7 @@
          </table>
       </div>
       <div style="position: relative">
-         <div id="map_area" style="display:none"></div>
+         <div id="map_area"></div>
          <div id="no_geolocation" class="noselect">You have not geolocated the selected feed.</div>
       </div>
    </div>

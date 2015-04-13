@@ -963,7 +963,11 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
          margin-top: 10px;
          border: 1px solid black;
          width: 880px;
-         height: 400px;
+         height: 300px;
+
+         @media(max-width: $SMALL_WIDTH) {
+            display: none;
+         }
       }
 
       #no_geolocation {

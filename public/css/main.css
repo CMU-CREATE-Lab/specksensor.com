@@ -736,7 +736,10 @@ body.shrink {
       margin-top: 10px;
       border: 1px solid black;
       width: 880px;
-      height: 400px; }
+      height: 300px; }
+      @media (max-width: 767px) {
+        #dashboard #content_area #map_area {
+          display: none; } }
     #dashboard #content_area #no_geolocation {
       position: absolute;
       width: 350px;
