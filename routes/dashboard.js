@@ -9,7 +9,8 @@ router.get('/',
                             title : "Dashboard",
                             section : "dashboard",
                             googleMapsApiKey : config.get("maps:apiKey"),
-                            speckProductId : config.get("product:id")
+                            speckProductId : config.get("product:id"),
+                            isInteriorPage : true
                          });
            });
 

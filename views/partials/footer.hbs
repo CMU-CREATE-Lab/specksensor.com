@@ -1,15 +1,15 @@
-<footer class="noselect">
+<div id="default_footer" class="noselect">
    <hr>
    <div class="row">
       <div class="footer_piece col-xs-6 col-sm-3">
          <a href="https://twitter.com/specksensor" target="_blank" class="social_media_link"><span class="fa-stack fa-lg">
-           <i class="fa fa-square-o fa-stack-2x"></i>
-           <i class="fa fa-twitter fa-stack-1x"></i>
-         </span></a>
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-twitter fa-stack-1x"></i>
+            </span></a>
          <a href="https://www.facebook.com/SpeckSensor" target="_blank" class="social_media_link"><span class="fa-stack fa-lg">
-           <i class="fa fa-square-o fa-stack-2x"></i>
-           <i class="fa fa-facebook fa-stack-1x"></i>
-         </span></a>
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-facebook fa-stack-1x"></i>
+            </span></a>
       </div>
       <div class="footer_piece col-sm-6">
          <div class="link">
@@ -26,4 +26,18 @@
          <p>&copy; specksensor.com</p>
       </div>
    </div>
-</footer>
+</div>
+{{#if isInteriorPage}}
+   <nav id="interior_footer" class="noselect navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+      <div class="container">
+         <div class="navbar-header">
+            <ul class="nav navbar-nav navbar-right navbar-tab-item">
+               <li class="pull-left {{#ifEqual section 'dashboard'}}active{{/ifEqual}}"><a href="/dashboard" title="Dashboard"><i class="fa fa-bar-chart"></i></a></li>
+               <li class="pull-left {{#ifEqual section 'devices'}}active{{/ifEqual}}"><a href="/devices" title="Devices" class="speck_icon_anchor"><i class="speck_icon"></i></a></li>
+               <li class="pull-left {{#ifEqual section 'account'}}active{{/ifEqual}}"><a href="/account" title="User Profile"><i class="fa fa-user"></i></a></li>
+               <li class="pull-right"><a href="/logout" title="Log Out"><i class="fa fa-sign-out"></i></a></li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+{{/if}}

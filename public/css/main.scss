@@ -14,29 +14,37 @@ $LARGE_WIDTH: 1200px;
 $EASING: all 0.2s ease;
 $LINK_COLOR: #337ab7;
 $NAVBAR_TEXT_COLOR: rgb(157, 157, 157);
+$INTERIOR_FOOTER_HEIGHT: 50px;
 // =====================================================================================================================
 // Global
 // =====================================================================================================================
 
-html, body {
-   height: 100%;
-}
-
 @mixin shrunken_body_padding {
    // Required padding for .navbar-fixed-top.
-   // Remove if using .navbar-static-top.
    // Change if height of navigation changes.
    padding-top: $NAVBAR_HEIGHT_SHRUNKEN;
 }
 
 body {
    // Required padding for .navbar-fixed-top.
-   // Remove if using .navbar-static-top.
    // Change if height of navigation changes.
    padding-top: $NAVBAR_HEIGHT_DEFAULT;
 
+   // Use a default bottom padding of 0.  This
+   // is overridden below for interior pages.
+   // with a width smaller than $SMALL_WIDTH
+   padding-bottom: 0;
+
    @media(max-width: $SMALL_WIDTH) {
       @include shrunken_body_padding;
+   }
+}
+
+body.interior_page {
+   @media(max-width: $SMALL_WIDTH) {
+      // Required padding for .navbar-fixed-bottom.
+      // Change if height of navigation changes.
+      padding-bottom: $INTERIOR_FOOTER_HEIGHT;
    }
 }
 
@@ -996,7 +1004,7 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       -moz-border-radius: 3px;
       padding: 10px;
       margin: 5px 0 5px 0;
-      cursor: pointer;
+      //cursor: pointer;
    }
 }
 
@@ -1025,7 +1033,26 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 // Footer
 // =====================================================================================================================
 
-footer {
+// display the appropriate footer
+body.interior_page {
+   #default_footer {
+      display: block;
+   }
+   #interior_footer {
+      display: none;
+   }
+
+   @media(max-width: $SMALL_WIDTH) {
+      #default_footer {
+         display: none;
+      }
+      #interior_footer {
+         display: block;
+      }
+   }
+}
+
+#default_footer {
    margin: 40px 0 0 0;
 
    .footer_piece {
@@ -1074,6 +1101,71 @@ footer {
 
       .active {
          font-weight: bold;
+      }
+   }
+}
+
+#interior_footer {
+   $INTERIOR_FOOTER_FONT_SIZE_PIXELS: 24px;
+   $ICON_VERTICAL_PADDING: ($INTERIOR_FOOTER_HEIGHT - $INTERIOR_FOOTER_FONT_SIZE_PIXELS) / 2;
+   display: none;
+   position: fixed;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   margin: 0 auto 0 auto;
+   color: $NAVBAR_TEXT_COLOR;
+   z-index: 10;
+   font-size: $INTERIOR_FOOTER_FONT_SIZE_PIXELS;
+
+   height: $INTERIOR_FOOTER_HEIGHT + 1px;
+   min-height: $INTERIOR_FOOTER_HEIGHT + 1px;
+
+   .navbar-header {
+      height: $INTERIOR_FOOTER_HEIGHT;
+
+      .navbar-nav {
+         margin: 0;
+      }
+
+      .navbar-nav > li > a {
+         padding: 0;
+      }
+
+      .nav > li {
+         display: inline-block;
+         width: $INTERIOR_FOOTER_HEIGHT;
+         min-width: $INTERIOR_FOOTER_HEIGHT;
+         max-width: $INTERIOR_FOOTER_HEIGHT;
+         text-align: center;
+
+         a {
+            text-align: center;
+
+            i {
+               padding: $ICON_VERTICAL_PADDING 0;
+            }
+         }
+
+         .speck_icon_anchor {
+            width: $INTERIOR_FOOTER_HEIGHT;
+            height: $INTERIOR_FOOTER_HEIGHT;
+            padding: 15px 0;
+         }
+
+         .speck_icon {
+            display: inline-block;
+            width: 25px;
+            height: 20px;
+            background: url('../images/speck_icon_grey@2x.png') no-repeat;
+            background-size: 25px 20px;
+         }
+      }
+
+      .nav > li.active, .nav > li:hover {
+         .speck_icon {
+            background-image: url('../images/speck_icon_white@2x.png');
+         }
       }
    }
 }

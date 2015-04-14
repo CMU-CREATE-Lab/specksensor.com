@@ -28,7 +28,7 @@
    {{/if}}
    {{> google_analytics}}
 </head>
-<body>
+<body {{#if isInteriorPage}}class="interior_page"{{/if}}>
 {{> navbar}}
 {{> hero_image}}
 {{> carousel}}

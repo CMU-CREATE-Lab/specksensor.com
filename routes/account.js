@@ -24,7 +24,8 @@ router.get('/',
                                {
                                   title : "Account",
                                   section : "account",
-                                  userInfo : userInfoResponse.data
+                                  userInfo : userInfoResponse.data,
+                                  isInteriorPage : true
                                });
                  }
               });
