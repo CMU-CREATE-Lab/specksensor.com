@@ -8,7 +8,7 @@ $SIDEBAR_WIDTH: 250px;
 $NAVBAR_HEIGHT_DEFAULT: 75px;
 $NAVBAR_HEIGHT_SHRUNKEN: 50px;
 $TINY_WIDTH: 500px;
-$SMALL_WIDTH: 767px;
+$SMALL_WIDTH: 767px; // this is intentionally 1 pixel less than bootstrap's small device width
 $MEDIUM_WIDTH: 992px;
 $LARGE_WIDTH: 1200px;
 $EASING: all 0.2s ease;
