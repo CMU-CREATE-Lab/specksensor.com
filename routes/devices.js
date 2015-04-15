@@ -8,8 +8,7 @@ router.get('/',
                          {
                             title : "Devices",
                             section : "devices",
-                            speckProductId : config.get("product:id"),
-                            isInteriorPage : true
+                            speckProductId : config.get("product:id")
                          });
            });
 

@@ -14,7 +14,7 @@ $LARGE_WIDTH: 1200px;
 $EASING: all 0.2s ease;
 $LINK_COLOR: #337ab7;
 $NAVBAR_TEXT_COLOR: rgb(157, 157, 157);
-$INTERIOR_FOOTER_HEIGHT: 50px;
+$IS_LOGGED_IN_FOOTER_HEIGHT: 50px;
 // =====================================================================================================================
 // Global
 // =====================================================================================================================
@@ -40,11 +40,11 @@ body {
    }
 }
 
-body.interior_page {
+body.is_logged_in {
    @media(max-width: $SMALL_WIDTH) {
       // Required padding for .navbar-fixed-bottom.
       // Change if height of navigation changes.
-      padding-bottom: $INTERIOR_FOOTER_HEIGHT;
+      padding-bottom: $IS_LOGGED_IN_FOOTER_HEIGHT;
    }
 }
 
@@ -1034,11 +1034,11 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 // =====================================================================================================================
 
 // display the appropriate footer
-body.interior_page {
+body.is_logged_in {
    #default_footer {
       display: block;
    }
-   #interior_footer {
+   #is_logged_in_and_on_mobile_footer {
       display: none;
    }
 
@@ -1046,7 +1046,7 @@ body.interior_page {
       #default_footer {
          display: none;
       }
-      #interior_footer {
+      #is_logged_in_and_on_mobile_footer {
          display: block;
       }
    }
@@ -1105,9 +1105,9 @@ body.interior_page {
    }
 }
 
-#interior_footer {
-   $INTERIOR_FOOTER_FONT_SIZE_PIXELS: 24px;
-   $ICON_VERTICAL_PADDING: ($INTERIOR_FOOTER_HEIGHT - $INTERIOR_FOOTER_FONT_SIZE_PIXELS) / 2;
+#is_logged_in_and_on_mobile_footer {
+   $IS_LOGGED_IN_AND_ON_MOBILE_FOOTER_FONT_SIZE_PIXELS: 24px;
+   $ICON_VERTICAL_PADDING: ($IS_LOGGED_IN_FOOTER_HEIGHT - $IS_LOGGED_IN_AND_ON_MOBILE_FOOTER_FONT_SIZE_PIXELS) / 2;
    display: none;
    position: fixed;
    left: 0;
@@ -1116,13 +1116,13 @@ body.interior_page {
    margin: 0 auto 0 auto;
    color: $NAVBAR_TEXT_COLOR;
    z-index: 10;
-   font-size: $INTERIOR_FOOTER_FONT_SIZE_PIXELS;
+   font-size: $IS_LOGGED_IN_AND_ON_MOBILE_FOOTER_FONT_SIZE_PIXELS;
 
-   height: $INTERIOR_FOOTER_HEIGHT + 1px;
-   min-height: $INTERIOR_FOOTER_HEIGHT + 1px;
+   height: $IS_LOGGED_IN_FOOTER_HEIGHT + 1px;
+   min-height: $IS_LOGGED_IN_FOOTER_HEIGHT + 1px;
 
    .navbar-header {
-      height: $INTERIOR_FOOTER_HEIGHT;
+      height: $IS_LOGGED_IN_FOOTER_HEIGHT;
 
       .navbar-nav {
          margin: 0;
@@ -1134,9 +1134,9 @@ body.interior_page {
 
       .nav > li {
          display: inline-block;
-         width: $INTERIOR_FOOTER_HEIGHT;
-         min-width: $INTERIOR_FOOTER_HEIGHT;
-         max-width: $INTERIOR_FOOTER_HEIGHT;
+         width: $IS_LOGGED_IN_FOOTER_HEIGHT;
+         min-width: $IS_LOGGED_IN_FOOTER_HEIGHT;
+         max-width: $IS_LOGGED_IN_FOOTER_HEIGHT;
          text-align: center;
 
          a {
@@ -1148,8 +1148,8 @@ body.interior_page {
          }
 
          .speck_icon_anchor {
-            width: $INTERIOR_FOOTER_HEIGHT;
-            height: $INTERIOR_FOOTER_HEIGHT;
+            width: $IS_LOGGED_IN_FOOTER_HEIGHT;
+            height: $IS_LOGGED_IN_FOOTER_HEIGHT;
             padding: 15px 0;
          }
 
