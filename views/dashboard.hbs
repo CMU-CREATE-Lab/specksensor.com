@@ -20,6 +20,7 @@
    var SEVEN_DAYS_IN_SECS = 604800;
 
    var MEDIUM_DEVICE_WIDTH_PIXELS = 992;
+   var SMALL_DEVICE_WIDTH_PIXELS = 768;
 
    var esdr = null;
 
@@ -895,6 +896,9 @@
       else {
          $(".menu_button").show();
       }
+
+      // when in
+      $("#channel_switcher_menu").toggleClass("dropup", $(window).width() < SMALL_DEVICE_WIDTH_PIXELS);
    }
 
    function setRangeFromSecondsAgoToNow(numSecondsAgo) {
