@@ -699,6 +699,11 @@ body.shrink {
 
 #dashboard {
   margin: 0 auto 0 auto; }
+  #dashboard #loading_panel {
+    position: relative;
+    margin: 100px auto 0 auto;
+    text-align: center;
+    height: 343px; }
   #dashboard #menu_panel {
     position: absolute;
     width: 180px;
@@ -737,7 +742,7 @@ body.shrink {
     #dashboard #content_area #map_area {
       margin-top: 10px;
       border: 1px solid black;
-      width: 880px;
+      width: 523px;
       height: 300px; }
       @media (max-width: 767px) {
         #dashboard #content_area #map_area {

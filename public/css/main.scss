@@ -8,7 +8,8 @@ $SIDEBAR_WIDTH: 250px;
 $NAVBAR_HEIGHT_DEFAULT: 75px;
 $NAVBAR_HEIGHT_SHRUNKEN: 50px;
 $TINY_WIDTH: 500px;
-$SMALL_WIDTH: 767px; // this is intentionally 1 pixel less than bootstrap's small device width
+// intentionally 1 pixel less than bootstrap's small device width
+$SMALL_WIDTH: 767px;
 $MEDIUM_WIDTH: 992px;
 $LARGE_WIDTH: 1200px;
 $EASING: all 0.2s ease;
@@ -907,6 +908,13 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 #dashboard {
    margin: 0 auto 0 auto;
 
+   #loading_panel {
+      position: relative;
+      margin: 100px auto 0 auto;
+      text-align: center;
+      height: 343px;
+   }
+
    #menu_panel {
       position: absolute;
       width: $DASHBOARD_MENU_PANEL_WIDTH - (2*$DASHBOARD_MENU_PANEL_PADDING);
@@ -970,7 +978,7 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       #map_area {
          margin-top: 10px;
          border: 1px solid black;
-         width: 880px;
+         width: 523px;
          height: 300px;
 
          @media(max-width: $SMALL_WIDTH) {
