@@ -720,10 +720,11 @@ body.shrink {
         #dashboard #menu_panel #devices_and_feeds .device_and_feeds .device {
           font-weight: bold; }
         #dashboard #menu_panel #devices_and_feeds .device_and_feeds .feed {
+          padding-left: 1px;
           white-space: nowrap;
           overflow: hidden; }
           #dashboard #menu_panel #devices_and_feeds .device_and_feeds .feed label {
-            margin-left: 3px; }
+            margin-left: 5px; }
   #dashboard #content_area {
     position: relative;
     margin-left: 190px; }

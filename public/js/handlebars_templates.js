@@ -3,11 +3,11 @@
 templates['dashboard_device_and_feeds'] = template({"1":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
-  return "         <div class=\"feed\">\n            <input type=\"checkbox\" id=\"feed_checkbox_"
+  return "         <div class=\"feed\">\n            <input type=\"radio\" id=\"feed_radio_button_"
     + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" class=\"feed_checkbox\" value=\""
+    + "\" name=\"feed_radio_button\" class=\"feed_radio_button\" value=\""
     + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"><label for=\"feed_checkbox_"
+    + "\"><label for=\"feed_radio_button_"
     + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
     + "\">"
     + alias3(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"name","hash":{},"data":data}) : helper)))

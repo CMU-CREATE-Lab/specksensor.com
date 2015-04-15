@@ -938,11 +938,12 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
             }
 
             .feed {
+               padding-left:1px;
                white-space: nowrap;
                overflow: hidden;
 
                label {
-                  margin-left: 3px;
+                  margin-left: 5px;
                }
             }
          }

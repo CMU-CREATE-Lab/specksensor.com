@@ -151,8 +151,8 @@
                                           }
                                        });
 
-                                       // add the click handler for the checkboxes
-                                       $(".feed_checkbox").click(function() {
+                                       // add the click handler for the radio buttons
+                                       $(".feed_radio_button").click(function() {
                                           var feedId = $(this).val();
                                           setFeedSelected(feedId, $(this).is(':checked'));
                                        });
@@ -246,7 +246,7 @@
                var id = marker['id'];
 
                // if the marker for the selected feed is already selected, then remove it
-               setFeedSelected(id, !(selectedFeed && selectedFeed.id == id));
+               setFeedSelected(id, true);
             },
             function() {
                // nothing to do
@@ -541,38 +541,38 @@
    }
 
    function setFeedSelected(feedId, isSelected) {
-      var feed = feedsById[feedId];
+      // make sure the appropriate radio button is selected (the user might have clicked a map marker)
+      $('#feed_radio_button_' + feedId).prop('checked', true);
 
-      // remove the current feed from the grapher (if any)
-      removeFeedFromGrapher(selectedFeed);
+      if (selectedFeed == null || selectedFeed.id != feedId) {
 
-      $("#no_geolocation").hide();
-      $(".grapher_toolbar_content").hide();
+         var feed = feedsById[feedId];
 
-      // uncheck all checkboxes
-      $('.feed_checkbox').prop('checked', false);
+         // remove the current feed from the grapher (if any)
+         removeFeedFromGrapher(selectedFeed);
 
-      if (isSelected) {
-         selectedFeed = feed;
+         $("#no_geolocation").hide();
+         $(".grapher_toolbar_content").hide();
 
-         // check the appropriate checkbox
-         $('#feed_checkbox_' + selectedFeed.id).prop('checked', true);
+         if (isSelected) {
+            selectedFeed = feed;
 
-         if (selectedFeed.latitude == null || selectedFeed.longitude == null) {
-            $("#no_geolocation").show();
+            if (selectedFeed.latitude == null || selectedFeed.longitude == null) {
+               $("#no_geolocation").show();
+            }
+
+            $("#time_range_switcher_menu").show();
+
+            // update the grapher
+            addFeedToGrapher(selectedFeed);
+         }
+         else {
+            selectedFeed = null;
          }
 
-         $("#time_range_switcher_menu").show();
-
-         // update the grapher
-         addFeedToGrapher(selectedFeed);
+         // update markers
+         renderMarkers();
       }
-      else {
-         selectedFeed = null;
-      }
-
-      // update markers
-      renderMarkers();
    }
 
    function removeFeedFromGrapher(feed) {

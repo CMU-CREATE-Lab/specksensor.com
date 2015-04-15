@@ -3,7 +3,7 @@
    <div id="feeds_for_device_{{id}}">
       {{#each feeds}}
          <div class="feed">
-            <input type="checkbox" id="feed_checkbox_{{id}}" class="feed_checkbox" value="{{id}}"><label for="feed_checkbox_{{id}}">{{name}}</label>
+            <input type="radio" id="feed_radio_button_{{id}}" name="feed_radio_button" class="feed_radio_button" value="{{id}}"><label for="feed_radio_button_{{id}}">{{name}}</label>
          </div>
       {{/each}}
    </div>
