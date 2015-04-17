@@ -4,17 +4,23 @@
 // For details, see http://www.apache.org/licenses/LICENSE-2.0.
 // =====================================================================================================================
 
-$SIDEBAR_WIDTH: 250px;
-$NAVBAR_HEIGHT_DEFAULT: 75px;
-$NAVBAR_HEIGHT_SHRUNKEN: 50px;
-// intentionally 1 pixel less than bootstrap's small device width
+// These are all intentionally 1 pixel less than bootstrap's defined widths
+$TINY_WIDTH: 320px;
+$EXTRA_EXTRA_SMALL_WIDTH: 449px;
+$EXTRA_SMALL_WIDTH: 629px;
 $SMALL_WIDTH: 767px;
-$MEDIUM_WIDTH: 992px;
-$LARGE_WIDTH: 1200px;
+$MEDIUM_WIDTH: 991px;
+$LARGE_WIDTH: 1199px;
+
 $EASING: all 0.2s ease;
 $LINK_COLOR: #337ab7;
+
 $NAVBAR_TEXT_COLOR: rgb(157, 157, 157);
+$NAVBAR_HEIGHT_DEFAULT: 75px;
+$NAVBAR_HEIGHT_SHRUNKEN: 50px;
+
 $IS_LOGGED_IN_FOOTER_HEIGHT: 50px;
+
 // =====================================================================================================================
 // Global
 // =====================================================================================================================
@@ -35,13 +41,13 @@ body {
    // with a width smaller than $SMALL_WIDTH
    padding-bottom: 0;
 
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       @include shrunken_body_padding;
    }
 }
 
 body.is_logged_in {
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       // Required padding for .navbar-fixed-bottom.
       // Change if height of navigation changes.
       padding-bottom: $IS_LOGGED_IN_FOOTER_HEIGHT;
@@ -62,7 +68,7 @@ body.shrink {
 
 .col-lg-12 {
    width: 100%;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       float: left;
    }
 }
@@ -154,7 +160,7 @@ body.shrink {
       padding-top: 15px;
       font-size: 14px;
       @include easing;
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          padding-top: 10px;
       }
    }
@@ -182,7 +188,7 @@ body.shrink {
    }
 
    .dropdown-menu > li > a {
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          padding-top: 10px;
          padding-left: 35px;
       }
@@ -190,7 +196,7 @@ body.shrink {
 
    .dropdown-menu-active {
       font-weight: bold;
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          font-weight: normal;
          color: white;
       }
@@ -229,7 +235,7 @@ body.shrink {
             height: 18px;
          }
 
-         @media(max-width: $SMALL_WIDTH) {
+         @media (max-width: $SMALL_WIDTH) {
             position: absolute;
             display: block;
             top: 15px;
@@ -248,14 +254,14 @@ body.shrink {
    }
 
    .hide_in_mobile_navbar {
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          display: none;
       }
    }
 
    .show_in_mobile_navbar {
       display: none;
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          display: block;
       }
    }
@@ -280,16 +286,16 @@ body.shrink {
       font-size: 12px;
       @include easing;
 
-      @media(max-width: $MEDIUM_WIDTH) {
+      @media (max-width: $MEDIUM_WIDTH) {
          right: -5px !important;
       }
 
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          display: none;
       }
    }
 
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       @include shrunken_navbar;
 
    }
@@ -347,7 +353,7 @@ body.shrink {
       background-position: right;
    }
 
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       height: 300px;
    }
 }
@@ -370,7 +376,7 @@ body.shrink {
       max-width: 340px;
    }
 
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       #about_us_logos {
          text-align: center;
       }
@@ -390,7 +396,7 @@ body.shrink {
       max-width: 500px;
    }
 
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       #screenshot {
          text-align: center;
       }
@@ -408,11 +414,11 @@ body.shrink {
 .carousel {
    height: 450px;
 
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       height: 400px;
    }
 
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       height: 300px;
    }
 
@@ -444,22 +450,22 @@ body.shrink {
    font-size: 1.6vw;
    width: 695px;
    text-align: right;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       font-size: 2vw;
       width: 585px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       width: 350px;
    }
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       margin-top: 30px;
       margin-right: 50px;
    }
-   @media(max-width: 620px) {
+   @media (max-width: 620px) {
       font-size: 2.3vw;
       width: 270px;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       display: none;
    }
 }
@@ -472,23 +478,23 @@ body.shrink {
    font-size: 1.65vw;
    width: 655px;
    text-align: right;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       font-size: 2vw;
       width: 520px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       font-size: 2.15vw;
       width: 400px;
    }
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       margin-top: 30px;
       margin-right: 50px;
    }
-   @media(max-width: 620px) {
+   @media (max-width: 620px) {
       font-size: 2.4vw;
       width: 250px;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       display: none;
    }
 }
@@ -504,21 +510,21 @@ body.shrink {
    font-size: 30px;
    width: 407px;
    text-align: left;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       left: -530px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       left: -390px;
       top: 50px;
       font-size: 25px;
       width: 330px;
    }
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       font-size: 2.5vw;
       left: -265px;
       width: 250px;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       display: none;
    }
 }
@@ -533,25 +539,25 @@ body.shrink {
    font-size: 28px;
    width: 407px;
    text-align: right;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       left: -530px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       left: -390px;
       top: 50px;
       font-size: 20px;
       width: 360px;
       right: 50px;
    }
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       font-size: 2.42vw;
       left: -265px;
       width: 300px;
    }
-   @media(max-width: 620px) {
+   @media (max-width: 620px) {
       width: 250px;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       display: none;
    }
 }
@@ -567,23 +573,23 @@ body.shrink {
    font-size: 28px;
    width: 507px;
    text-align: left;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       left: -430px;
       font-size: 28px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       left: -385px;
       top: 50px;
       font-size: 20px;
       width: 330px;
    }
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       font-size: 2.5vw;
       left: -250px;
       top: 40px;
       width: 245px;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       display: none;
    }
 }
@@ -598,25 +604,25 @@ body.shrink {
    font-size: 28px;
    width: 507px;
    text-align: right;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       left: -530px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       left: -390px;
       top: 50px;
       font-size: 20px;
       width: 410px;
       right: 50px;
    }
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       font-size: 2.42vw;
       left: -265px;
       width: 300px;
    }
-   @media(max-width: 620px) {
+   @media (max-width: 620px) {
       width: 250px;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       display: none;
    }
 }
@@ -630,7 +636,7 @@ body.shrink {
    .big_quote {
       font-size: 34px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       top: -10px;
       height: 100%;
    }
@@ -640,10 +646,10 @@ body.shrink {
    top: -10px;
    position: absolute;
    width: 550px;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       width: 500px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       top: 0px;
       left: 0px;
       width: 100%;
@@ -656,11 +662,11 @@ body.shrink {
    left: 270px;
    position: absolute;
    width: 550px;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       width: 500px;
       left: 0px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       top: 15px;
       left: 0px;
       width: 100%;
@@ -673,15 +679,15 @@ body.shrink {
    left: 600px;
    position: absolute;
    width: 550px;
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       width: 425px;
       left: 550px;
       top: 40px;
    }
-   @media(max-width: 1045px) {
+   @media (max-width: 1045px) {
       width: 400px;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       top: 30px;
       left: 0px;
       width: 100%;
@@ -692,25 +698,25 @@ body.shrink {
 .col-circle1 {
    width: 38% !important;
    padding-left: 0px;
-   @media(max-width: 1045px) {
+   @media (max-width: 1045px) {
       width: 36% !important;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       padding-left: 30%;
    }
-   @media(max-width: 640px) {
+   @media (max-width: 640px) {
       padding-left: 27%;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       padding-left: 20%;
    }
-   @media(max-width: 460px) {
+   @media (max-width: 460px) {
       padding-left: 12%;
    }
-   @media(max-width: 360px) {
+   @media (max-width: 360px) {
       padding-left: 11%;
    }
-   @media(max-width: 330px) {
+   @media (max-width: 330px) {
       padding-left: 1%;
    }
 }
@@ -718,25 +724,25 @@ body.shrink {
 .col-circle2 {
    width: 37% !important;
    padding-left: 0px;
-   @media(max-width: 1045px) {
+   @media (max-width: 1045px) {
       width: 35% !important;
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       padding-left: 30%;
    }
-   @media(max-width: 640px) {
+   @media (max-width: 640px) {
       padding-left: 27%;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       padding-left: 20%;
    }
-   @media(max-width: 460px) {
+   @media (max-width: 460px) {
       padding-left: 12%;
    }
-   @media(max-width: 360px) {
+   @media (max-width: 360px) {
       padding-left: 11%;
    }
-   @media(max-width: 330px) {
+   @media (max-width: 330px) {
       padding-left: 1%;
    }
 }
@@ -744,22 +750,22 @@ body.shrink {
 .col-circle3 {
    width: 0% !important;
    padding-left: 0px;
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       padding-left: 30%;
    }
-   @media(max-width: 640px) {
+   @media (max-width: 640px) {
       padding-left: 27%;
    }
-   @media(max-width: 545px) {
+   @media (max-width: 545px) {
       padding-left: 20%;
    }
-   @media(max-width: 460px) {
+   @media (max-width: 460px) {
       padding-left: 12%;
    }
-   @media(max-width: 360px) {
+   @media (max-width: 360px) {
       padding-left: 11%;
    }
-   @media(max-width: 330px) {
+   @media (max-width: 330px) {
       padding-left: 1%;
    }
 }
@@ -802,11 +808,11 @@ body.shrink {
    width: 560px;
    height: 315px;
 
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       width: 400px;
       height: 225px;
    }
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       width: 300px;
       height: 169px;
    }
@@ -824,7 +830,7 @@ body.shrink {
       text-align: left;
    }
 
-   @media(max-width: 630px) {
+   @media (max-width: 630px) {
       .order_button_container {
          margin-left: 0;
          text-align: center;
@@ -842,12 +848,12 @@ body.shrink {
 // =====================================================================================================================
 
 #what_is_speck {
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       .panel-body {
          min-height: 360px;
       }
    }
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       .panel-body {
          min-height: 0px;
       }
@@ -877,7 +883,7 @@ body.shrink {
       min-height: 110px;
    }
 
-   @media(max-width: $LARGE_WIDTH) {
+   @media (max-width: $LARGE_WIDTH) {
       .col-lg-7 {
          padding-top: 20px;
       }
@@ -891,7 +897,7 @@ body.shrink {
       }
    }
 
-   @media(max-width: $MEDIUM_WIDTH) {
+   @media (max-width: $MEDIUM_WIDTH) {
       .panel-body p {
          min-height: 0px !important;
       }
@@ -914,9 +920,55 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       height: 343px;
    }
 
-   #menu_panel {
+   .horizontal_list_or_menu_button {
+
+      .dropdown-menu > .menu_item {
+         a.selected {
+            font-weight: bold;
+         }
+
+         a.unselected {
+            font-weight: normal;
+         }
+      }
+
+      .horizontal-list {
+         padding: 0;
+         margin-bottom: 0;
+
+         .menu_item {
+            display: inline-block;
+            margin-right: 20px;
+            font-size: 12px;
+            line-height: 24px;
+
+            a.selected {
+               cursor: default;
+               font-weight: bold;
+               color: black;
+               text-decoration: none;
+            }
+
+            a.unselected {
+               cursor: pointer;
+               color: $LINK_COLOR;
+            }
+            a.unselected:hover {
+               text-decoration: underline;
+            }
+         }
+
+         .menu_item:last-of-type {
+            margin-right: 0;
+         }
+      }
+   }
+
+   #devices_and_feeds_sidebar_menu_container {
       position: absolute;
-      width: $DASHBOARD_MENU_PANEL_WIDTH - (2*$DASHBOARD_MENU_PANEL_PADDING);
+      left: -190px;
+      display: block;
+      width: $DASHBOARD_MENU_PANEL_WIDTH - (2 * $DASHBOARD_MENU_PANEL_PADDING);
       margin-top: 72px;
       padding: $DASHBOARD_MENU_PANEL_PADDING;
 
@@ -927,8 +979,8 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
          font-weight: bold;
       }
 
-      #devices_and_feeds {
-         overflow-y: scroll;
+      #devices_and_feeds_sidebar_menu {
+         overflow-y: auto;
 
          .device_and_feeds {
             margin-top: 5px;
@@ -938,11 +990,15 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
             }
 
             .feed {
-               padding-left:1px;
+               padding-left: 1px;
                white-space: nowrap;
                overflow: hidden;
 
+               input {
+                  cursor: pointer;
+               }
                label {
+                  cursor: pointer;
                   margin-left: 5px;
                }
             }
@@ -950,10 +1006,7 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       }
    }
 
-   #content_area {
-      position: relative;
-      margin-left: $DASHBOARD_MENU_PANEL_WIDTH;
-
+   #export_button_container {
       #export_button {
          padding: 2px 5px 2px 5px;
          font-size: 18px;
@@ -964,38 +1017,216 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       #export_button_menu {
          margin-top: -5px;
       }
+   }
 
-      #grapher_bottom_toolbar {
-         margin-top: 5px;
+   .selected_device_and_feed_name {
+      display: inline-block;
+
+      .device_name_label {
+         display: inline-block;
+         font-weight: bold;
+         margin-right: 5px;
       }
 
-      #time_range_switcher_panel, #time_range_switcher_panel_placeholder {
-         display: none;
-         font-size: 12px;
+      .feed_name_label {
+         display: inline-block;
+      }
+   }
+
+   #grapher_toolbar_top {
+      position: relative;
+      margin-bottom: 5px;
+
+      #selected_device_and_feed_name_container {
+         display: block;
+
+         #devices_and_feeds_dropdown_menu {
+            .feed {
+               .feed-icon.placeholder {
+                  width: 14px;
+                  height: 14px;
+               }
+            }
+         }
+      }
+
+      #time_range_switcher_menu {
+         position: relative;
+         display: block;
+         height: 30px;
          margin-bottom: 5px;
+         margin-right: 5px;
+
+         #time_range_switcher_menu_items {
+            line-height: 30px;
+         }
+
+         #time_range_switcher_menu_icon {
+            display: none;
+
+            @media (max-width: $TINY_WIDTH) {
+               display: inline-block;
+            }
+         }
+
+         #time_range_switcher_menu_label {
+            display: inline-block;
+
+            @media (max-width: $TINY_WIDTH) {
+               display: none;
+            }
+         }
+
+         #time_range_switcher_menu_caret {
+            display: inline-block;
+
+            @media (max-width: $TINY_WIDTH) {
+               display: none;
+            }
+         }
+
       }
+   }
+
+   #grapher_toolbar_bottom {
+      padding-top: 5px;
+      height: 30px;
+      line-height: 30px;
+   }
+
+   #map_area_container {
+      position: relative;
 
       #map_area {
+         position: relative;
          margin-top: 10px;
          border: 1px solid black;
          width: 523px;
          height: 300px;
-
-         @media(max-width: $SMALL_WIDTH) {
-            display: none;
-         }
       }
 
       #no_geolocation {
          position: absolute;
-         width: 350px;
+         width: 300px;
          text-align: center;
          padding: 2px;
          top: 1px;
          left: 50%;
-         margin: 0 auto 0 -175px;
+         margin: 0 auto 0 -155px;
          background-color: rgba(255, 200, 200, 0.75);
          display: none;
+      }
+   }
+
+   // definitions for the content_area for things which don't change based on how many feeds the user has
+   #content_area {
+      position: relative;
+
+      #selected_device_and_feed_name_label {
+         line-height: 30px;
+      }
+
+      // hide the page title and map when the width is small
+      @media (max-width: $SMALL_WIDTH) {
+         #page_title {
+            display: none;
+         }
+
+         #map_area_container {
+            display: none;
+         }
+
+         // add some margin above the top toolbar since the page title will be hidden
+         #grapher_toolbar_top {
+            margin-top: 15px;
+         }
+      }
+
+      @media (max-width: $EXTRA_EXTRA_SMALL_WIDTH) {
+         // when the width is XXS, save space by hiding the device name label
+         .device_name_label {
+            display: none;
+         }
+      }
+
+      // Special cases for things in the content_area when the user has only 1 feed
+      &.has_only_one_feed {
+         margin-left: 0;
+
+         // hide the sidebar menu
+         #devices_and_feeds_sidebar_menu_container {
+            display: none;
+         }
+
+         // hide the dropdown menu
+         #devices_and_feeds_dropdown_menu_container {
+            display: none;
+         }
+
+         // show the device name and feed label
+         #selected_device_and_feed_name_label {
+            display: block;
+         }
+
+         @media (max-width: $EXTRA_SMALL_WIDTH) {
+            // make the time range switcher popup menu appear at the top-right
+            #time_range_switcher_menu {
+               position: absolute;
+               right: 0;
+               bottom: 0;
+               margin-bottom: 0;
+            }
+         }
+      }
+
+      // Special cases for things in the content_area when the user has multiple feeds
+      &.has_multiple_feeds {
+         margin-left: $DASHBOARD_MENU_PANEL_WIDTH;
+
+         // show the sidebar
+         #devices_and_feeds_sidebar_menu_container {
+            display: block;
+         }
+
+         // only show the dropdown menu if the width is small
+         #devices_and_feeds_dropdown_menu_container {
+            display: none;
+         }
+
+         // hide the device name and feed label (since we'll show either the sidebar menu or the dropdown menu instead)
+         #selected_device_and_feed_name_label {
+            display: none;
+         }
+
+         @media (max-width: $SMALL_WIDTH) {
+            // no need for a left margin because the sidebar menu will be hidden (see below)
+            margin-left: 0;
+
+            // hide the sidebar menu when the width is small
+            #devices_and_feeds_sidebar_menu_container {
+               display: none;
+            }
+
+            // show the dropdown menu instead of the sidebar menu
+            #devices_and_feeds_dropdown_menu_container {
+               display: block;
+            }
+
+            // make the time range switcher popup menu appear at the top-right
+            #time_range_switcher_menu {
+               position: relative;
+            }
+         }
+
+         @media (max-width: $EXTRA_SMALL_WIDTH) {
+            // make the time range switcher popup menu appear at the top-right
+            #time_range_switcher_menu {
+               position: absolute;
+               right: 0;
+               bottom: 0;
+               margin-bottom: 0;
+            }
+         }
       }
    }
 }
@@ -1050,7 +1281,7 @@ body.is_logged_in {
       display: none;
    }
 
-   @media(max-width: $SMALL_WIDTH) {
+   @media (max-width: $SMALL_WIDTH) {
       #default_footer {
          display: none;
       }
@@ -1065,7 +1296,7 @@ body.is_logged_in {
 
    .footer_piece {
       line-height: 32px;
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          margin-bottom: 10px;
       }
    }
@@ -1079,7 +1310,7 @@ body.is_logged_in {
       text-align: center;
 
       // hide the links for small width--they'll appear in the hamburger menu instead
-      @media(max-width: $SMALL_WIDTH) {
+      @media (max-width: $SMALL_WIDTH) {
          display: none;
       }
    }

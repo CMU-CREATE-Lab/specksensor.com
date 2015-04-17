@@ -1,4 +1,9 @@
 <link href="/css/grapher.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+   body {
+      overflow-x: hidden;
+   }
+</style>
 <script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}" type="text/javascript"></script>
 <script src="{{esdrUrl}}/lib/bodytrack-grapher/org/bodytrack/grapher/grapher2.nocache.js" type="text/javascript"></script>
 <script src="{{esdrUrl}}/lib/plot-manager/org/bodytrack/grapher/PlotManager.js" type="text/javascript"></script>
@@ -25,6 +30,7 @@
    var esdr = null;
 
    var feedsById = {};
+   var deviceNamesById = {};
    var selectedFeed = null;
    var selectedChannelName = DEFAULT_CHANNEL_NAMES[0];
 
@@ -128,6 +134,15 @@
                                        // it received the most recent upload
                                        selectedFeed = foundFeeds.rows[0];
 
+                                       // set a flag in the form of a CSS class which the CSS rules can use to change
+                                       // rendering behavior depending on whether the user has one or many feeds.
+                                       if (foundFeeds.rows.length == 1) {
+                                          $("#content_area").addClass('has_only_one_feed');
+                                       }
+                                       else {
+                                          $("#content_area").addClass('has_multiple_feeds');
+                                       }
+
                                        // sort the feeds by deviceId
                                        var feedsByDeviceId = {};
                                        foundFeeds.rows.forEach(function(feed) {
@@ -139,22 +154,30 @@
                                           feedsByDeviceId[feed.deviceId].push(feed);
                                        });
 
-                                       // build the devices and feeds menu
-                                       var deviceAndFeedsTemplate = Handlebars.templates['dashboard_device_and_feeds'];
+                                       // build the devices and feeds menus
+                                       var deviceAndFeedsSidebarMenuItemTemplate = Handlebars.templates['dashboard_device_and_feeds_sidebar_menu_item'];
+                                       var deviceAndFeedsDropdownMenuItemTemplate = Handlebars.templates['dashboard_device_and_feeds_dropdown_menu_item'];
                                        devices.forEach(function(device) {
                                           device.feeds = feedsByDeviceId[device.id];
+                                          deviceNamesById[device.id] = device.name;
 
                                           // don't show devices here which have no feeds
                                           if (device.feeds && device.feeds.length > 0) {
-                                             var deviceAndFeedsElement = $(deviceAndFeedsTemplate(device));
-                                             $("#devices_and_feeds").append(deviceAndFeedsElement);
+                                             $("#devices_and_feeds_sidebar_menu").append($(deviceAndFeedsSidebarMenuItemTemplate(device)));
+                                             var dropdownMenuItemElement = $(deviceAndFeedsDropdownMenuItemTemplate(device));
+                                             $("#devices_and_feeds_dropdown_menu").append(dropdownMenuItemElement);
                                           }
                                        });
 
                                        // add the click handler for the radio buttons
                                        $(".feed_radio_button").click(function() {
                                           var feedId = $(this).val();
-                                          setFeedSelected(feedId, $(this).is(':checked'));
+                                          setFeedSelected(feedId);
+                                       });
+
+                                       $("#devices_and_feeds_dropdown_menu").find(".feed").click(function() {
+                                          var feedId = $(this).attr('feedId');
+                                          setFeedSelected(feedId);
                                        });
 
                                        initializeMap();
@@ -245,8 +268,7 @@
             function(marker) {
                var id = marker['id'];
 
-               // if the marker for the selected feed is already selected, then remove it
-               setFeedSelected(id, true);
+               setFeedSelected(id);
             },
             function() {
                // nothing to do
@@ -289,12 +311,7 @@
          });
          $("#time_range_switcher_menu_items").append(timeRangeElement);
       });
-      if (selectedFeed) {
-         $("#time_range_switcher_menu").show();
-      }
-      else {
-         $("#time_range_switcher_menu").hide();
-      }
+      $("#time_range_switcher_menu").show();
 
       var now = new Date();
       var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -312,8 +329,8 @@
       plotManager.setWillAutoResizeWidth(true, function() {
          return $("#content_area").width()         // window width
                 - $(".y_axis").width()             // Y axis width
-                - $("#y_axis_label").height()      // the height of the Y axis label
-                - 5                                // right margin
+                //- $("#y_axis_label").height()      // the height of the Y axis label
+                //- 5                                // right margin
                 - 3;                               // grapher and Y axis borders
       });
 
@@ -328,7 +345,7 @@
          };
 
          // auto-scale the y-axes
-         if (isAutoScaleOn && selectedFeed && hasDateRangeChanged) {
+         if (isAutoScaleOn && hasDateRangeChanged) {
             autoScaleYAxes();
          }
 
@@ -344,16 +361,15 @@
 
       addFeedToGrapher(selectedFeed);
 
-      $("#loading_panel").hide();
-      $("#grapher_container").show();
-      $("#menu_panel").show();
-
       $("#export_this_channel_button").click(function() {
          doExport(false);
       });
       $("#export_all_channels_button").click(function() {
          doExport(true);
       });
+
+      $("#loading_panel").hide();
+      $("#grapher_container").show();
 
       setSizes();
 
@@ -362,12 +378,10 @@
    }
 
    function doExport(willExportAllChannels) {
-      if (selectedFeed) {
-         var idOrApiKey = selectedFeed.isPublic ? selectedFeed.id : selectedFeed.apiKeyReadOnly;
-         var channels = willExportAllChannels ? Object.keys(selectedFeed.channelBounds.channels).sort().join(',') : selectedChannelName;
-         var dateAxisRange = plotManager.getDateAxis().getRange();
-         window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxisRange.min + "&to=" + dateAxisRange.max, '_blank');
-      }
+      var idOrApiKey = selectedFeed.isPublic ? selectedFeed.id : selectedFeed.apiKeyReadOnly;
+      var channels = willExportAllChannels ? Object.keys(selectedFeed.channelBounds.channels).sort().join(',') : selectedChannelName;
+      var dateAxisRange = plotManager.getDateAxis().getRange();
+      window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxisRange.min + "&to=" + dateAxisRange.max, '_blank');
    }
 
    function createCanvasFeatureDetectingMouseEventHandler(featureDetectedCallback, featureNotDetectedCallback) {
@@ -451,7 +465,7 @@
       });
 
       // select the marker corresponding to the currently selected feed
-      setFeedSelected(selectedFeed.id, true);
+      setFeedSelected(selectedFeed.id);
    }
 
    function fitMapBoundsToMarkers() {
@@ -512,7 +526,7 @@
    function drawPoint(markerCoords, marker) {
       var isNoData = marker['value'] == null;
       var radius = (isNoData ? POINT_RADIUS_NO_DATA : POINT_RADIUS_HAS_DATA);
-      if (selectedFeed && selectedFeed.id == marker.id) {
+      if (selectedFeed.id == marker.id) {
          context.beginPath();
          context.arc(markerCoords.x, markerCoords.y, radius + 1, 0, TWO_PI, false);
          context.lineWidth = 2;
@@ -540,35 +554,33 @@
       };
    }
 
-   function setFeedSelected(feedId, isSelected) {
+   function setFeedSelected(feedId) {
       // make sure the appropriate radio button is selected (the user might have clicked a map marker)
       $('#feed_radio_button_' + feedId).prop('checked', true);
 
-      if (selectedFeed == null || selectedFeed.id != feedId) {
+      // uncheck all menu items in the devices and feeds dropdown menu and then check the selected one
+      $("#devices_and_feeds_dropdown_menu").find(".feed-icon").removeClass('fa-check').addClass('placeholder');
+      $('#feed_menu_item_' + feedId).find('.feed-icon').removeClass('placeholder').addClass('fa-check');
 
-         var feed = feedsById[feedId];
+      var feed = feedsById[feedId];
+      $(".device_name_label").text(deviceNamesById[feed.deviceId]);
+      $(".feed_name_label").text(feed.name);
+
+      if (selectedFeed.id != feedId) {
 
          // remove the current feed from the grapher (if any)
          removeFeedFromGrapher(selectedFeed);
 
          $("#no_geolocation").hide();
-         $(".grapher_toolbar_content").hide();
 
-         if (isSelected) {
-            selectedFeed = feed;
+         selectedFeed = feed;
 
-            if (selectedFeed.latitude == null || selectedFeed.longitude == null) {
-               $("#no_geolocation").show();
-            }
-
-            $("#time_range_switcher_menu").show();
-
-            // update the grapher
-            addFeedToGrapher(selectedFeed);
+         if (selectedFeed.latitude == null || selectedFeed.longitude == null) {
+            $("#no_geolocation").show();
          }
-         else {
-            selectedFeed = null;
-         }
+
+         // update the grapher
+         addFeedToGrapher(selectedFeed);
 
          // update markers
          renderMarkers();
@@ -590,7 +602,6 @@
 
          $("#y_axis_label").empty();
          $("#channel_switcher_menu_items").empty();
-         $(".grapher_toolbar_content").hide();
          $(".color_box").hide();
       }
    }
@@ -710,7 +721,6 @@
                $("#channel_switcher_menu_items").append(menuItemElement);
             });
          }
-         $(".grapher_toolbar_content").show();
 
          // The isNewlyLoadedPlot is a flag we need so that we can autoscale the plot after load.  We get the min and
          // max values for the *entire* channel, but, upon first load of the channel in the grapher, we're limiting the
@@ -883,22 +893,33 @@
       //Mike can't be stopped
       sizeBoxen(boxen, "#plot_container", 0);
 
-      // Change the UI for the time range menu and channel menu depending on window size.  If the window is large
-      // enough, show items as a horizontal list of links.  Otherwise, collapse them into a popup menu.
-      var willCollapseToMenuButton = $(window).width() < MEDIUM_DEVICE_WIDTH_PIXELS;
+      // Change the UI for the time range menu and channel menu depending on window size and whether the user
+      // has multiple feeds.  Having multiple feeds matters because the sidebar menu is only shown when there
+      // are multiple feeds, which makes the grapher area narrower, and thus there's less room for these
+      // lists of links.
+      var windowWidth = $(window).width();
+      var TINY_DEVICE_WIDTH_PIXELS = 630;
+      var willCollapseToMenuButton = (windowWidth < TINY_DEVICE_WIDTH_PIXELS) ||
+                                     ((SMALL_DEVICE_WIDTH_PIXELS <= windowWidth) &&
+                                      (windowWidth < MEDIUM_DEVICE_WIDTH_PIXELS) &&
+                                      $("#content_area").hasClass('has_multiple_feeds'));
+
       $(".horizontal_list_or_menu_button").toggleClass("btn-group", willCollapseToMenuButton);
       $(".horizontal_list_or_menu_button_items")
             .toggleClass("dropdown-menu", willCollapseToMenuButton)
             .toggleClass("horizontal-list", !willCollapseToMenuButton);
-      if ($(window).width() >= MEDIUM_DEVICE_WIDTH_PIXELS) {
-         $(".menu_button").hide();
-      }
-      else {
+      if (willCollapseToMenuButton) {
          $(".menu_button").show();
       }
+      else {
+         $(".menu_button").hide();
+      }
 
-      // when in
-      $("#channel_switcher_menu").toggleClass("dropup", $(window).width() < SMALL_DEVICE_WIDTH_PIXELS);
+      // for small devices, make the channel switcher menu drop up
+      $("#channel_switcher_menu").toggleClass("dropup", windowWidth < SMALL_DEVICE_WIDTH_PIXELS);
+
+      // make the devices and feeds dropdown button smaller on tiny devices
+      $("#devices_and_feeds_dropdown_menu_button").toggleClass("btn-sm", windowWidth < TINY_DEVICE_WIDTH_PIXELS);
    }
 
    function setRangeFromSecondsAgoToNow(numSecondsAgo) {
@@ -965,43 +986,54 @@
          Your Speck has not yet uploaded any data. Once it has uploaded some data, you can explore it here.
       </p>
    </div>
-   <div id="menu_panel" style="display:none">
-      <div class="title">My Specks</div>
-      <div id="devices_and_feeds"></div>
-      <div id="show_public_feeds_toggle"></div>
-   </div>
    <div id="content_area" style="display:none">
+      <div id="devices_and_feeds_sidebar_menu_container">
+         <div class="title">My Specks</div>
+         <div id="devices_and_feeds_sidebar_menu"></div>
+      </div>
       <div id="grapher_container" class="noselect" style="display:none">
-         <h2>Dashboard</h2>
+         <h2 id="page_title">Dashboard</h2>
+         <div id="grapher_toolbar_top" class="grapher_toolbar">
+            <div id="selected_device_and_feed_name_container">
+               <div id="selected_device_and_feed_name_label" class="selected_device_and_feed_name">
+                  <div class="device_name_label"></div>
+                  <div class="feed_name_label"></div>
+               </div>
+               <div id="devices_and_feeds_dropdown_menu_container" class="dropdown">
+                  <button id="devices_and_feeds_dropdown_menu_button" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                     <div class="selected_device_and_feed_name">
+                        <div class="device_name_label"></div>
+                        <div class="feed_name_label"></div>
+                     </div>
+                     <span class="caret"></span>
+                  </button>
+                  <ul id="devices_and_feeds_dropdown_menu" class="dropdown-menu" role="menu" aria-labelledby="devices_and_feeds_dropdown_menu_button"></ul>
+               </div>
+            </div>
+            <div id="time_range_switcher_menu" class="horizontal_list_or_menu_button btn-group">
+               <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <i id="time_range_switcher_menu_icon" class="fa fa-clock-o"></i>
+                  <span id="time_range_switcher_menu_label">Time Range</span>
+                  <span id="time_range_switcher_menu_caret" class="caret"></span>
+               </button>
+               <ul id="time_range_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu dropdown-menu-right" role="menu"></ul>
+            </div>
+         </div>
          <table id="grapher" border="0" cellpadding="0" cellspacing="0">
             <tr>
                <td>
-                  <div class="grapher_toolbar">
-                     <div class="grapher_toolbar_content">
-                        <div id="time_range_switcher_menu" class="horizontal_list_or_menu_button btn-group">
-                           <button type="button" class="menu_button btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                              <span id="time_range_switcher_menu_label">Time Range</span> <span class="caret"></span>
-                           </button>
-                           <ul id="time_range_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
-                        </div>
-                     </div>
-                  </div>
+                  <div id="date_axis" class="date_axis"></div>
                </td>
-               <td rowspan="2" align="center" valign="bottom">
-                  <div class="btn-group">
+               <td align="center" valign="bottom">
+                  <div id="export_button_container" class="btn-group">
                      <button id="export_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Download your data">
                         <i class="fa fa-cloud-download"></i>
                      </button>
-                     <ul id="export_button_menu" class="dropdown-menu pull-right" role="menu">
+                     <ul id="export_button_menu" class="dropdown-menu dropdown-menu-right" role="menu">
                         <li><a id="export_this_channel_button" href="#">This Channel</a></li>
                         <li><a id="export_all_channels_button" href="#">All Channels</a></li>
                      </ul>
                   </div>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <div id="date_axis" class="date_axis"></div>
                </td>
             </tr>
             <tr>
@@ -1019,26 +1051,24 @@
             <tr>
                <td colspan="2" align="right">
                   <div id="grapher_toolbar_bottom" class="grapher_toolbar">
-                     <div class="grapher_toolbar_content">
-                        <div class="pull-left">
-                           <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group">
-                              <button type="button" class="menu_button btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                 <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
-                              </button>
-                              <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
-                           </div>
+                     <div class="pull-left">
+                        <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group">
+                           <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                              <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
+                           </button>
+                           <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
                         </div>
+                     </div>
 
-                        <div class="btn-group pull-right">
-                           <a id="auto_scale_toggle_button" class="btn btn-default btn-xs" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
-                        </div>
+                     <div class="btn-group pull-right">
+                        <a id="auto_scale_toggle_button" class="btn btn-default btn-sm" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
                      </div>
                   </div>
                </td>
             </tr>
          </table>
       </div>
-      <div style="position: relative">
+      <div id="map_area_container">
          <div id="map_area"></div>
          <div id="no_geolocation" class="noselect">You have not geolocated the selected feed.</div>
       </div>

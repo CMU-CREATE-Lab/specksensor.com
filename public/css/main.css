@@ -20,7 +20,7 @@ body.shrink {
 
 .col-lg-12 {
   width: 100%; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .col-lg-12 {
       float: left; } }
 
@@ -169,7 +169,7 @@ body.shrink {
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease; }
-    @media (max-width: 992px) {
+    @media (max-width: 991px) {
       #main_navbar #zip_code_container {
         right: -5px !important; } }
     @media (max-width: 767px) {
@@ -280,7 +280,7 @@ body.shrink {
 
 .carousel {
   height: 450px; }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .carousel {
       height: 400px; } }
   @media (max-width: 767px) {
@@ -306,11 +306,11 @@ body.shrink {
   font-size: 1.6vw;
   width: 695px;
   text-align: right; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .particles-hero-text {
       font-size: 2vw;
       width: 585px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .particles-hero-text {
       width: 350px; } }
   @media (max-width: 767px) {
@@ -333,11 +333,11 @@ body.shrink {
   font-size: 1.65vw;
   width: 655px;
   text-align: right; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .what-is-speck-hero-text {
       font-size: 2vw;
       width: 520px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .what-is-speck-hero-text {
       font-size: 2.15vw;
       width: 400px; } }
@@ -364,10 +364,10 @@ body.shrink {
   font-size: 30px;
   width: 407px;
   text-align: left; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .home-hero-text1 {
       left: -530px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .home-hero-text1 {
       left: -390px;
       top: 50px;
@@ -392,10 +392,10 @@ body.shrink {
   font-size: 28px;
   width: 407px;
   text-align: right; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .home-hero-text2 {
       left: -530px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .home-hero-text2 {
       left: -390px;
       top: 50px;
@@ -425,11 +425,11 @@ body.shrink {
   font-size: 28px;
   width: 507px;
   text-align: left; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .home-hero-text3 {
       left: -430px;
       font-size: 28px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .home-hero-text3 {
       left: -385px;
       top: 50px;
@@ -455,10 +455,10 @@ body.shrink {
   font-size: 28px;
   width: 507px;
   text-align: right; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .home-hero-text4 {
       left: -530px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .home-hero-text4 {
       left: -390px;
       top: 50px;
@@ -485,7 +485,7 @@ body.shrink {
   line-height: 28px; }
   .testimonials .big_quote {
     font-size: 34px; }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .testimonials {
       top: -10px;
       height: 100%; } }
@@ -494,10 +494,10 @@ body.shrink {
   top: -10px;
   position: absolute;
   width: 550px; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .ts1 {
       width: 500px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .ts1 {
       top: 0px;
       left: 0px;
@@ -509,11 +509,11 @@ body.shrink {
   left: 270px;
   position: absolute;
   width: 550px; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .ts2 {
       width: 500px;
       left: 0px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .ts2 {
       top: 15px;
       left: 0px;
@@ -525,7 +525,7 @@ body.shrink {
   left: 600px;
   position: absolute;
   width: 550px; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     .ts3 {
       width: 425px;
       left: 550px;
@@ -533,7 +533,7 @@ body.shrink {
   @media (max-width: 1045px) {
     .ts3 {
       width: 400px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .ts3 {
       top: 30px;
       left: 0px;
@@ -546,7 +546,7 @@ body.shrink {
   @media (max-width: 1045px) {
     .col-circle1 {
       width: 36% !important; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .col-circle1 {
       padding-left: 30%; } }
   @media (max-width: 640px) {
@@ -571,7 +571,7 @@ body.shrink {
   @media (max-width: 1045px) {
     .col-circle2 {
       width: 35% !important; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .col-circle2 {
       padding-left: 30%; } }
   @media (max-width: 640px) {
@@ -593,7 +593,7 @@ body.shrink {
 .col-circle3 {
   width: 0% !important;
   padding-left: 0px; }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     .col-circle3 {
       padding-left: 30%; } }
   @media (max-width: 640px) {
@@ -645,7 +645,7 @@ body.shrink {
 #intro_video {
   width: 560px;
   height: 315px; }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     #intro_video {
       width: 400px;
       height: 225px; } }
@@ -667,10 +667,10 @@ body.shrink {
   margin-top: 30px;
   font-size: smaller; }
 
-@media (max-width: 1200px) {
+@media (max-width: 1199px) {
   #what_is_speck .panel-body {
     min-height: 360px; } }
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   #what_is_speck .panel-body {
     min-height: 0px; } }
 
@@ -686,14 +686,14 @@ body.shrink {
     content: "\e080"; }
   #particles .panel-body p {
     min-height: 110px; }
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     #particles .col-lg-7 {
       padding-top: 20px; }
     #particles .padd-bottom {
       padding-bottom: 60px; }
     #particles .panel-body p {
       min-height: 120px; } }
-  @media (max-width: 992px) {
+  @media (max-width: 991px) {
     #particles .panel-body p {
       min-height: 0px !important; } }
 
@@ -704,60 +704,174 @@ body.shrink {
     margin: 100px auto 0 auto;
     text-align: center;
     height: 343px; }
-  #dashboard #menu_panel {
+  #dashboard .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.selected {
+    font-weight: bold; }
+  #dashboard .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.unselected {
+    font-weight: normal; }
+  #dashboard .horizontal_list_or_menu_button .horizontal-list {
+    padding: 0;
+    margin-bottom: 0; }
+    #dashboard .horizontal_list_or_menu_button .horizontal-list .menu_item {
+      display: inline-block;
+      margin-right: 20px;
+      font-size: 12px;
+      line-height: 24px; }
+      #dashboard .horizontal_list_or_menu_button .horizontal-list .menu_item a.selected {
+        cursor: default;
+        font-weight: bold;
+        color: black;
+        text-decoration: none; }
+      #dashboard .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected {
+        cursor: pointer;
+        color: #337ab7; }
+      #dashboard .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected:hover {
+        text-decoration: underline; }
+    #dashboard .horizontal_list_or_menu_button .horizontal-list .menu_item:last-of-type {
+      margin-right: 0; }
+  #dashboard #devices_and_feeds_sidebar_menu_container {
     position: absolute;
+    left: -190px;
+    display: block;
     width: 180px;
     margin-top: 72px;
     padding: 5px;
     font-size: 12px; }
-    #dashboard #menu_panel .title {
+    #dashboard #devices_and_feeds_sidebar_menu_container .title {
       font-size: 14px;
       font-weight: bold; }
-    #dashboard #menu_panel #devices_and_feeds {
-      overflow-y: scroll; }
-      #dashboard #menu_panel #devices_and_feeds .device_and_feeds {
+    #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu {
+      overflow-y: auto; }
+      #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu .device_and_feeds {
         margin-top: 5px; }
-        #dashboard #menu_panel #devices_and_feeds .device_and_feeds .device {
+        #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu .device_and_feeds .device {
           font-weight: bold; }
-        #dashboard #menu_panel #devices_and_feeds .device_and_feeds .feed {
+        #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu .device_and_feeds .feed {
           padding-left: 1px;
           white-space: nowrap;
           overflow: hidden; }
-          #dashboard #menu_panel #devices_and_feeds .device_and_feeds .feed label {
+          #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu .device_and_feeds .feed input {
+            cursor: pointer; }
+          #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu .device_and_feeds .feed label {
+            cursor: pointer;
             margin-left: 5px; }
-  #dashboard #content_area {
+  #dashboard #export_button_container #export_button {
+    padding: 2px 5px 2px 5px;
+    font-size: 18px;
+    margin-bottom: 7px; }
+  #dashboard #export_button_container #export_button_menu {
+    margin-top: -5px; }
+  #dashboard .selected_device_and_feed_name {
+    display: inline-block; }
+    #dashboard .selected_device_and_feed_name .device_name_label {
+      display: inline-block;
+      font-weight: bold;
+      margin-right: 5px; }
+    #dashboard .selected_device_and_feed_name .feed_name_label {
+      display: inline-block; }
+  #dashboard #grapher_toolbar_top {
     position: relative;
-    margin-left: 190px; }
-    #dashboard #content_area #export_button {
-      padding: 2px 5px 2px 5px;
-      font-size: 18px;
-      margin-bottom: 7px; }
-    #dashboard #content_area #export_button_menu {
-      margin-top: -5px; }
-    #dashboard #content_area #grapher_bottom_toolbar {
-      margin-top: 5px; }
-    #dashboard #content_area #time_range_switcher_panel, #dashboard #content_area #time_range_switcher_panel_placeholder {
-      display: none;
-      font-size: 12px;
-      margin-bottom: 5px; }
-    #dashboard #content_area #map_area {
+    margin-bottom: 5px; }
+    #dashboard #grapher_toolbar_top #selected_device_and_feed_name_container {
+      display: block; }
+      #dashboard #grapher_toolbar_top #selected_device_and_feed_name_container #devices_and_feeds_dropdown_menu .feed .feed-icon.placeholder {
+        width: 14px;
+        height: 14px; }
+    #dashboard #grapher_toolbar_top #time_range_switcher_menu {
+      position: relative;
+      display: block;
+      height: 30px;
+      margin-bottom: 5px;
+      margin-right: 5px; }
+      #dashboard #grapher_toolbar_top #time_range_switcher_menu #time_range_switcher_menu_items {
+        line-height: 30px; }
+      #dashboard #grapher_toolbar_top #time_range_switcher_menu #time_range_switcher_menu_icon {
+        display: none; }
+        @media (max-width: 320px) {
+          #dashboard #grapher_toolbar_top #time_range_switcher_menu #time_range_switcher_menu_icon {
+            display: inline-block; } }
+      #dashboard #grapher_toolbar_top #time_range_switcher_menu #time_range_switcher_menu_label {
+        display: inline-block; }
+        @media (max-width: 320px) {
+          #dashboard #grapher_toolbar_top #time_range_switcher_menu #time_range_switcher_menu_label {
+            display: none; } }
+      #dashboard #grapher_toolbar_top #time_range_switcher_menu #time_range_switcher_menu_caret {
+        display: inline-block; }
+        @media (max-width: 320px) {
+          #dashboard #grapher_toolbar_top #time_range_switcher_menu #time_range_switcher_menu_caret {
+            display: none; } }
+  #dashboard #grapher_toolbar_bottom {
+    padding-top: 5px;
+    height: 30px;
+    line-height: 30px; }
+  #dashboard #map_area_container {
+    position: relative; }
+    #dashboard #map_area_container #map_area {
+      position: relative;
       margin-top: 10px;
       border: 1px solid black;
       width: 523px;
       height: 300px; }
-      @media (max-width: 767px) {
-        #dashboard #content_area #map_area {
-          display: none; } }
-    #dashboard #content_area #no_geolocation {
+    #dashboard #map_area_container #no_geolocation {
       position: absolute;
-      width: 350px;
+      width: 300px;
       text-align: center;
       padding: 2px;
       top: 1px;
       left: 50%;
-      margin: 0 auto 0 -175px;
+      margin: 0 auto 0 -155px;
       background-color: rgba(255, 200, 200, 0.75);
       display: none; }
+  #dashboard #content_area {
+    position: relative; }
+    #dashboard #content_area #selected_device_and_feed_name_label {
+      line-height: 30px; }
+    @media (max-width: 767px) {
+      #dashboard #content_area #page_title {
+        display: none; }
+      #dashboard #content_area #map_area_container {
+        display: none; }
+      #dashboard #content_area #grapher_toolbar_top {
+        margin-top: 15px; } }
+    @media (max-width: 449px) {
+      #dashboard #content_area .device_name_label {
+        display: none; } }
+    #dashboard #content_area.has_only_one_feed {
+      margin-left: 0; }
+      #dashboard #content_area.has_only_one_feed #devices_and_feeds_sidebar_menu_container {
+        display: none; }
+      #dashboard #content_area.has_only_one_feed #devices_and_feeds_dropdown_menu_container {
+        display: none; }
+      #dashboard #content_area.has_only_one_feed #selected_device_and_feed_name_label {
+        display: block; }
+      @media (max-width: 629px) {
+        #dashboard #content_area.has_only_one_feed #time_range_switcher_menu {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          margin-bottom: 0; } }
+    #dashboard #content_area.has_multiple_feeds {
+      margin-left: 190px; }
+      #dashboard #content_area.has_multiple_feeds #devices_and_feeds_sidebar_menu_container {
+        display: block; }
+      #dashboard #content_area.has_multiple_feeds #devices_and_feeds_dropdown_menu_container {
+        display: none; }
+      #dashboard #content_area.has_multiple_feeds #selected_device_and_feed_name_label {
+        display: none; }
+      @media (max-width: 767px) {
+        #dashboard #content_area.has_multiple_feeds {
+          margin-left: 0; }
+          #dashboard #content_area.has_multiple_feeds #devices_and_feeds_sidebar_menu_container {
+            display: none; }
+          #dashboard #content_area.has_multiple_feeds #devices_and_feeds_dropdown_menu_container {
+            display: block; }
+          #dashboard #content_area.has_multiple_feeds #time_range_switcher_menu {
+            position: relative; } }
+      @media (max-width: 629px) {
+        #dashboard #content_area.has_multiple_feeds #time_range_switcher_menu {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          margin-bottom: 0; } }
 
 .device_list .device_list_item {
   border: 1px solid black;
