@@ -78,6 +78,11 @@
 
    #export_button_container {
       text-align: right;
+      margin-right: 15px;
+   }
+
+   #channel_switcher_panel {
+      margin-left: 15px;
    }
 
    @media (max-width: 992px) {
@@ -140,10 +145,10 @@
       </tr>
    </table>
    <div class="row">
-      <div id="channel_switcher_panel" class="col-sm-10"></div>
-      <div id="export_button_container" class="col-sm-2">
+      <div id="export_button_container" class="pull-right">
          <button id="export_button" class="btn btn-default btn-sm" onclick="doExport();">Download Data</button>
       </div>
+      <div id="channel_switcher_panel"></div>
    </div>
 </div>
 <div id="no_data">No data found!</div>
