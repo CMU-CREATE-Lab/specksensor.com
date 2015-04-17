@@ -26,6 +26,8 @@
 
    var MEDIUM_DEVICE_WIDTH_PIXELS = 992;
    var SMALL_DEVICE_WIDTH_PIXELS = 768;
+   var MIN_GRAPHER_HEIGHT = 50;
+   var MAX_GRAPHER_HEIGHT = 300;
 
    var esdr = null;
 
@@ -872,19 +874,45 @@
    }
 
    function setSizes() {
-      var yAxisElement = $("#y_axis");
+      var windowWidth = $(window).width();
+
+      // adjust the grapher's height depending on window height, but only if the window is narrow
+      if (windowWidth < SMALL_DEVICE_WIDTH_PIXELS) {
+         var heightOfEverythingElse = $("#dashboard").height() - $("#plot_container").outerHeight();
+
+         // compute the new plot container height by starting with the window height, and then subtracing away
+         // the height of everything else that's not the plot container
+         var newPlotContainerHeight = $(window).height()
+                                      - 100                       // top and bottom navbars
+                                      - 30                        // top and bottom padding
+                                      - heightOfEverythingElse;   // everything in #dashboard that's not plot_container
+         newPlotContainerHeight = Math.max(MIN_GRAPHER_HEIGHT, Math.min(newPlotContainerHeight, MAX_GRAPHER_HEIGHT));
+
+         plotManager.getPlotContainer().setHeight(newPlotContainerHeight);
+      }
+
+      // Don't show the y axis label if the grapher is tall enough.  If it is, then position it accordingly.
       var yAxisLabelElement = $("#y_axis_label");
-      var yAxisWidth = yAxisElement.width();
-      var yAxisHeight = yAxisElement.height();
-      yAxisLabelElement.width(yAxisHeight); // set the width == height since we're rotating
-      var yAxisLabelHeight = yAxisLabelElement.height();
+      if ($("#plot_container").outerHeight() >= 150) {
+         var yAxisElement = $("#y_axis");
+         var yAxisWidth = yAxisElement.width();
+         var yAxisHeight = yAxisElement.height();
+         yAxisLabelElement.width(yAxisHeight); // set the width == height since we're rotating
+         var yAxisLabelHeight = yAxisLabelElement.height();
 
-      // compute the position of the y-axis label
-      var yAxisLabelLeft = Math.round(yAxisWidth + yAxisLabelHeight / 2 - yAxisHeight / 2 + 2);
-      var yAxisLabelTop = Math.round(yAxisHeight / 2 - yAxisLabelHeight / 2);
+         // compute the position of the y-axis label
+         var yAxisLabelLeft = Math.round(yAxisWidth + yAxisLabelHeight / 2 - yAxisHeight / 2 + 2);
+         var yAxisLabelTop = Math.round(yAxisHeight / 2 - yAxisLabelHeight / 2);
 
-      // set positions and sizes
-      yAxisLabelElement.css("top", yAxisLabelTop + "px").css("left", yAxisLabelLeft + "px");
+         // set position and then show it
+         yAxisLabelElement
+               .css("top", yAxisLabelTop + "px")
+               .css("left", yAxisLabelLeft + "px")
+               .show();
+      } else {
+         yAxisLabelElement.hide();
+      }
+
 
       // update the map so it's the same width at the grapher
       $("#map_area").width($("#grapher").width() - 2);   // subtract 2 to account for the borders
@@ -897,7 +925,6 @@
       // has multiple feeds.  Having multiple feeds matters because the sidebar menu is only shown when there
       // are multiple feeds, which makes the grapher area narrower, and thus there's less room for these
       // lists of links.
-      var windowWidth = $(window).width();
       var TINY_DEVICE_WIDTH_PIXELS = 630;
       var willCollapseToMenuButton = (windowWidth < TINY_DEVICE_WIDTH_PIXELS) ||
                                      ((SMALL_DEVICE_WIDTH_PIXELS <= windowWidth) &&
