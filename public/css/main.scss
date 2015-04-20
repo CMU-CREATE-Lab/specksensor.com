@@ -969,7 +969,9 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       left: -190px;
       display: block;
       width: $DASHBOARD_MENU_PANEL_WIDTH - (2 * $DASHBOARD_MENU_PANEL_PADDING);
-      margin-top: 72px;
+      margin-top: 79px;
+      overflow-y: auto;
+      max-height: 687px;
       padding: $DASHBOARD_MENU_PANEL_PADDING;
 
       font-size: 12px;

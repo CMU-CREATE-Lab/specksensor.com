@@ -733,7 +733,9 @@ body.shrink {
     left: -190px;
     display: block;
     width: 180px;
-    margin-top: 72px;
+    margin-top: 79px;
+    overflow-y: auto;
+    max-height: 687px;
     padding: 5px;
     font-size: 12px; }
     #dashboard #devices_and_feeds_sidebar_menu_container .title {
