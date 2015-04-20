@@ -970,7 +970,7 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       display: block;
       width: $DASHBOARD_MENU_PANEL_WIDTH - (2 * $DASHBOARD_MENU_PANEL_PADDING);
       margin-top: 79px;
-      overflow-y: auto;
+      overflow-y: hidden;
       max-height: 687px;
       padding: $DASHBOARD_MENU_PANEL_PADDING;
 
@@ -983,6 +983,10 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 
       #devices_and_feeds_sidebar_menu {
          overflow-y: auto;
+
+         // this is computing by starting with the max-height of the devices_and_feeds_sidebar_menu_container, and then
+         // subtracting the 20px height of the title and the 10px of vertical padding (5px top and bottom)
+         max-height: 687px - 20px - 10px;
 
          .device_and_feeds {
             margin-top: 5px;

@@ -734,7 +734,7 @@ body.shrink {
     display: block;
     width: 180px;
     margin-top: 79px;
-    overflow-y: auto;
+    overflow-y: hidden;
     max-height: 687px;
     padding: 5px;
     font-size: 12px; }
@@ -742,7 +742,8 @@ body.shrink {
       font-size: 14px;
       font-weight: bold; }
     #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu {
-      overflow-y: auto; }
+      overflow-y: auto;
+      max-height: 657px; }
       #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu .device_and_feeds {
         margin-top: 5px; }
         #dashboard #devices_and_feeds_sidebar_menu_container #devices_and_feeds_sidebar_menu .device_and_feeds .device {
