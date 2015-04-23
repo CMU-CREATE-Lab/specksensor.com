@@ -76,7 +76,7 @@ router.get('/about-us', function(req, res) {
 });
 
 router.get('/buy', function(req, res) {
-   res.render('buy', { title : "Buy", section : "buy" });
+   res.redirect('http://store.specksensor.com/products/speck');
 });
 
 router.get('/contact', function(req, res) {
