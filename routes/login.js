@@ -6,7 +6,12 @@ var computeTimeToRefreshAccessToken = require('../middleware/accessToken').compu
 var log = require('log4js').getLogger('specksensor:routes:login');
 
 router.get('/', function(req, res) {
-   res.render('login', { title : "Login", section : "login" });
+   if (req.isAuthenticated()) {
+      res.redirect('/dashboard');
+   }
+   else {
+      res.render('login', { title : "Login", section : "login" });
+   }
 });
 
 router.post('/', function(req, res, next) {
