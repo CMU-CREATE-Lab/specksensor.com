@@ -1241,15 +1241,78 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 // Devices
 // =====================================================================================================================
 
-.device_list {
-   .device_list_item {
-      border: 1px solid black;
-      border-radius: 3px;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      padding: 10px;
-      margin: 5px 0 5px 0;
-      //cursor: pointer;
+#devices {
+
+   .device_list {
+
+      .device_list_item {
+
+         .serial_number {
+            font-family: "Courier New", Courier, monospace;
+            font-size: smaller;
+
+            @media (max-width: $EXTRA_SMALL_WIDTH) {
+               display: none;
+            }
+         }
+
+         .feeds_container {
+            margin: 10px 10px 0 10px;
+            .panel {
+               margin-bottom: 20px;
+            }
+
+            .panel:last-of-type {
+               margin-bottom: 10px;
+            }
+
+            .feed_table {
+               display: table;
+
+               .table_row {
+                  display: table-row;
+
+                  .table_cell_label {
+                     display: table-cell;
+                     font-weight: bold;
+                     white-space: nowrap;
+                  }
+
+                  .table_cell_value {
+                     display: table-cell;
+                     padding-left: 10px;
+                  }
+
+                  .capitalize {
+                     text-transform: capitalize;
+                  }
+
+               }
+            }
+
+            .feed_api_info {
+               display: none;
+
+               .api_key {
+                  font-family: "Courier New", Courier, monospace;
+                  word-wrap: break-word;
+                  word-break: break-all;
+               }
+            }
+         }
+      }
+   }
+
+   // hide the page title when the width is small
+   @media (max-width: $SMALL_WIDTH) {
+      #page_title {
+         display: none;
+      }
+
+      // add some margin at the top since the page title will be hidden
+      #device_list {
+         margin-top: 15px;
+      }
    }
 }
 

@@ -1,0 +1,104 @@
+<div id="device_list_item_{{id}}" class="panel panel-primary device_list_item">
+   <div class="panel-heading">
+      <div class="pull-right serial_number">{{serialNumberFormatted}}</div>
+      <h3 class="panel-title">{{name}}</h3>
+   </div>
+   {{#if feeds}}
+      <div class="feeds_container">
+         {{#each feeds}}
+            <div class="panel panel-default">
+               <div class="panel-heading"><h3 class="panel-title">{{name}}</h3></div>
+               <div class="panel-body">
+                  <div class="feed_table">
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           Visibility:
+                        </div>
+                        <div class="table_cell_value capitalize">
+                           {{#if isPublic}}public{{else}}private{{/if}}
+                        </div>
+                     </div>
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           Exposure:
+                        </div>
+                        <div class="table_cell_value capitalize">
+                           {{exposure}}
+                        </div>
+                     </div>
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           Time Range:
+                        </div>
+                        <div class="table_cell_value">
+                           {{#if hasData}}
+                              {{minTimeSecsFormatted}} - {{maxTimeSecsFormatted}}
+                           {{else}}
+                              n/a
+                           {{/if}}
+                        </div>
+                     </div>
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           Last Upload:
+                        </div>
+                        <div class="table_cell_value">
+                           {{lastUploadFormatted}}
+                        </div>
+                     </div>
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           Created:
+                        </div>
+                        <div class="table_cell_value">
+                           {{createdFormatted}}
+                        </div>
+                     </div>
+                  </div>
+
+               </div>
+               <div class="panel-footer feed_api_info">
+                  <div class="feed_table" style="font-size: smaller">
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           ID:
+                        </div>
+                        <div class="table_cell_value api_key">
+                           {{id}}
+                        </div>
+                     </div>
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           API Key (read-only):
+                        </div>
+                        <div class="table_cell_value api_key">
+                           {{apiKeyReadOnly}}
+                        </div>
+                     </div>
+                     <div class="table_row">
+                        <div class="table_cell_label">
+                           API Key (read-write):
+                        </div>
+                        <div class="table_cell_value api_key">
+                           {{apiKey}}
+                        </div>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+         {{/each}}
+      </div>
+   {{else}}
+      <div class="panel-body feeds_container">
+         You have not yet defined an installation location for this Speck. Please use
+         the <a href="/software">Speck app</a> to finish the upload configuration
+         process and specify where you have installed this Speck.
+      </div>
+   {{/if}}
+{{!--
+   <div class="panel-footer">
+      <div style="text-align:right">edit/delete buttons will go here</div>
+   </div>
+--}}
+</div>

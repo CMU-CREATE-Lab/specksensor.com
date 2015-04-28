@@ -2,20 +2,75 @@
    var esdr = null;
    var PRODUCT_ID = '{{speckProductId}}';
 
+   var devices = [];
+   var devicesById = {};
+   var hasAtLeastOneFeed = false;
+
    $(document).ready(function() {
       var accessToken = new com.specksensor.AccessToken();
       accessToken.load(function(err, token) {
-         console.log("Done getting the token: " + token);
-
          esdr = new org.cmucreatelab.esdr.ESDR(token);
          fetchDevices();
       });
    });
 
    function fetchDevices() {
-      esdr.devices.find("?orderBy=-created&where=productId="+PRODUCT_ID, {
-         success : function(devices) {
-            renderDevices(devices.rows);
+      // fetch devices, ordered by creation date, most recent first
+      esdr.devices.find("?orderBy=-created&where=productId=" + PRODUCT_ID, {
+         success : function(foundDevices) {
+            if (foundDevices && foundDevices.rows && foundDevices.rows.length > 0) {
+               devices = foundDevices.rows;
+
+               devices.forEach(function(device) {
+                  device.feeds = [];
+                  // split the serial number into groups of four chars, separated by dashes (got this from http://stackoverflow.com/a/7033662/703200)
+                  device.serialNumberFormatted = device.serialNumber.match(/.{1,4}/g).join('-');
+                  devicesById[device.id] = device;
+               });
+
+               // now load all the feeds and associate each with its device (TODO: trim down the list of requested fields)
+               esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + "&orderBy=-lastUpload&fields=id,name,deviceId,apiKey,apiKeyReadOnly,isPublic,exposure,created,lastUpload,minTimeSecs,maxTimeSecs&cache-bust=" + Date.now(),
+                     {
+                        success : function(foundFeeds) {
+                           if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
+
+                              hasAtLeastOneFeed = true;
+
+                              // associate each feed with its device
+                              foundFeeds.rows.forEach(function(feed) {
+                                 var hasData = feed.minTimeSecs != null && feed.maxTimeSecs != null;
+                                 feed.hasData = hasData;
+                                 feed.minTimeSecsFormatted = hasData ? createDateTimeString(new Date(feed.minTimeSecs * 1000)) : null;
+                                 feed.maxTimeSecsFormatted = hasData ? createDateTimeString(new Date(feed.maxTimeSecs * 1000)) : null;
+                                 feed.lastUploadFormatted = hasData ? createDateTimeString(new Date(feed.lastUpload)) : "never";
+                                 feed.createdFormatted = createDateTimeString(new Date(feed.created));
+                                 devicesById[feed.deviceId].feeds.push(feed);
+                              });
+                           }
+
+                           renderDevices();
+                        },
+                        unauthorized : function() {
+                           // TODO:
+                           console.log("Unauthorized");
+                        },
+                        validationError : function(errors) {
+                           // TODO
+                           console.log("Validation error while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(errors, null, 3));
+                        },
+                        error : function(responseBody, httpStatusCode) {
+                           // TODO: some other error
+                           console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(responseBody, null, 3));
+                        },
+                        failure : function(err, httpStatusCode) {
+                           // TODO: some other error
+                           console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + err);
+                        }
+                     });
+            }
+            else {
+               renderDevices();
+            }
          },
          unauthorized : function() {
             // TODO:
@@ -28,22 +83,53 @@
       });
    }
 
-   function renderDevices(devices) {
-      var deviceListItemTemplate = Handlebars.templates['device_list_item'];
-      $("#device_list").empty();
+   function renderDevices() {
       if (devices && devices.length > 0) {
+
+         var deviceAndFeedsTemplate = Handlebars.templates['device_and_feeds'];
          devices.forEach(function(device) {
             console.log(device);
-            var deviceElement = $(deviceListItemTemplate(device));
-            $("#device_list").append(deviceElement);
+            var deviceElement = $(deviceAndFeedsTemplate(device));
+            $("#device_list").append(deviceElement).show();
+            $("#device_list_container").show();
          });
-      } else {
+
+         if (hasAtLeastOneFeed) {
+
+            $("#developer_info_toggle_button").click(function() {
+               if ($(this).prop("checked")) {
+                  $('.feed_api_info').show();
+               }
+               else {
+                  $('.feed_api_info').hide();
+               }
+            });
+            $("#developer_info_toggle").show();
+         }
+      }
+      else {
          $("#has_no_devices_panel").show();
       }
    }
+
+   function createDateTimeString(date) {
+      return date.toLocaleDateString() + " " + date.toLocaleTimeString()
+   }
 </script>
-<h2>My Specks</h2>
-<div id="device_list" class="device_list"></div>
-<div id="has_no_devices_panel" style="display:none">
-   <p>You have not yet registered any Specks.  Please download and install our <a href="/software">Speck app</a> to register your Speck.</p>
+<div id="devices">
+   <div id="device_list_container" style="display:none">
+      <h2 id="page_title">My Specks</h2>
+      <div id="device_list" class="device_list"></div>
+      <div id="developer_info_toggle" style="display:none">
+         <input type="checkbox" id="developer_info_toggle_button" value="true">
+         <label for="developer_info_toggle_button">Show extra details for API developers</label>
+      </div>
+   </div>
+   <div id="has_no_devices_panel" style="display:none">
+      <h2>My Specks</h2>
+      <p>
+         You have not yet registered any Specks. Please download and install our
+         <a href="/software">Speck app</a> to register your Speck and configure it for uploads.
+      </p>
+   </div>
 </div>

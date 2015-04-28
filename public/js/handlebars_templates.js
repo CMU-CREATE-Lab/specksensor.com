@@ -40,16 +40,62 @@ templates['dashboard_device_and_feeds_sidebar_menu_item'] = template({"1":functi
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.feeds : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "   </div>\n</div>";
 },"useData":true});
-templates['device_list_item'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+templates['device_and_feeds'] = template({"1":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "      <div class=\"feeds_container\">\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.feeds : depth0),{"name":"each","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "      </div>\n";
+},"2":function(depth0,helpers,partials,data) {
+    var stack1, helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "            <div class=\"panel panel-default\">\n               <div class=\"panel-heading\"><h3 class=\"panel-title\">"
+    + alias3(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"name","hash":{},"data":data}) : helper)))
+    + "</h3></div>\n               <div class=\"panel-body\">\n                  <div class=\"feed_table\">\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Visibility:\n                        </div>\n                        <div class=\"table_cell_value capitalize\">\n                           "
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isPublic : depth0),{"name":"if","hash":{},"fn":this.program(3, data, 0),"inverse":this.program(5, data, 0),"data":data})) != null ? stack1 : "")
+    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Exposure:\n                        </div>\n                        <div class=\"table_cell_value capitalize\">\n                           "
+    + alias3(((helper = (helper = helpers.exposure || (depth0 != null ? depth0.exposure : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"exposure","hash":{},"data":data}) : helper)))
+    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Time Range:\n                        </div>\n                        <div class=\"table_cell_value\">\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.hasData : depth0),{"name":"if","hash":{},"fn":this.program(7, data, 0),"inverse":this.program(9, data, 0),"data":data})) != null ? stack1 : "")
+    + "                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Last Upload:\n                        </div>\n                        <div class=\"table_cell_value\">\n                           "
+    + alias3(((helper = (helper = helpers.lastUploadFormatted || (depth0 != null ? depth0.lastUploadFormatted : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"lastUploadFormatted","hash":{},"data":data}) : helper)))
+    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Created:\n                        </div>\n                        <div class=\"table_cell_value\">\n                           "
+    + alias3(((helper = (helper = helpers.createdFormatted || (depth0 != null ? depth0.createdFormatted : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"createdFormatted","hash":{},"data":data}) : helper)))
+    + "\n                        </div>\n                     </div>\n                  </div>\n\n               </div>\n               <div class=\"panel-footer feed_api_info\">\n                  <div class=\"feed_table\" style=\"font-size: smaller\">\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           ID:\n                        </div>\n                        <div class=\"table_cell_value api_key\">\n                           "
+    + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           API Key (read-only):\n                        </div>\n                        <div class=\"table_cell_value api_key\">\n                           "
+    + alias3(((helper = (helper = helpers.apiKeyReadOnly || (depth0 != null ? depth0.apiKeyReadOnly : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"apiKeyReadOnly","hash":{},"data":data}) : helper)))
+    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           API Key (read-write):\n                        </div>\n                        <div class=\"table_cell_value api_key\">\n                           "
+    + alias3(((helper = (helper = helpers.apiKey || (depth0 != null ? depth0.apiKey : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"apiKey","hash":{},"data":data}) : helper)))
+    + "\n                        </div>\n                     </div>\n                  </div>\n\n               </div>\n            </div>\n";
+},"3":function(depth0,helpers,partials,data) {
+    return "public";
+},"5":function(depth0,helpers,partials,data) {
+    return "private";
+},"7":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "                              "
+    + alias3(((helper = (helper = helpers.minTimeSecsFormatted || (depth0 != null ? depth0.minTimeSecsFormatted : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"minTimeSecsFormatted","hash":{},"data":data}) : helper)))
+    + " - "
+    + alias3(((helper = (helper = helpers.maxTimeSecsFormatted || (depth0 != null ? depth0.maxTimeSecsFormatted : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"maxTimeSecsFormatted","hash":{},"data":data}) : helper)))
+    + "\n";
+},"9":function(depth0,helpers,partials,data) {
+    return "                              n/a\n";
+},"11":function(depth0,helpers,partials,data) {
+    return "      <div class=\"panel-body feeds_container\">\n         You have not yet defined an installation location for this Speck. Please use\n         the <a href=\"/software\">Speck app</a> to finish the upload configuration\n         process and specify where you have installed this Speck.\n      </div>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1, helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
   return "<div id=\"device_list_item_"
     + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" class=\"device_list_item noselect\">\n   <div>"
+    + "\" class=\"panel panel-primary device_list_item\">\n   <div class=\"panel-heading\">\n      <div class=\"pull-right serial_number\">"
+    + alias3(((helper = (helper = helpers.serialNumberFormatted || (depth0 != null ? depth0.serialNumberFormatted : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"serialNumberFormatted","hash":{},"data":data}) : helper)))
+    + "</div>\n      <h3 class=\"panel-title\">"
     + alias3(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</div>\n   <div>Created: "
-    + alias3(((helper = (helper = helpers.created || (depth0 != null ? depth0.created : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"created","hash":{},"data":data}) : helper)))
-    + "</div>\n</div>";
+    + "</h3>\n   </div>\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.feeds : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.program(11, data, 0),"data":data})) != null ? stack1 : "")
+    + "</div>";
 },"useData":true});
 templates['feed_list_item'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
