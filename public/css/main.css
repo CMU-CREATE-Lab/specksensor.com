@@ -913,7 +913,7 @@ body.shrink {
 @media (max-width: 767px) {
   #devices #page_title {
     display: none; }
-  #devices #device_list {
+  #devices #developer_info_toggle {
     margin-top: 15px; } }
 
 .account_table {

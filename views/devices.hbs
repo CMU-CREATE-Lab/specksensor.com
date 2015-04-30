@@ -7,6 +7,9 @@
    var hasAtLeastOneFeed = false;
 
    $(document).ready(function() {
+      // enable popovers
+      $('[data-toggle="popover"]').popover();
+
       var accessToken = new com.specksensor.AccessToken();
       accessToken.load(function(err, token) {
          esdr = new org.cmucreatelab.esdr.ESDR(token);
@@ -88,7 +91,6 @@
 
          var deviceAndFeedsTemplate = Handlebars.templates['device_and_feeds'];
          devices.forEach(function(device) {
-            console.log(device);
             var deviceElement = $(deviceAndFeedsTemplate(device));
             $("#device_list").append(deviceElement).show();
             $("#device_list_container").show();
@@ -119,11 +121,19 @@
 <div id="devices">
    <div id="device_list_container" style="display:none">
       <h2 id="page_title">My Specks</h2>
-      <div id="device_list" class="device_list"></div>
-      <div id="developer_info_toggle" style="display:none">
+      <div id="developer_info_toggle" style="display:none" class="noselect">
          <input type="checkbox" id="developer_info_toggle_button" value="true">
-         <label for="developer_info_toggle_button">Show extra details for API developers</label>
+         <label for="developer_info_toggle_button" class="pointer_cursor">Show extra details for API developers</label>
+         <i class="fa fa-question-circle pointer_cursor"
+               data-toggle="popover"
+               data-trigger="hover click"
+               data-placement="bottom"
+               data-content="Developers interested in reading/writing their Speck data
+                            programmatically can use the ID and/or API keys revealed by
+                            toggling this checkbox. The API keys should be kept private
+                            and only shared with people you trust."></i>
       </div>
+      <div id="device_list" class="device_list"></div>
    </div>
    <div id="has_no_devices_panel" style="display:none">
       <h2>My Specks</h2>
