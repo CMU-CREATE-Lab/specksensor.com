@@ -81,6 +81,10 @@ body.shrink {
    margin-top: 3px;
 }
 
+.pointer_cursor {
+   cursor: pointer;
+}
+
 // =====================================================================================================================
 // Rotations and Misc
 // =====================================================================================================================
@@ -1409,6 +1413,11 @@ body.is_logged_in {
 
       .active {
          font-weight: bold;
+      }
+
+      @media (max-width: $MEDIUM_WIDTH) {
+         margin-left: 15px;
+         margin-right: 15px;
       }
    }
 }

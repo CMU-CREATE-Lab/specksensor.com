@@ -103,6 +103,10 @@ router.get('/terms', function(req, res) {
    res.render('terms', { title : "Terms and Conditions", section : "terms" });
 });
 
+router.get('/jobs', function(req, res) {
+   res.render('jobs', { title : "Jobs", section : "jobs" });
+});
+
 router.get('/air-quality-by-zip-code', function(req, res) {
    res.render('air-quality-by-zip-code', {
       title : "Air Quality Zip Code Search",
