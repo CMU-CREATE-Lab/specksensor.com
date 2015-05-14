@@ -289,6 +289,8 @@ flow.series([
                         app.use('/chrome-app/v1', sessionSupport, require('./routes/chrome-app'));
                         app.use('/access-token', sessionSupport, require('./routes/access-token'));
                         app.use('/password-reset', sessionSupport, require('./routes/password-reset')(db.users));
+                        app.use('/shipping', sessionSupport, require('./routes/shipping'));
+                        app.use('/calibration', sessionSupport, require('./routes/calibration'));
 
                         app.use('/dashboard', sessionSupport, ensureAuthenticated, require('./routes/dashboard'));
                         app.use('/devices', sessionSupport, ensureAuthenticated, require('./routes/devices'));

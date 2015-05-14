@@ -1,0 +1,94 @@
+<div id="shipping_page" class="clearfix">
+  <div class="container">
+    <br>
+    <div id="shipping_error_messages" class="form_messages alert alert-danger"></div>
+    <div id="shipping_success_messages" class="form_messages alert alert-success"></div>
+    <h2>Shipping Form</h2>
+    <br>
+    <form id="shipping_tracker_form" role="form" onsubmit="return submitShippingTrackingForm();">
+      <div class="form-group">
+        <label for="invoice-number">Order Invoice Number:</label>
+        <input type="text" class="form-control fusion-table-form-field" id="invoice-number" name="invoice" placeholder="Enter Order Invoice Number" required>
+      </div>
+      <label for="first-serial-number">Speck Serial Numbers (one per line):</label><br>
+      <div class="form-group">
+        <input type="text" class="form-control fusion-table-form-field" id="first-serial-number" name="serials[0]" placeholder="Enter Speck Serial Number" required>
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  var serialNumberArrayIndex = 0;
+
+  $(function() {
+    // Focus on first field on page load to make item scanning easier.
+    $("#invoice-number").focus();
+  });
+
+  // Make pressing the enter key go to the next field on the page, rather than submit the form.
+  // And when we hit the last field, automatically create a new one for input.
+  $('body').on('keydown', 'input', function(e) {
+    var form = $(this).parents('form:eq(0)');
+    var focusable;
+    var next;
+    if (e.keyCode == 13) {
+      focusable = form.find('input');
+      next = focusable.eq(focusable.index(this) + 1);
+      if (next.length) {
+        next.focus();
+      } else {
+        serialNumberArrayIndex++;
+        focusable = focusable.eq(focusable.index(this));
+        focusable.parent().after('<div class="form-group"><input type="text" class="form-control fusion-table-form-field" name="serials[' + serialNumberArrayIndex + ']" placeholder="Enter Speck Serial Number"><div>');
+        $(focusable).trigger(e);
+      }
+      return false;
+    }
+  });
+
+  function submitShippingTrackingForm() {
+    var messages = new com.specksensor.Messages();
+    var form = $("#shipping_tracker_form");
+    var formData = form.serialize();
+    var errorMessagesElement = $("#shipping_error_messages");
+    var successMessagesElement = $("#shipping_success_messages");
+    errorMessagesElement.empty().hide();
+    successMessagesElement.empty().hide();
+
+    var invoiceElement = $("#invoice-number");
+    var invoiceNumber = invoiceElement.val().trim();
+
+    var firstSerialNumberElement = $("#first-serial-number");
+    var firstSerialNumber = firstSerialNumberElement.val().trim();
+
+    if (invoiceNumber.length < 1) {
+      messages.add("Invoice Number required.");
+    } else if (firstSerialNumber.length < 1) {
+      messages.add("At least one Serial Number is required.");
+    }
+    if (messages.isEmpty()) {
+      setFormEnabled(form, false);
+      superagent
+        .post("/shipping")
+        .send(formData)
+        .end(function(err, res) {
+          setFormEnabled(form, true);
+          if (res.status == 200) {
+            form[0].reset();
+            messages.add('Information successfully submitted');
+            messages.render(successMessagesElement);
+          } else {
+            // TODO: Make a better error message
+            messages.add("Error detected");
+            messages.render(errorMessagesElement);
+          }
+      });
+    } else {
+      messages.render(errorMessagesElement);
+    }
+    return false;
+  }
+</script>

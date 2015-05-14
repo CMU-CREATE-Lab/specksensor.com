@@ -1,0 +1,104 @@
+<div id="calibration_page" class="clearfix">
+  <div class="container">
+    <br>
+    <div id="calibration_error_messages" class="form_messages alert alert-danger"></div>
+    <div id="calibration_success_messages" class="form_messages alert alert-success"></div>
+    <h2>Calibration Form</h2>
+    <br>
+    <form id="calibration_tracker_form" role="form" onsubmit="return submitCalibrationTrackingForm();">
+      <div class="form-group">
+        <label for="calibration-batch">Calibration Batch Number:</label>
+        <input type="text" class="form-control fusion-table-form-field" id="calibration-batch" name="calibration" placeholder="Enter Calibration Batch Number" required>
+      </div>
+      <label>Speck Serial Numbers and Locations (one per line):</label>
+      <div class="form-group row">
+        <div class="col-lg-4">
+          <input type="text" class="form-control" id="first-serial-number" name="specks[serials][0]" placeholder="Enter Speck Serial Number" required />
+        </div>
+        <div class="col-lg-4">
+          <input type="text" class="form-control" id="first-location" name="specks[locations][0]" placeholder="Enter Calibration Location" required />
+        </div>
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  var serialNumberArrayIndex = 0;
+
+  $(function() {
+    // Focus on first field on page load to make item scanning easier.
+    $("#calibration-batch").focus();
+  });
+
+  // Make pressing the enter key go to the next field on the page, rather than submit the form.
+  // And when we hit the last field, automatically create a new one for input.
+  $('body').on('keydown', 'input', function(e) {
+    var form = $(this).parents('form:eq(0)');
+    var focusable;
+    var next;
+    if (e.keyCode == 13) {
+      focusable = form.find('input');
+      next = focusable.eq(focusable.index(this) + 1);
+      if (next.length) {
+        next.focus();
+      } else {
+        serialNumberArrayIndex++;
+        focusable = focusable.eq(focusable.index(this));
+        focusable.parent().parent().after('<div class="form-group row"><div class="col-lg-4"><input type="text" class="form-control" name="specks[serials][' + serialNumberArrayIndex + ']" placeholder="Enter Speck Serial Number" /></div><div class="col-lg-4"><input type="text" class="form-control" name="specks[locations][' + serialNumberArrayIndex + ']" placeholder="Enter Calibration Location" /></div></div>');
+        $(focusable).trigger(e);
+      }
+      return false;
+    }
+  });
+
+  function submitCalibrationTrackingForm() {
+    var messages = new com.specksensor.Messages();
+    var form = $("#calibration_tracker_form");
+    var formData = form.serialize();
+    var errorMessagesElement = $("#calibration_error_messages");
+    var successMessagesElement = $("#calibration_success_messages");
+    errorMessagesElement.empty().hide();
+    successMessagesElement.empty().hide();
+
+    var invoiceElement = $("#calibration-batch");
+    var invoiceNumber = invoiceElement.val().trim();
+
+    var firstSerialNumberElement = $("#first-serial-number");
+    var firstSerialNumber = firstSerialNumberElement.val().trim();
+
+    var firstLocationElement = $("#first-location");
+    var firstLocation = firstLocationElement.val().trim();
+
+    if (invoiceNumber.length < 1) {
+      messages.add("Calibration Batch Number required.");
+    } else if (firstSerialNumber.length < 1) {
+      messages.add("At least one Serial Number is required.");
+    } else if (firstLocation.length < 1) {
+      messages.add("At least one calibration location is required.");
+    }
+    if (messages.isEmpty()) {
+      setFormEnabled(form, false);
+      superagent
+        .post("/calibration")
+        .send(formData)
+        .end(function(err, res) {
+          setFormEnabled(form, true);
+          if (res.status == 200) {
+            form[0].reset();
+            messages.add('Information successfully submitted');
+            messages.render(successMessagesElement);
+          } else {
+            // TODO: Make a better error message
+            messages.add("Error detected");
+            messages.render(errorMessagesElement);
+          }
+      });
+    } else {
+      messages.render(errorMessagesElement);
+    }
+    return false;
+  }
+</script>

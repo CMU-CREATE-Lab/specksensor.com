@@ -33,6 +33,9 @@ body.shrink {
 .pointer_cursor {
   cursor: pointer; }
 
+.fusion-table-form-field {
+  width: 360px; }
+
 .rotate_90 {
   transform: rotate(90deg);
   -ms-transform: rotate(90deg);

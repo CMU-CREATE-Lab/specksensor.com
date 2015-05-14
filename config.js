@@ -48,6 +48,16 @@ config.defaults({
                          "willEmailToUser" : true
                       }
                    },
+                   "googleServices" : {
+                     "accountEmail" : "79976664605-7slpjhrtoub996dhiu5lb11l1073f3dk@developer.gserviceaccount.com",
+                     "keyPath" : "./google-services-key.pem",
+                     "fusionTables" : {
+                       "tableIds" : {
+                         "shippingTableId" : "1TegIAfrrX5uvCvsu5DqPO_omWJEQQg-awX8mjsKt",
+                         "calibrationTableId" : "1zsE1LDtwiXMFCK-PraGzIc1vczD5EYpA8Fm0T-IZ"
+                       }
+                     }
+                   },
                    "maps" : {
                       "apiKey" : "AIzaSyDRg-ANz3nWQqLNFG9pQjZLXw45k84Eseo"
                    },

@@ -6,3 +6,4 @@ logs/*.log
 todo.txt
 
 config-prod.json
+google-services-key.pem
