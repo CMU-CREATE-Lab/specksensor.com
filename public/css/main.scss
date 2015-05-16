@@ -86,7 +86,7 @@ body.shrink {
 }
 
 .fusion-table-form-field {
-  width: 360px;
+   width: 360px;
 }
 
 // =====================================================================================================================
@@ -913,6 +913,35 @@ body.shrink {
 }
 
 // =====================================================================================================================
+// FAQs Page
+// =====================================================================================================================
+
+#faq_page {
+   .question_teaser {
+      font-weight: bold;
+   }
+
+   a.anchor {
+      display: block;
+      position: relative;
+      top: -75px;
+      visibility: hidden;
+   }
+
+   .question_and_answer {
+      margin-bottom: 25px;
+
+      .question {
+         font-weight: bold;
+      }
+      .answer {
+         margin-top: 5px;
+         margin-left: 20px;
+      }
+   }
+}
+
+// =====================================================================================================================
 // Dashboard
 // =====================================================================================================================
 
@@ -1412,16 +1441,16 @@ body.is_logged_in {
 
    .link {
       display: inline-block;
-      margin-left: 25px;
-      margin-right: 25px;
+      margin-left: 20px;
+      margin-right: 20px;
 
       .active {
          font-weight: bold;
       }
 
       @media (max-width: $MEDIUM_WIDTH) {
-         margin-left: 15px;
-         margin-right: 15px;
+         margin-left: 10px;
+         margin-right: 10px;
       }
    }
 }
