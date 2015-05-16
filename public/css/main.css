@@ -703,8 +703,6 @@ body.shrink {
     #particles .panel-body p {
       min-height: 0px !important; } }
 
-#faq_page .question_teaser {
-  font-weight: bold; }
 #faq_page a.anchor {
   display: block;
   position: relative;
