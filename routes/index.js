@@ -6,41 +6,36 @@ var superagent = require('superagent');
 //======================================================================================================================
 
 router.get('/', function(req, res) {
-   if (req.isAuthenticated()) {
-      res.redirect('/dashboard');
-   }
-   else {
-      res.render('index', {
-         section : "home",
-         carousel : [
-            {
-               caption : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality.",
-               captionCssClass : "home-hero-text1",
-               url : "home.png",
-               imageCssClass : "anchor_right",
-               isActive : true
-            },
-            {
-               caption : "Fine particles are invisible to the naked eye, but can have very harmful impacts on your health. These pollutants can lodge deep into your lungs because they are smaller than a human hair.",
-               url : "what-is-pm.png",
-               captionCssClass : "home-hero-text2",
-               imageCssClass : "anchor_left"
-            },
-            {
-               caption : "Fine particles are produced by many sources, including household activities such as cooking and cleaning. Understanding how these particles are generated can help you take better control of the air you breathe at home.",
-               url : "pm-sources.png",
-               captionCssClass : "home-hero-text3",
-               imageCssClass : "anchor_right"
-            },
-            {
-               caption : "By monitoring readings on the Speck, you can become an expert about your air quality, and run experiments to test a variety of approaches to reduce fine particle concentration in your home.",
-               url : "pathways-to-better-air.png",
-               captionCssClass : "home-hero-text4",
-               imageCssClass : "anchor_left"
-            }
-         ]
-      });
-   }
+   res.render('index', {
+      section : "home",
+      carousel : [
+         {
+            caption : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality.",
+            captionCssClass : "home-hero-text1",
+            url : "home.png",
+            imageCssClass : "anchor_right",
+            isActive : true
+         },
+         {
+            caption : "Fine particles are invisible to the naked eye, but can have very harmful impacts on your health. These pollutants can lodge deep into your lungs because they are smaller than a human hair.",
+            url : "what-is-pm.png",
+            captionCssClass : "home-hero-text2",
+            imageCssClass : "anchor_left"
+         },
+         {
+            caption : "Fine particles are produced by many sources, including household activities such as cooking and cleaning. Understanding how these particles are generated can help you take better control of the air you breathe at home.",
+            url : "pm-sources.png",
+            captionCssClass : "home-hero-text3",
+            imageCssClass : "anchor_right"
+         },
+         {
+            caption : "By monitoring readings on the Speck, you can become an expert about your air quality, and run experiments to test a variety of approaches to reduce fine particle concentration in your home.",
+            url : "pathways-to-better-air.png",
+            captionCssClass : "home-hero-text4",
+            imageCssClass : "anchor_left"
+         }
+      ]
+   });
 });
 
 //----------------------------------------------------------------------------------------------------------------------
