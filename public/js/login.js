@@ -29,7 +29,7 @@ function submitLoginForm(formElementId, emailElementId, passwordElementId, messa
          window.location.href = redirectToAfterLogin;
       }
       else {
-         window.location.href = '/';
+         window.location.href = '/dashboard';
       }
    };
 
