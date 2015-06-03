@@ -309,7 +309,7 @@ body.shrink {
     color: #666666;
     text-align: center;
     font-size: larger; }
-    @media (max-width: 629px), (max-width: 449px) {
+    @media (max-width: 629px) {
       #software_page .video_thumbnail_with_caption .caption {
         font-size: smaller; } }
     #software_page .video_thumbnail_with_caption .caption a {

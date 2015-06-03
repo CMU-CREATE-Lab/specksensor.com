@@ -452,7 +452,7 @@ body.shrink {
          color: #666666;
          text-align: center;
          font-size: larger;
-         @media (max-width: $EXTRA_SMALL_WIDTH), (max-width: $EXTRA_EXTRA_SMALL_WIDTH) {
+         @media (max-width: $EXTRA_SMALL_WIDTH) {
             font-size: smaller;
          }
 
