@@ -275,14 +275,48 @@ body.shrink {
     max-width: 50%;
     text-align: center; } }
 
-#software_page img {
-  max-width: 500px; }
-@media (max-width: 767px) {
-  #software_page #screenshot {
-    text-align: center; }
-  #software_page img {
-    max-width: 60%;
-    text-align: center; } }
+#software_page #screenshot img {
+  max-width: 420px; }
+#software_page .intro_text {
+  font-weight: bold; }
+#software_page .fine_print {
+  font-size: smaller; }
+#software_page .video_thumbnail_with_caption {
+  position: relative;
+  margin: 15px 0; }
+  #software_page .video_thumbnail_with_caption .video_thumbnail {
+    position: relative; }
+    #software_page .video_thumbnail_with_caption .video_thumbnail .video_thumbnail_image {
+      margin-right: auto;
+      margin-left: auto; }
+    #software_page .video_thumbnail_with_caption .video_thumbnail .play_button {
+      position: absolute;
+      font-size: 60px;
+      line-height: 60px;
+      color: rgba(80, 80, 80, 0.8);
+      left: 0;
+      right: 0;
+      margin-right: auto;
+      margin-left: auto;
+      text-align: center;
+      pointer-events: none;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%); }
+  #software_page .video_thumbnail_with_caption .caption {
+    margin-top: 3px;
+    color: #666666;
+    text-align: center;
+    font-size: larger; }
+    @media (max-width: 629px), (max-width: 449px) {
+      #software_page .video_thumbnail_with_caption .caption {
+        font-size: smaller; } }
+    #software_page .video_thumbnail_with_caption .caption a {
+      text-decoration: none;
+      color: #666666; }
+  #software_page .video_thumbnail_with_caption:hover .play_button {
+    color: #00adef; }
 
 .carousel {
   height: 450px; }

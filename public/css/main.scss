@@ -31,6 +31,13 @@ $IS_LOGGED_IN_FOOTER_HEIGHT: 50px;
    padding-top: $NAVBAR_HEIGHT_SHRUNKEN;
 }
 
+@mixin vertically_centered {
+   top: 50%;
+   -webkit-transform: translateY(-50%);
+   -ms-transform: translateY(-50%);
+   transform: translateY(-50%);
+}
+
 body {
    // Required padding for .navbar-fixed-top.
    // Change if height of navigation changes.
@@ -400,17 +407,65 @@ body.shrink {
 // =====================================================================================================================
 
 #software_page {
-   img {
-      max-width: 500px;
+
+   #screenshot {
+      img {
+         max-width: 420px;
+      }
    }
 
-   @media (max-width: $SMALL_WIDTH) {
-      #screenshot {
-         text-align: center;
+   .intro_text {
+      font-weight: bold;
+   }
+
+   .fine_print {
+      font-size: smaller;
+   }
+
+   .video_thumbnail_with_caption {
+      position: relative;
+      margin: 15px 0;
+      .video_thumbnail {
+         position: relative;
+         .video_thumbnail_image {
+            margin-right: auto;
+            margin-left: auto;
+         }
+
+         .play_button {
+            position: absolute;
+            font-size: 60px;
+            line-height: 60px;
+            color: rgba(80, 80, 80, 0.8);
+            left: 0;
+            right: 0;
+            margin-right: auto;
+            margin-left: auto;
+            text-align: center;
+            pointer-events: none;
+            @include vertically_centered;
+         }
       }
-      img {
-         max-width: 60%;
+
+      .caption {
+         margin-top: 3px;
+         color: #666666;
          text-align: center;
+         font-size: larger;
+         @media (max-width: $EXTRA_SMALL_WIDTH), (max-width: $EXTRA_EXTRA_SMALL_WIDTH) {
+            font-size: smaller;
+         }
+
+         a {
+            text-decoration: none;
+            color: #666666;
+         }
+      }
+
+      &:hover {
+         .play_button {
+            color: rgb(0, 173, 239);
+         }
       }
    }
 }

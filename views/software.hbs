@@ -1,36 +1,87 @@
-<div id="software_page" class="clearfix">
+<script src="/lib/ekko-lightbox/ekko-lightbox.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+   $(document).ready(function() {
+      $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+         event.preventDefault();
+         $(this).ekkoLightbox();
+      });
+   });
+</script>
+<div id="software_page">
    <h2>Software</h2>
    <div class="row">
-      <div class="col-sm-6" style="margin-bottom:20px">
-         <p>
-            Thank you for purchasing a Speck! You now have the power to take control of your air quality and breathe easier... </p>
+      <div class="col-sm-6">
+         <p class="intro_text">
+            Use our free software to configure your Speck and optionally register it to upload its data to your
+            account on specksensor.com. Alternatively, you can use the Speck software to download the data directly to
+            your computer.
          </p>
-         <p>
-            To begin exploring your Speck data, first
-            <a href="/signup">sign up for a Speck Sensor account</a> &mdash; it's simple and free!
+         <p style="text-align: center; margin:50px">
+            <a class="btn btn-primary" href="https://chrome.google.com/webstore/detail/speck/anchbeboblnigmihhclbdkpdglecnimi" role="button"><i class="fa fa-download"></i> Download</a>
          </p>
-         <p>
-            Next, register and set up your Speck by following these steps:
+         <p class="fine_print">
+            The Speck app is available for free on the Chrome Web Store. The Speck app requires Google Chrome on either
+            Windows or Mac OS 10.8+.
          </p>
-         <ol>
-            <li>Download and install our
-               <a href="https://chrome.google.com/webstore/detail/speck/anchbeboblnigmihhclbdkpdglecnimi">Speck app</a>. The app is available for free on the Chrome Web Store.
-               The Speck Chrome app requires either Windows or Mac OS 10.8+.
-            </li>
-            <li>Once you have the app installed, connect your Speck to your computer via the USB cable and launch the app.</li>
-            <li>After a few seconds, the app should connect to your Speck and mirror its display on your computer screen.</li>
-            <li>Use the Wi-Fi tab to configure your Speck for your Wi-Fi network.</li>
-            <li>Use the Upload Configuration tab to register the Speck using your Speck Sensor account login information.</li>
-            <li>Once configuration and registration are complete, quit the app. Note: the Speck will not upload data while the app is still running.</li>
-            <li>After a few minutes, you should see your data on the Dashboard!</li>
-         </ol>
       </div>
-      <div id="screenshot" class="col-sm-6">
+      <div id="screenshot" class="col-sm-6 hidden-xs">
          <a href="https://chrome.google.com/webstore/detail/speck/anchbeboblnigmihhclbdkpdglecnimi" target="chrome_app"><img src="/images/speck_app_screenshot.png" alt="The Speck app"></a>
       </div>
    </div>
-   <h2>Legacy Software</h2>
+   <h3>Setup and Requirements</h3>
    <div>
-      The older, black-colored Specks are supported in the Speck Chrome app beginning with version 1.0.0 (released May 21, 2015).  Users with these older Specks may continue to use the <a href="/legacy-software">legacy software</a> if preferred.
+      <p>
+         You will need to have your Speck plugged in to your computer in order to use the Speck app.  Simply use the USB
+         cable supplied with your Speck&mdash;the small plug goes into the Speck, and the larger one goes into the USB
+         port on your computer.
+      </p>
+      <p>
+         You will also need to have the <a href="http://www.google.com/chrome/" target="get_chrome">Google Chrome web browser</a> installed on your computer.  The Speck app is a Google
+         Chrome app, and, as such, requires Google Chrome to be installed.
+      </p>
+   </div>
+   <h3>Download and Installation</h3>
+   <div>
+      <p>
+         To install the software on your computer, go to the
+         <a href="https://chrome.google.com/webstore/detail/speck/anchbeboblnigmihhclbdkpdglecnimi">Speck app's page on the Chrome Web Store</a>,
+         and then click the "Add To Chrome" button. The videos below demonstrate the download and installation
+         process in detail for Mac and Windows.
+      </p>
+   </div>
+   <div class="row">
+      <div id="video_mac_install" class="col-xs-6">
+         {{> vimeo_video_thumbnail_with_caption videoId="128538234" title="Installing the Speck App on a Mac" caption="Installing on a Mac" thumbnailImageFilename="519708010_640.jpg"}}
+      </div>
+      <div class="col-xs-6">
+         {{> vimeo_video_thumbnail_with_caption videoId="128538327" title="Installing the Speck App on Windows" caption="Installing on Windows" thumbnailImageFilename="519708430_640.jpg"}}
+      </div>
+   </div>
+   <h3>Using the Speck App</h3>
+   <div>
+      <p>
+         The following videos demonstrate the various features of the Speck app in detail.
+      </p>
+   </div>
+   <div class="row">
+      <div id="video_mac_install" class="col-xs-6">
+         {{> vimeo_video_thumbnail_with_caption videoId="129042696" title="Speck App Overview" caption="Speck App Overview" thumbnailImageFilename="520389907_640.jpg"}}
+      </div>
+      <div class="col-xs-6">
+         {{> vimeo_video_thumbnail_with_caption videoId="129042974" title="Downloading Data Samples" caption="Downloading Data Samples" thumbnailImageFilename="520424514_640.jpg"}}
+      </div>
+   </div>
+   <div class="row">
+      <div id="video_mac_install" class="col-xs-6">
+         {{> vimeo_video_thumbnail_with_caption videoId="129043524" title="Speck App: Settings" caption="Settings" thumbnailImageFilename="521301065_640.jpg"}}
+      </div>
+      <div class="col-xs-6">
+         {{> vimeo_video_thumbnail_with_caption videoId="129066394" title="Speck App: Wireless Networking Configuration" caption="Wireless Networking Configuration" thumbnailImageFilename="520424641_640.jpg"}}
+      </div>
+   </div>
+   <div class="row">
+      <div id="video_mac_install" class="col-xs-6 col-xs-offset-3">
+         {{> vimeo_video_thumbnail_with_caption videoId="129067639" title="Speck App: Upload Configuration" caption="Upload Configuration" thumbnailImageFilename="520425452_640.jpg"}}
+      </div>
    </div>
 </div>
