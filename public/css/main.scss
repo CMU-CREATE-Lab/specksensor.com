@@ -96,6 +96,13 @@ body.shrink {
    width: 360px;
 }
 
+a.anchor {
+   display: block;
+   position: relative;
+   top: -75px;
+   visibility: hidden;
+}
+
 // =====================================================================================================================
 // Rotations and Misc
 // =====================================================================================================================
@@ -127,6 +134,14 @@ body.shrink {
    cursor: default;
 }
 
+// For when you want columns of equal height. See http://getbootstrap.com.vn/examples/equal-height-columns/
+.row-eq-height {
+   display: -webkit-box;
+   display: -webkit-flex;
+   display: -ms-flexbox;
+   display: flex;
+}
+
 // =====================================================================================================================
 // Typography
 // =====================================================================================================================
@@ -139,6 +154,10 @@ body.shrink {
 .home_page_font {
    font-size: 20px;
    margin: 0 0 40px;
+}
+
+.no_wrap {
+   white-space: nowrap;
 }
 
 // =====================================================================================================================
@@ -157,6 +176,57 @@ body.shrink {
    height: 19px;
    background: transparent url("../images/checkmark_white.png") no-repeat 0 0;
    background-size: 24px 19px;
+}
+
+// =====================================================================================================================
+// Lightboxed Video
+// =====================================================================================================================
+
+.video_thumbnail_with_caption {
+   position: relative;
+   margin: 15px 0;
+   .video_thumbnail {
+      position: relative;
+      .video_thumbnail_image {
+         margin-right: auto;
+         margin-left: auto;
+      }
+
+      .play_button {
+         position: absolute;
+         font-size: 60px;
+         line-height: 60px;
+         color: rgba(80, 80, 80, 0.8);
+         left: 0;
+         right: 0;
+         margin-right: auto;
+         margin-left: auto;
+         text-align: center;
+         pointer-events: none;
+         @include vertically_centered;
+      }
+   }
+
+   .caption {
+      margin-top: 3px;
+      color: #666666;
+      text-align: center;
+      font-size: larger;
+      @media (max-width: $EXTRA_SMALL_WIDTH) {
+         font-size: smaller;
+      }
+
+      a {
+         text-decoration: none;
+         color: #666666;
+      }
+   }
+
+   &:hover {
+      .play_button {
+         color: rgb(0, 173, 239);
+      }
+   }
 }
 
 // =====================================================================================================================
@@ -245,11 +315,6 @@ body.shrink {
          text-decoration: none;
          @include easing;
 
-         .tiny_buy_icon {
-            width: 25px;
-            height: 18px;
-         }
-
          @media (max-width: $SMALL_WIDTH) {
             position: absolute;
             display: block;
@@ -285,7 +350,7 @@ body.shrink {
       position: relative;
       display: inline-block;
       margin-top: -3px;
-      width: 30px;
+      width: 24px;
       height: 20px;
       @include easing;
    }
@@ -324,12 +389,6 @@ body.shrink {
 
 #main_navbar.shrink {
    @include shrunken_navbar;
-
-   .tiny_buy_icon {
-      width: 25px;
-      height: 18px;
-      @include easing;
-   }
 
    #zip_code_container {
       -ms-transform: scale(0.8);
@@ -420,53 +479,6 @@ body.shrink {
 
    .fine_print {
       font-size: smaller;
-   }
-
-   .video_thumbnail_with_caption {
-      position: relative;
-      margin: 15px 0;
-      .video_thumbnail {
-         position: relative;
-         .video_thumbnail_image {
-            margin-right: auto;
-            margin-left: auto;
-         }
-
-         .play_button {
-            position: absolute;
-            font-size: 60px;
-            line-height: 60px;
-            color: rgba(80, 80, 80, 0.8);
-            left: 0;
-            right: 0;
-            margin-right: auto;
-            margin-left: auto;
-            text-align: center;
-            pointer-events: none;
-            @include vertically_centered;
-         }
-      }
-
-      .caption {
-         margin-top: 3px;
-         color: #666666;
-         text-align: center;
-         font-size: larger;
-         @media (max-width: $EXTRA_SMALL_WIDTH) {
-            font-size: smaller;
-         }
-
-         a {
-            text-decoration: none;
-            color: #666666;
-         }
-      }
-
-      &:hover {
-         .play_button {
-            color: rgb(0, 173, 239);
-         }
-      }
    }
 }
 
@@ -911,6 +923,131 @@ body.shrink {
 // =====================================================================================================================
 
 #what_is_speck {
+   margin-top: 42px;
+
+   .hero_text {
+      margin: 50px 0;
+      font-size: 26px;
+      text-align: center;
+      font-weight: 200;
+   }
+
+   #teaser_row {
+      margin-bottom: 40px;
+   }
+
+   .icon {
+      position: relative;
+      display: inline-block;
+      float: left;
+      width: 48px;
+      height: 35px;
+      background-size: 48px 35px;
+      margin-top: 5px;
+      margin-left: 10px;
+   }
+
+   .speck_icon {
+      background-image: url('/images/speck_icon_grey_139.png');
+   }
+
+   .cloud_icon {
+      background-image: url('/images/cloud_icon_grey_139.png');
+   }
+
+   .graph_icon {
+      background-image: url('/images/graph_icon_grey_139.png');
+   }
+
+   .main_feature_teaser {
+      position: relative;
+      cursor: pointer;
+      padding: 20px 10px 20px 10px;
+      color: rgb(139, 139, 139);
+
+      .teaser_content {
+         position: relative;
+         display: block;
+         padding: 0 15px;
+         overflow: hidden;
+
+         .teaser_title h4 {
+            font-weight: 200;
+            font-size: 20px;
+            color: rgb(90, 90, 90);
+         }
+      }
+
+      &:hover {
+         background: #fcfcfc;
+         box-shadow: 0 0 5px #ddd;
+         -webkit-transition: box-shadow 0.2s ease-in-out;
+         -moz-transition: box-shadow 0.2s ease-in-out;
+         -o-transition: box-shadow 0.2s ease-in-out;
+         transition: box-shadow 0.2s ease-in-out;
+         color: rgb(51, 51, 51);
+
+         .speck_icon {
+            background-image: url('/images/speck_icon_grey_51.png');
+         }
+
+         .cloud_icon {
+            background-image: url('/images/cloud_icon_grey_51.png');
+         }
+
+         .graph_icon {
+            background-image: url('/images/graph_icon_grey_51.png');
+         }
+
+         .teaser_title h4 {
+            color: rgb(51, 51, 51);
+         }
+
+      }
+
+   }
+
+   .main_feature {
+      margin: 50px 20px;
+
+      .main_feature_text_container {
+         .main_feature_title {
+            font-size: 25px;
+            margin-bottom: 20px;
+         }
+         .main_feature_description {
+            font-size: 16px;
+            line-height: 1.8;
+
+            p {
+               margin-bottom:15px;
+            }
+         }
+      }
+
+      .main_feature_media_container {
+         text-align: center;
+         img {
+            display: inline-block;
+            max-height: 250px;
+            margin: 15px 0;
+
+            @media (max-width: $SMALL_WIDTH) {
+               max-height:200px;
+            }
+            @media (max-width: $EXTRA_SMALL_WIDTH) {
+               max-height:175px;
+            }
+         }
+
+      }
+
+      @media (max-width: $SMALL_WIDTH) {
+         margin: 30px 0;
+      }
+
+   }
+
    @media (max-width: $LARGE_WIDTH) {
       .panel-body {
          min-height: 360px;
@@ -918,8 +1055,22 @@ body.shrink {
    }
    @media (max-width: $MEDIUM_WIDTH) {
       .panel-body {
-         min-height: 0px;
+         min-height: 0;
       }
+   }
+   @media (max-width: $SMALL_WIDTH) {
+      .panel-body {
+         min-height: 0;
+      }
+   }
+   @media (max-width: $EXTRA_SMALL_WIDTH) {
+      margin-top: 30px;
+   }
+   @media (max-width: $EXTRA_EXTRA_SMALL_WIDTH) {
+      margin-top: 25px;
+   }
+   @media (max-width: $TINY_WIDTH) {
+      margin-top: 20px;
    }
 }
 
@@ -973,13 +1124,6 @@ body.shrink {
 
 #faq_page {
    .question_teaser {
-   }
-
-   a.anchor {
-      display: block;
-      position: relative;
-      top: -75px;
-      visibility: hidden;
    }
 
    .question_and_answer {
