@@ -135,12 +135,12 @@ router.get('/get_time/', function(req, res) {
 router.get('/get_outdoor_aqi/', function(req, res) {
    // TODO: Should probably make this a more general function in esdr.js
    var ESDR_API_ROOT_URL = 'http://esdr.cmucreatelab.org/api/v1';
-   var DEMO_SPECK_SERIAL_NUMBER = "e0b9eeba821c2ccae96de9e1e76932d2";
-   var JOSH_DEV_SPECK_SERIAL_NUMBER = "343d7d5a668aa7eca589bf01cbc8dd17";
+   var DEMO_SPECK_SERIAL_NUMBER = "b5320dc134e7dece9317c53e4e5b1f08";
    var aqi_value = -1;
    if (req.headers['serialnumber'] == DEMO_SPECK_SERIAL_NUMBER) {
-      var texas_api_key = "a2fd2312ef53eda80418ee63dd32a184eb708f95a51a4edeeade0bb807a7bac3";
-      var channels = "PM2_5";
+      var feedIdOrApiKey = 2697;
+      var channelName = "PM2_5";
+
       // TODO: This fails on initial day rollover because of the note below
       // NOTE: AirNow reports are usually 2 hours behind
       var today = new Date();
@@ -151,13 +151,13 @@ router.get('/get_outdoor_aqi/', function(req, res) {
       var endTime = Date.parse(lastCaptureTime) / 1000;
       // TODO: Cache values, since AirNow values change every hour and we may be requesting more often
       superagent
-            .get(ESDR_API_ROOT_URL + "/feeds/" + texas_api_key + "/channels/" + channels + "/export?from=" + startTime + "&to=" + endTime)
+            .get(ESDR_API_ROOT_URL + "/feeds/" + feedIdOrApiKey + "/channels/" + channelName + "/export?from=" + startTime + "&to=" + endTime)
             .end(function(err, esdrRes) {
                     if (err) {
                        console.log("Error connection to ESDR.");
                     }
                     var csvData = esdrRes.text;
-                    if (csvData) {
+                          if (csvData) {
                        try {
                           var tmp_aqi = csvData.split(",");
                           aqi_value = parseFloat(tmp_aqi[tmp_aqi.length - 1].trim());
@@ -168,16 +168,6 @@ router.get('/get_outdoor_aqi/', function(req, res) {
                     }
                     res.set('Content-Type', 'text/plain').send("get_outdoor_aqi=" + aqi_value + "\r\n");
                  });
-   }
-   else if (req.headers['serialnumber'] == JOSH_DEV_SPECK_SERIAL_NUMBER) {
-      var fakeAqi = Date.now() % 1000;
-      // simulate random error by returning an invalid string 1/4th of the time
-      if (Math.random() < 0.25) {
-         res.set('Content-Type', 'text/plain').send("hello_josh=" + fakeAqi + "\r\n");
-      }
-      else {
-         res.set('Content-Type', 'text/plain').send("get_outdoor_aqi=" + fakeAqi + "\r\n");
-      }
    }
    else {
       res.set('Content-Type', 'text/plain').send("get_outdoor_aqi=" + aqi_value + "\r\n");
