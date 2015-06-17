@@ -792,6 +792,11 @@ a.anchor {
     @media (max-width: 767px) {
       #what_is_speck .main_feature {
         margin: 30px 0; } }
+  #what_is_speck .tech_spec_group .tech_spec_label {
+    font-weight: bold;
+    white-space: nowrap; }
+  #what_is_speck .tech_spec_group .tech_spec_value {
+    white-space: nowrap; }
   @media (max-width: 1199px) {
     #what_is_speck .panel-body {
       min-height: 360px; } }

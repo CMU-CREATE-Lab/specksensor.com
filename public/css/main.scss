@@ -1020,7 +1020,7 @@ a.anchor {
             line-height: 1.8;
 
             p {
-               margin-bottom:15px;
+               margin-bottom: 15px;
             }
          }
       }
@@ -1033,10 +1033,10 @@ a.anchor {
             margin: 15px 0;
 
             @media (max-width: $SMALL_WIDTH) {
-               max-height:200px;
+               max-height: 200px;
             }
             @media (max-width: $EXTRA_SMALL_WIDTH) {
-               max-height:175px;
+               max-height: 175px;
             }
          }
 
@@ -1046,6 +1046,16 @@ a.anchor {
          margin: 30px 0;
       }
 
+   }
+
+   .tech_spec_group {
+      .tech_spec_label {
+         font-weight: bold;
+         white-space: nowrap;
+      }
+      .tech_spec_value {
+         white-space: nowrap;
+      }
    }
 
    @media (max-width: $LARGE_WIDTH) {
