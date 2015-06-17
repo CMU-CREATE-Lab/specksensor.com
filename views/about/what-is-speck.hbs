@@ -1,6 +1,9 @@
 <script src="/lib/ekko-lightbox/ekko-lightbox.min.js" type="text/javascript"></script>
 <script type="text/javascript">
    $(document).ready(function() {
+      // enable popovers
+      $('[data-toggle="popover"]').popover();
+
       $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
          event.preventDefault();
          $(this).ekkoLightbox();
@@ -179,8 +182,10 @@
                      quick tour of its features.
                   </p>
                   <p>
-                     Want more? See the Speck Setup Guide and technical specifications below, read the <a href="/faq">frequently asked questions</a>,
-                     or <a href="mailto:info@specksensor.com?Subject=Inquiry%20about%20Speck" target="_top">contact us</a> if
+                     Want more? See the Speck Setup Guide and technical specifications below, read the
+                     <a href="/faq">frequently asked questions</a>,
+                     or
+                     <a href="mailto:info@specksensor.com?Subject=Inquiry%20about%20Speck" target="_top">contact us</a> if
                      you need help.
                   </p>
                </div>
@@ -235,7 +240,15 @@
          </div>
          <div class="tech_spec_item row">
             <div class="tech_spec_label col-sm-4 col-md-3">Additional on-board sensors</div>
-            <div class="tech_spec_value col-sm-3 col-md-3">Temperature and humidity<sup>1</sup></div>
+            <div class="tech_spec_value col-sm-3 col-md-3">
+               Temperature and humidity
+               <i class="fa fa-exclamation-circle pointer_cursor"
+                     data-toggle="popover"
+                     data-trigger="hover click"
+                     data-placement="bottom"
+                     data-content="Specks shipped prior to July 2015 do not have a humidity sensor."></i>
+
+            </div>
          </div>
          <div class="tech_spec_item row">
             <div class="tech_spec_label col-sm-4 col-md-3">Environmental operating range</div>
