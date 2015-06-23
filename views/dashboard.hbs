@@ -683,13 +683,16 @@
                channelUnits = units;
                yAxisLabel += " (" + units + ")";
             }
+         } else {
+            yAxisLabel = selectedChannelName;
          }
          $("#y_axis_label").html(yAxisLabel == null ? "" : yAxisLabel);
 
-         // set the channel menu button label to the currently-selected channel name
-         var currentlySelectChannelPrettyName = feed['channelSpecs'][selectedChannelName]['prettyName'];
-         if (!currentlySelectChannelPrettyName) {
-            currentlySelectChannelPrettyName = selectedChannelName;
+         // set the channel menu button label to the currently-selected channel name, but first make sure the channelSpecs
+         // has this channel name
+         var currentlySelectChannelPrettyName = selectedChannelName;
+         if (selectedChannelName in feed['channelSpecs']) {
+            currentlySelectChannelPrettyName = feed['channelSpecs'][selectedChannelName]['prettyName'] || selectedChannelName;
          }
          $("#channel_switcher_menu_label").text(currentlySelectChannelPrettyName);
 
@@ -703,7 +706,10 @@
 
             var channelNameMenuItemTemplate = Handlebars.templates['grapher_channel_menu_item'];
             availableChannels.forEach(function(channelName) {
-               var prettyChannelName = feed['channelSpecs'][channelName]['prettyName'];
+               var prettyChannelName = channelName;
+               if (channelName in feed['channelSpecs']){
+                  prettyChannelName = feed['channelSpecs'][channelName]['prettyName'] || channelName;
+               }
                var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
 
                var menuItemElement = $(channelNameMenuItemTemplate({
@@ -909,10 +915,10 @@
                .css("top", yAxisLabelTop + "px")
                .css("left", yAxisLabelLeft + "px")
                .show();
-      } else {
+      }
+      else {
          yAxisLabelElement.hide();
       }
-
 
       // update the map so it's the same width at the grapher
       $("#map_area").width($("#grapher").width() - 2);   // subtract 2 to account for the borders
