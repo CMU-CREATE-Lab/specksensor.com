@@ -953,6 +953,9 @@
 
       // make the devices and feeds dropdown button smaller on tiny devices
       $("#devices_and_feeds_dropdown_menu_button").toggleClass("btn-sm", windowWidth < TINY_DEVICE_WIDTH_PIXELS);
+
+      // When the window is tiny, the time range menu moves to the right, so we need to add the dropdown-menu-right Bootstrap CSS class
+      $("#time_range_switcher_menu_items").toggleClass("dropdown-menu-right", windowWidth < TINY_DEVICE_WIDTH_PIXELS);
    }
 
    function setRangeFromSecondsAgoToNow(numSecondsAgo) {
@@ -1049,7 +1052,7 @@
                   <span id="time_range_switcher_menu_label">Time Range</span>
                   <span id="time_range_switcher_menu_caret" class="caret"></span>
                </button>
-               <ul id="time_range_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu dropdown-menu-right" role="menu"></ul>
+               <ul id="time_range_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
             </div>
          </div>
          <table id="grapher" border="0" cellpadding="0" cellspacing="0">
