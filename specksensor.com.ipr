@@ -61,7 +61,7 @@
   </component>
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{specksensor.com node_modules}" />
-    <file url="PROJECT" libraries="{Handlebars Runtime 2.0.0, Node.js v0.10.36 Core Modules, Superagent, googlemaps-DefinitelyTyped, jQuery 1.11.2, mocha-DefinitelyTyped, nconf-DefinitelyTyped, should-DefinitelyTyped, specksensor.com node_modules}" />
+    <file url="PROJECT" libraries="{Handlebars Runtime 2.0.0, Node.js v0.12.7 Core Modules, Superagent, googlemaps-DefinitelyTyped, jQuery 1.11.2, mocha-DefinitelyTyped, nconf-DefinitelyTyped, should-DefinitelyTyped, specksensor.com node_modules}" />
     <includedPredefinedLibrary name="Node.js Globals" />
   </component>
   <component name="ProjectCodeStyleSettingsManager">
