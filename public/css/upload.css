@@ -69,11 +69,14 @@ body {
   border: 1px solid black;
   margin: 0;
   padding: 0; }
+
 #map_area .map_instructions {
   font-size: 12px !important;
   color: #666666; }
+
 #map_area #map_geolocation {
   font-size: 12px !important; }
+
 #map_area .map_geolocation_prompt {
   display: none; }
 
