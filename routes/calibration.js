@@ -29,8 +29,10 @@ router.post('/', function(req, res) {
 
   // TODO: Apparently there is a limit of 500 inserts per request.
   var sqlStatements = "";
+  var inputDate = new Date();
+  inputDate = inputDate.toLocaleDateString() + " " + inputDate.toLocaleTimeString();
   for (var i = 0; i < uniqueSerialNumbers.length; i++) {
-    sqlStatements += "INSERT INTO " + config.get("googleServices:fusionTables:tableIds:calibrationTableId") + "('Calibration Batch Number', 'Speck Serial Number', 'Location') VALUES ('" + calibrationBatch + "', '" + uniqueSerialNumbers[i] + "', '" + speckLocations[locationIndiciesToUse[i]] + "');";
+    sqlStatements += "INSERT INTO " + config.get("googleServices:fusionTables:tableIds:calibrationTableId") + "('Input Date', 'Calibration Batch Number', 'Speck Serial Number', 'Location') VALUES ('" + inputDate + "', '" + calibrationBatch + "', '" + uniqueSerialNumbers[i] + "', '" + speckLocations[locationIndiciesToUse[i]] + "');";
   }
 
   /**

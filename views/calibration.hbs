@@ -10,7 +10,8 @@
         <label for="calibration-batch">Calibration Batch Number:</label>
         <input type="text" class="form-control fusion-table-form-field" id="calibration-batch" name="calibration" placeholder="Enter Calibration Batch Number" required>
       </div>
-      <label>Speck Serial Numbers and Locations (one per line):</label>
+      <div><label>Speck Serial Numbers and Locations (one per line):</label></div>
+      <div class="entry-number">1.</div>
       <div class="form-group row">
         <div class="col-lg-4">
           <input type="text" class="form-control" id="first-serial-number" name="specks[serials][0]" placeholder="Enter Speck Serial Number" required />
@@ -47,7 +48,7 @@
       } else {
         serialNumberArrayIndex++;
         focusable = focusable.eq(focusable.index(this));
-        focusable.parent().parent().after('<div class="form-group row"><div class="col-lg-4"><input type="text" class="form-control" name="specks[serials][' + serialNumberArrayIndex + ']" placeholder="Enter Speck Serial Number" /></div><div class="col-lg-4"><input type="text" class="form-control" name="specks[locations][' + serialNumberArrayIndex + ']" placeholder="Enter Calibration Location" /></div></div>');
+        focusable.parent().parent().after('<div class="entry-number">' + (serialNumberArrayIndex + 1) + '. </div><div class="form-group row"><div class="col-lg-4"><input type="text" class="form-control" name="specks[serials][' + serialNumberArrayIndex + ']" placeholder="Enter Speck Serial Number" /></div><div class="col-lg-4"><input type="text" class="form-control" name="specks[locations][' + serialNumberArrayIndex + ']" placeholder="Enter Calibration Location" /></div></div>');
         $(focusable).trigger(e);
       }
       return false;

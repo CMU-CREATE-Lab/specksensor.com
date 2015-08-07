@@ -11,6 +11,7 @@
         <input type="text" class="form-control fusion-table-form-field" id="invoice-number" name="invoice" placeholder="Enter Order Invoice Number" required>
       </div>
       <label for="first-serial-number">Speck Serial Numbers (one per line):</label><br>
+      <div class="entry-number">1.</div>
       <div class="form-group">
         <input type="text" class="form-control fusion-table-form-field" id="first-serial-number" name="serials[0]" placeholder="Enter Speck Serial Number" required>
       </div>
@@ -42,7 +43,7 @@
       } else {
         serialNumberArrayIndex++;
         focusable = focusable.eq(focusable.index(this));
-        focusable.parent().after('<div class="form-group"><input type="text" class="form-control fusion-table-form-field" name="serials[' + serialNumberArrayIndex + ']" placeholder="Enter Speck Serial Number"><div>');
+        focusable.parent().after('<div class="entry-number">' + (serialNumberArrayIndex + 1) + '.</div><div class="form-group"><input type="text" class="form-control fusion-table-form-field" name="serials[' + serialNumberArrayIndex + ']" placeholder="Enter Speck Serial Number"><div>');
         $(focusable).trigger(e);
       }
       return false;
