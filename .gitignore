@@ -5,5 +5,8 @@ out
 logs/*.log
 todo.txt
 
+newrelic.js
+newrelic_agent.log
+
 config-prod.json
 google-services-key.pem

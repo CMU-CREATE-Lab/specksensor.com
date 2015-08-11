@@ -35,6 +35,7 @@
     "morgan": "^1.6.1",
     "mysql": "^2.8.0",
     "nconf": "^0.7.1",
+    "newrelic": "^1.21.2",
     "nimble": "0.0.2",
     "passport": "^0.2.2",
     "passport-http-bearer": "^1.0.1",

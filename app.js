@@ -4,10 +4,17 @@ if (!RunMode.isValid()) {
    process.exit(1);
 }
 
+if (RunMode.isTest()) {
+   process.env['NEW_RELIC_APP_NAME'] = "Speck Test";
+}
+var nr = require('newrelic');
+
 var log4js = require('log4js');
 log4js.configure('log4js-config-' + RunMode.get() + '.json');
 var log = log4js.getLogger('specksensor');
 log.info("Run Mode: " + RunMode.get());
+
+log.info("New Relic enabled for app: " + ((nr.agent && nr.agent.config && nr.agent.config.app_name) ? nr.agent.config.app_name : "unknown"));
 
 // dependencies
 var express = require('express');
