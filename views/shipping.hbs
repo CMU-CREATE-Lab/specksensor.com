@@ -82,8 +82,7 @@
             messages.add('Information successfully submitted');
             messages.render(successMessagesElement);
           } else {
-            // TODO: Make a better error message
-            messages.add("Error detected");
+            messages.add(res.text);
             messages.render(errorMessagesElement);
           }
       });

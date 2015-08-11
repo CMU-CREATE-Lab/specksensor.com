@@ -54,9 +54,8 @@ router.post('/', function(req, res) {
 
   authClient.authorize(function(err, tokens) {
     if (err) {
-      // TODO: Need to return some error to the user if authentication failed
       console.log(err);
-      return;
+      res.status(500).send('Error authenticating with Google Fusion Tables');
     }
   });
 
@@ -66,16 +65,15 @@ router.post('/', function(req, res) {
       auth: authClient,
       sql:  sqlStatements
     }, function(err, resp) {
-      if (err) {
-        // TODO: Need to return some error to the user if insert failed
+      if (err || !resp) {
         console.log(err);
-        return;
+        res.status(500).send('Error submitting data');
+      } else {
+        res.render('shipping', { title : "Shipping", section : "shipping" });
       }
       console.log(resp);
     }
   );
-
-  res.render('shipping', { title : "Shipping", section : "shipping" });
 });
 
 //======================================================================================================================

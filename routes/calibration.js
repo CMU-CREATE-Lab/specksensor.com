@@ -32,7 +32,8 @@ router.post('/', function(req, res) {
   var inputDate = new Date();
   inputDate = inputDate.toLocaleDateString() + " " + inputDate.toLocaleTimeString();
   for (var i = 0; i < uniqueSerialNumbers.length; i++) {
-    sqlStatements += "INSERT INTO " + config.get("googleServices:fusionTables:tableIds:calibrationTableId") + "('Input Date', 'Calibration Batch Number', 'Speck Serial Number', 'Location') VALUES ('" + inputDate + "', '" + calibrationBatch + "', '" + uniqueSerialNumbers[i] + "', '" + speckLocations[locationIndiciesToUse[i]] + "');";
+    var loc = speckLocations[locationIndiciesToUse[i]].replace("'", "\\'");
+    sqlStatements += "INSERT INTO " + config.get("googleServices:fusionTables:tableIds:calibrationTableId") + "('Input Date', 'Calibration Batch Number', 'Speck Serial Number', 'Location') VALUES ('" + inputDate + "', '" + calibrationBatch + "', '" + uniqueSerialNumbers[i] + "', '" + loc + "');";
   }
 
   /**
@@ -59,9 +60,8 @@ router.post('/', function(req, res) {
 
   authClient.authorize(function(err, tokens) {
     if (err) {
-      // TODO: Need to return some error to the user if authentication failed
       console.log(err);
-      return;
+      res.status(500).send('Error authenticating with Google Fusion Tables');
     }
   });
 
@@ -71,16 +71,15 @@ router.post('/', function(req, res) {
       auth: authClient,
       sql:  sqlStatements
     }, function(err, resp) {
-      if (err) {
-        // TODO: Need to return some error to the user if insert failed
+      if (err || !resp) {
         console.log(err);
-        return;
+        res.status(500).send('Error submitting data');
+      } else {
+        res.render('calibration', { title : "Calibration", section : "calibration" });
       }
       console.log(resp);
     }
   );
-
-  res.render('calibration', { title : "Calibration", section : "calibration" });
 });
 
 //======================================================================================================================
