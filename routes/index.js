@@ -134,15 +134,17 @@ router.get('/get_time/', function(req, res) {
 });
 
 var OUTDOOR_AQI_DEFAULT_VALUE = -1;
+var OUTDOOR_AQI_DEFAULT_CHANNEL_NAME = "PM2_5";
 var OUTDOOR_AQI_MAX_AGE_SECS = 6 * 60 * 60; // 6 hours
 
 router.get('/get_outdoor_aqi/', function(req, res) {
    var ESDR_API_ROOT_URL = 'http://esdr.cmucreatelab.org/api/v1';
    var DEMO_SPECK_SERIAL_NUMBER = "b5320dc134e7dece9317c53e4e5b1f08";
 
+   var aqi_value = OUTDOOR_AQI_DEFAULT_VALUE;
    if (req.headers && req.headers['serialnumber'] == DEMO_SPECK_SERIAL_NUMBER) {
       var feedIdOrApiKey = 2697;
-      var channelName = "PM2_5";
+      var channelName = OUTDOOR_AQI_DEFAULT_CHANNEL_NAME;
 
       // TODO: if we want to make this a little more flexible, and not just hardcoded to the PM2_5 channel, we could
       // use the /feeds/FEED_ID_OR_API_KEY/most-recent ESDR API method and get back the most recent for all channels
@@ -151,7 +153,6 @@ router.get('/get_outdoor_aqi/', function(req, res) {
       superagent
             .get(ESDR_API_ROOT_URL + "/feeds/" + feedIdOrApiKey + "/channels/" + channelName + "/most-recent")
             .end(function(err, mostRecentResponse) {
-                    var aqi_value = OUTDOOR_AQI_DEFAULT_VALUE;
                     if (err) {
                        log.error("Failed to get most recent value for feed.channel [" + feedIdOrApiKey + "." + channelName + "]: " + err);
                     }
