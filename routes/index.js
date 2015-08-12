@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var config = require('../config');
 var superagent = require('superagent');
+var log = require('log4js').getLogger('specksensor:routes:index');
 
 //======================================================================================================================
 
@@ -132,38 +133,54 @@ router.get('/get_time/', function(req, res) {
    res.set('Content-Type', 'text/plain').send("get_time=" + parseInt(Date.now() / 1000) + "\r\n");
 });
 
+var OUTDOOR_AQI_DEFAULT_VALUE = -1;
+var OUTDOOR_AQI_MAX_AGE_SECS = 6 * 60 * 60; // 6 hours
+
 router.get('/get_outdoor_aqi/', function(req, res) {
-   // TODO: Should probably make this a more general function in esdr.js
    var ESDR_API_ROOT_URL = 'http://esdr.cmucreatelab.org/api/v1';
    var DEMO_SPECK_SERIAL_NUMBER = "b5320dc134e7dece9317c53e4e5b1f08";
-   var aqi_value = -1;
-   if (req.headers['serialnumber'] == DEMO_SPECK_SERIAL_NUMBER) {
+
+   if (req.headers && req.headers['serialnumber'] == DEMO_SPECK_SERIAL_NUMBER) {
       var feedIdOrApiKey = 2697;
       var channelName = "PM2_5";
 
-      // TODO: This fails on initial day rollover because of the note below
-      // NOTE: AirNow reports are usually 2 hours behind
-      var today = new Date();
-      var newDateString = (today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear();
-      var firstCaptureTime = newDateString + " 00:00:00";
-      var lastCaptureTime = newDateString + " 23:59:59";
-      var startTime = Date.parse(firstCaptureTime) / 1000;
-      var endTime = Date.parse(lastCaptureTime) / 1000;
-      // TODO: Cache values, since AirNow values change every hour and we may be requesting more often
+      // TODO: if we want to make this a little more flexible, and not just hardcoded to the PM2_5 channel, we could
+      // use the /feeds/FEED_ID_OR_API_KEY/most-recent ESDR API method and get back the most recent for all channels
+      // in the feed, and then iterate over the channel names to see if any match the various permutations of PM 2.5
+      // channels.
       superagent
-            .get(ESDR_API_ROOT_URL + "/feeds/" + feedIdOrApiKey + "/channels/" + channelName + "/export?from=" + startTime + "&to=" + endTime)
-            .end(function(err, esdrRes) {
+            .get(ESDR_API_ROOT_URL + "/feeds/" + feedIdOrApiKey + "/channels/" + channelName + "/most-recent")
+            .end(function(err, mostRecentResponse) {
+                    console.log(JSON.stringify(mostRecentResponse.body, null, 3));
+                    var aqi_value = OUTDOOR_AQI_DEFAULT_VALUE;
                     if (err) {
-                       console.log("Error connection to ESDR.");
+                       log.error("Failed to get most recent value for feed.channel [" + feedIdOrApiKey + "." + channelName + "]: " + err);
                     }
-                    var csvData = esdrRes.text;
-                          if (csvData) {
-                       try {
-                          var tmp_aqi = csvData.split(",");
-                          aqi_value = parseFloat(tmp_aqi[tmp_aqi.length - 1].trim());
+                    else {
+                       if (mostRecentResponse &&
+                           mostRecentResponse.body &&
+                           mostRecentResponse.body.data &&
+                           mostRecentResponse.body.data.channels &&
+                           mostRecentResponse.body.data.channels[channelName] &&
+                           mostRecentResponse.body.data.channels[channelName]['mostRecentDataSample']) {
+
+                          // get the sample data
+                          var mostRecentDataSample = mostRecentResponse.body.data.channels[channelName]['mostRecentDataSample'];
+                          if (mostRecentDataSample['timeSecs'] && mostRecentDataSample['value']) {
+                             // make sure the most recent sample isn't too old
+                             if (mostRecentDataSample['timeSecs'] >= (Date.now() / 1000 - OUTDOOR_AQI_MAX_AGE_SECS)) {
+                                aqi_value = mostRecentDataSample['value'];
+                             }
+                             else {
+                                log.debug("The mostRecentDataSample found for feed.channel [" + feedIdOrApiKey + "." + channelName + "] its timestamp of [" + mostRecentDataSample['timeSecs'] + "] is too old.");
+                             }
+                          }
+                          else {
+                             log.info("The mostRecentDataSample found for feed.channel [" + feedIdOrApiKey + "." + channelName + "] contains no time and/or value.");
+                          }
                        }
-                       catch (error) {
-                          console.log("Failed to get AQI value. Defaulting to -1.");
+                       else {
+                          log.info("No mostRecentDataSample found for feed.channel [" + feedIdOrApiKey + "." + channelName + "]: " + err);
                        }
                     }
                     res.set('Content-Type', 'text/plain').send("get_outdoor_aqi=" + aqi_value + "\r\n");
