@@ -151,7 +151,6 @@ router.get('/get_outdoor_aqi/', function(req, res) {
       superagent
             .get(ESDR_API_ROOT_URL + "/feeds/" + feedIdOrApiKey + "/channels/" + channelName + "/most-recent")
             .end(function(err, mostRecentResponse) {
-                    console.log(JSON.stringify(mostRecentResponse.body, null, 3));
                     var aqi_value = OUTDOOR_AQI_DEFAULT_VALUE;
                     if (err) {
                        log.error("Failed to get most recent value for feed.channel [" + feedIdOrApiKey + "." + channelName + "]: " + err);
