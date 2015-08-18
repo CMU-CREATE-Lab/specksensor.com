@@ -81,6 +81,7 @@
             form[0].reset();
             messages.add('Information successfully submitted');
             messages.render(successMessagesElement);
+            $("#invoice-number").focus();
           } else {
             messages.add(res.text);
             messages.render(errorMessagesElement);
