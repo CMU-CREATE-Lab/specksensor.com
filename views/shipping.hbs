@@ -48,6 +48,20 @@
       }
       return false;
     }
+  // Handle pasting in a block of Speck IDs seperated by newlines/carriage returns
+  }).on('paste', 'input', function(e) {
+    var $self = $(this);
+    // Need to wait some small amount of time before the value is written to the field by the browser.
+    // Note: window.clipboardData is needed for IE because it fails to handle new lines and will only paste in the first line and disregard the rest.
+    // A textarea could have been used to solve this, but eh, not worth reimplementing the form.
+    setTimeout(function(e) {
+      var items = (window.clipboardData) ? window.clipboardData.getData('Text').replace(/(\r\n|\n|\r)/gm, ' ').trim().split(' ') : $self.val().split(' ');
+      items.forEach(function(item) {
+        e = $.Event('keydown');
+        e.keyCode = 13;
+        $(':focus').trigger(e).val(item);
+      });
+    }, 10);
   });
 
   function submitShippingTrackingForm() {
