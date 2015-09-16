@@ -5,7 +5,8 @@
    }
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}" type="text/javascript"></script>
-<script src="{{esdrUrl}}/lib/bodytrack-grapher/org/bodytrack/grapher/grapher2.nocache.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/jquery-mousewheel/jquery.mousewheel.min.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/createlab-grapher/grapher.min.js" type="text/javascript"></script>
 <script src="{{esdrUrl}}/lib/plot-manager/org/bodytrack/grapher/PlotManager.js" type="text/javascript"></script>
 <script src="/lib/canvas-layer/src/CanvasLayer.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
@@ -38,8 +39,6 @@
 
    // grapher stuff
    var plotManager;
-   var isAutoScaleOn = false;
-   var isNewlyLoadedPlot = true;
    var currentDateAxisRange = { min : null, max : null };
 
    // map stuff
@@ -346,20 +345,15 @@
             max : axisChangeEvent.max
          };
 
-         // auto-scale the y-axes
-         if (isAutoScaleOn && hasDateRangeChanged) {
-            autoScaleYAxes();
-         }
-
          // If the user is fiddling with the date axis, then mark all time range options as unselected.  But! Don't
          // unselect time range items if the axis range didn't change (e.g. cursor event of mousing out of the window)
          if (hasDateRangeChanged) {
             unselectAllTimeRangeMenuItems();
          }
-
-         // If the user is fiddling with the date axis, then mark the plot as not newly-loaded
-         isNewlyLoadedPlot = false;
       });
+
+      // create the plot container so that we can turn autoscaling on by default (but don't pad)
+      plotManager.addPlotContainer("plot_container").setAutoScaleEnabled(true, false);
 
       addFeedToGrapher(selectedFeed);
 
@@ -683,7 +677,8 @@
                channelUnits = units;
                yAxisLabel += " (" + units + ")";
             }
-         } else {
+         }
+         else {
             yAxisLabel = selectedChannelName;
          }
          $("#y_axis_label").html(yAxisLabel == null ? "" : yAxisLabel);
@@ -707,7 +702,7 @@
             var channelNameMenuItemTemplate = Handlebars.templates['grapher_channel_menu_item'];
             availableChannels.forEach(function(channelName) {
                var prettyChannelName = channelName;
-               if (channelName in feed['channelSpecs']){
+               if (channelName in feed['channelSpecs']) {
                   prettyChannelName = feed['channelSpecs'][channelName]['prettyName'] || channelName;
                }
                var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
@@ -730,22 +725,12 @@
             });
          }
 
-         // The isNewlyLoadedPlot is a flag we need so that we can autoscale the plot after load.  We get the min and
-         // max values for the *entire* channel, but, upon first load of the channel in the grapher, we're limiting the
-         // time range to a specific window, and that window will almost certainly have different min/max values.
-         // However, since the tiles load asynchronously, we need to autoscale them as they come in, but *stop*
-         // autoscaling after the user starts changing the date axis.
-         isNewlyLoadedPlot = true;
-
          var plotId = feed.id;
          plotManager.addDataSeriesPlot(plotId,
                                        function(level, offset, successCallback) {
                                           esdr.tiles.get(feed.apiKeyReadOnly, selectedChannelName, level, offset, {
                                              success : function(json) {
-                                                successCallback(JSON.stringify(json));
-                                                if (isNewlyLoadedPlot) {
-                                                   autoScaleYAxes();
-                                                }
+                                                successCallback(json);
                                              },
                                              unauthorized : function() {
                                                 // TODO:
@@ -776,46 +761,47 @@
             }
          });
 
-         plotManager.getPlot(plotId).setStyle({
-            "styles" : [
-               {
-                  "type" : "line",
-                  "lineWidth" : 1,
-                  "show" : true,
-                  "color" : (isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR)
-               },
-               {
-                  "type" : "circle",
-                  radius : 1,
-                  "lineWidth" : 1,
-                  "show" : true,
-                  "color" : isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR,
-                  fill : true
-               }
-            ],
-            "highlight" : {
-               "lineWidth" : 1,
-               "styles" : [
-                  {
-                     "type" : "circle",
-                     radius : 3,
-                     "lineWidth" : 0.5,
-                     "show" : true,
-                     "color" : isShowingColoredRanges ? 'white' : 'black',
-                     fill : false
-                  },
-                  {
-                     "show" : true,
-                     "type" : "value",
-                     "fillColor" : isShowingColoredRanges ? 'white' : 'black',
-                     "marginWidth" : 10,
-                     "font" : "7pt Helvetica,Arial,Verdana,sans-serif",
-                     "verticalOffset" : 7,
-                     "numberFormat" : "###,##0.##"
-                  }
-               ]
-            }
-         });
+         // TODO: add this back once the CREATE Lab grapher supports styles
+         //plotManager.getPlot(plotId).setStyle({
+         //   "styles" : [
+         //      {
+         //         "type" : "line",
+         //         "lineWidth" : 1,
+         //         "show" : true,
+         //         "color" : (isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR)
+         //      },
+         //      {
+         //         "type" : "circle",
+         //         radius : 1,
+         //         "lineWidth" : 1,
+         //         "show" : true,
+         //         "color" : isShowingColoredRanges ? 'black' : DARK_BLUE_COLOR,
+         //         fill : true
+         //      }
+         //   ],
+         //   "highlight" : {
+         //      "lineWidth" : 1,
+         //      "styles" : [
+         //         {
+         //            "type" : "circle",
+         //            radius : 3,
+         //            "lineWidth" : 0.5,
+         //            "show" : true,
+         //            "color" : isShowingColoredRanges ? 'white' : 'black',
+         //            fill : false
+         //         },
+         //         {
+         //            "show" : true,
+         //            "type" : "value",
+         //            "fillColor" : isShowingColoredRanges ? 'white' : 'black',
+         //            "marginWidth" : 10,
+         //            "font" : "7pt Helvetica,Arial,Verdana,sans-serif",
+         //            "verticalOffset" : 7,
+         //            "numberFormat" : "###,##0.##"
+         //         }
+         //      ]
+         //   }
+         //});
 
          //Mike keeps breaking code
          if (cbmode) {
@@ -851,6 +837,7 @@
          removeBoxen();
          if (isShowingColoredRanges) {
             drawBoxen(boxen, "#plot_container");
+            adjustBoxen(boxen, "#plot_container");
          }
 
          setSizes();
@@ -859,23 +846,13 @@
 
    function toggleYAxisAutoScaling() {
       var autoScaleToggleButton = $("#auto_scale_toggle_button");
-      isAutoScaleOn = !autoScaleToggleButton.hasClass("active");
+      var isAutoScaleOn = !autoScaleToggleButton.hasClass("active");
+      plotManager.getPlotContainer().setAutoScaleEnabled(isAutoScaleOn, false);  // toggle autoscaling, but don't pad
       if (isAutoScaleOn) {
-         autoScaleYAxes();
          autoScaleToggleButton.addClass("active");
       }
       else {
          autoScaleToggleButton.removeClass("active");
-      }
-   }
-
-   function autoScaleYAxes() {
-      var plot = plotManager.getPlot();
-      if (plot) {
-         var stats = plot.getStatisticsWithinRange(plotManager.getDateAxis().getRange());
-         if (typeof stats['minValue'] !== 'undefined' && typeof stats['maxValue'] !== 'undefined') {
-            plotManager.getYAxis().setRange(stats['minValue'], stats['maxValue']);
-         }
       }
    }
 
@@ -1097,7 +1074,7 @@
                      </div>
 
                      <div class="btn-group pull-right">
-                        <a id="auto_scale_toggle_button" class="btn btn-default btn-sm" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
+                        <a id="auto_scale_toggle_button" class="btn btn-default btn-sm active" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
                      </div>
                   </div>
                </td>

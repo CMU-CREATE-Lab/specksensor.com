@@ -3,6 +3,8 @@ $LINK_COLOR: #337ab7;
 .plot_container {
    position: relative;
    border: 1px solid black;
+   box-sizing: content-box;
+   -webkit-box-sizing: content-box;
 }
 
 .plot_container > canvas:focus {
@@ -10,10 +12,13 @@ $LINK_COLOR: #337ab7;
 }
 
 .date_axis {
+   position: relative;
    height: 42px;
    z-index: 2;
    border: 1px solid black;
    border-bottom-width: 0;
+   box-sizing: content-box;
+   -webkit-box-sizing: content-box;
 }
 
 .y_axis {
@@ -21,6 +26,8 @@ $LINK_COLOR: #337ab7;
    width: 42px;
    border: 1px solid black;
    border-left-width: 0;
+   box-sizing: content-box;
+   -webkit-box-sizing: content-box;
 }
 
 .y_axis_label {
