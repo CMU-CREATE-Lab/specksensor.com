@@ -49,7 +49,7 @@
       return false;
     }
   // Handle pasting in a block of Speck IDs seperated by newlines/carriage returns
-  }).on('paste', 'input', function(e) {
+  }).on('paste', 'input:not("#invoice-number")', function(e) {
     var $self = $(this);
     // Need to wait some small amount of time before the value is written to the field by the browser.
     // Note: window.clipboardData is needed for IE because it fails to handle new lines and will only paste in the first line and disregard the rest.
