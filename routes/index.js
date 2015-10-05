@@ -9,48 +9,18 @@ var log = require('log4js').getLogger('specksensor:routes:index');
 router.get('/', function(req, res) {
    res.render('index', {
       section : "home",
-      carousel : [
-         {
-            caption : "The Speck monitors fine particle concentration levels in your home, and empowers you to understand and take control of your air quality.",
-            captionCssClass : "home-hero-text1",
-            url : "home.png",
-            imageCssClass : "anchor_right",
-            isActive : true
-         },
-         {
-            caption : "Fine particles are invisible to the naked eye, but can have very harmful impacts on your health. These pollutants can lodge deep into your lungs because they are smaller than a human hair.",
-            url : "what-is-pm.png",
-            captionCssClass : "home-hero-text2",
-            imageCssClass : "anchor_left"
-         },
-         {
-            caption : "Fine particles are produced by many sources, including household activities such as cooking and cleaning. Understanding how these particles are generated can help you take better control of the air you breathe at home.",
-            url : "pm-sources.png",
-            captionCssClass : "home-hero-text3",
-            imageCssClass : "anchor_right"
-         },
-         {
-            caption : "By monitoring readings on the Speck, you can become an expert about your air quality, and run experiments to test a variety of approaches to reduce fine particle concentration in your home.",
-            url : "pathways-to-better-air.png",
-            captionCssClass : "home-hero-text4",
-            imageCssClass : "anchor_left"
-         }
-      ]
+      hero_image : { filename : "white_speck_hero.jpg", css_class : "anchor_right" },
+      hero_text : {
+         css_class : "home-hero-text",
+         text : '<span class="intro">Meet Speck.</span><br>The indoor air&nbsp;quality&nbsp;monitor<br>empowering you to breathe&nbsp;easier.'
+      }
    });
 });
 
 //----------------------------------------------------------------------------------------------------------------------
 
 router.get('/what-is-speck', function(req, res) {
-   res.render('about/what-is-speck', {
-      title : "What is Speck?",
-      section : "what-is-speck",
-      hero_image : { filename : "what-is-speck.png", css_class : "anchor_left" },
-      hero_text : {
-         css_class : "what-is-speck-hero-text",
-         text : "Speck is an air quality monitor that detects fine particulate matter in your indoor environment and informs you about trends and changes in particle concentration."
-      }
-   });
+   res.redirect('/');
 });
 
 router.get('/particles', function(req, res) {
