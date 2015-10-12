@@ -140,8 +140,7 @@ a.anchor {
   .video_thumbnail_with_caption .caption {
     margin-top: 3px;
     color: #666666;
-    text-align: center;
-    font-size: larger; }
+    text-align: center; }
     @media (max-width: 629px) {
       .video_thumbnail_with_caption .caption {
         font-size: smaller; } }
@@ -687,8 +686,10 @@ a.anchor {
 
 #software_page {
   font-size: 16px; }
-  #software_page #screenshot img {
-    max-width: 420px; }
+  #software_page .main_section {
+    margin-bottom: 30px; }
+    #software_page .main_section .sub_section {
+      margin-bottom: 20px; }
   #software_page .intro_text {
     font-weight: bold; }
   #software_page .fine_print {
