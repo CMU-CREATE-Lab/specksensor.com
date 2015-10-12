@@ -14,6 +14,7 @@ $LARGE_WIDTH: 1199px;
 
 $EASING: all 0.2s ease;
 $LINK_COLOR: #337ab7;
+$DEFAULT_TEXT_COLOR: #333333;
 
 $NAVBAR_TEXT_COLOR: rgb(157, 157, 157);
 $NAVBAR_HEIGHT_DEFAULT: 75px;
@@ -263,6 +264,28 @@ a.anchor {
 }
 
 // =====================================================================================================================
+// Forms
+// =====================================================================================================================
+
+.form_messages {
+   display: none;
+   margin-bottom: 15px;
+}
+
+#calibration_tracker_form {
+   .entry-number {
+      float: left;
+   }
+}
+
+#shipping_tracker_form {
+   .entry-number {
+      float: left;
+      padding-right: 15px;
+   }
+}
+
+// =====================================================================================================================
 // Navigation Bar
 // =====================================================================================================================
 
@@ -386,6 +409,7 @@ a.anchor {
    }
 
    #zip_code_container {
+      margin-right: 10px;
       right: 10px;
       font-size: 12px;
       @include easing;
@@ -401,9 +425,7 @@ a.anchor {
 
    @media (max-width: $SMALL_WIDTH) {
       @include shrunken_navbar;
-
    }
-
 }
 
 // Turns off the focus outline (a ridiculous blue on my Mac) for navbar elements
@@ -426,11 +448,10 @@ a.anchor {
       margin-top: 5px;
       @include easing;
    }
-
 }
 
 // =====================================================================================================================
-// Hero Image
+// Hero Image and Text
 // =====================================================================================================================
 
 #hero_image {
@@ -447,6 +468,10 @@ a.anchor {
       background-position: left;
    }
 
+   .anchor_center {
+      background-position: center;
+   }
+
    .anchor_right {
       background-position: right;
    }
@@ -460,66 +485,106 @@ a.anchor {
    }
 }
 
-// =====================================================================================================================
-// Forms
-// =====================================================================================================================
-
-.form_messages {
-   display: none;
-   margin-bottom: 15px;
-}
-
-#calibration_tracker_form {
-   .entry-number {
-      float: left;
+.home_hero_text {
+   .intro {
+      font-weight: 200;
+      @media (max-width: $SMALL_WIDTH) {
+         @media(-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+            font-weight: 500;
+         }
+      }
    }
-}
-
-#shipping_tracker_form {
-   .entry-number {
-      float: left;
-      padding-right: 15px;
+   position: absolute;
+   margin-left: auto;
+   margin-right: auto;
+   left: -720px;
+   right: 0;
+   top: 200px;
+   color: white;
+   font-size: 30px;
+   font-weight: 100;
+   white-space: nowrap;
+   width: 420px;
+   text-align: left;
+   @media (max-width: $LARGE_WIDTH) {
+      left: -520px;
    }
-}
-
-// =====================================================================================================================
-// About Us
-// =====================================================================================================================
-
-#about_us_page {
-   img {
-      max-width: 340px;
+   @media (max-width: $MEDIUM_WIDTH) {
+      left: -370px;
+      top: 175px;
+      font-size: 25px;
+      width: 350px;
    }
-
    @media (max-width: $SMALL_WIDTH) {
-      #about_us_logos {
-         text-align: center;
+      top: 120px;
+      font-size: 2.9vw;
+      left: -335px;
+      width: 270px;
+      @media(-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+         font-weight: 200;
       }
-      img {
-         max-width: 50%;
-         text-align: center;
-      }
+   }
+   @media (max-width: $EXTRA_SMALL_WIDTH) {
+      left: -275px;
+   }
+   @media (max-width: 565px) {
+      display: none;
    }
 }
 
-// =====================================================================================================================
-// Software
-// =====================================================================================================================
-
-#software_page {
-
-   #screenshot {
-      img {
-         max-width: 420px;
-      }
+.air_quality_hero_text {
+   float: right;
+   margin-right: 90px;
+   margin-top: 58px;
+   color: white;
+   font-size: 1.6vw;
+   width: 695px;
+   text-align: right;
+   @media (max-width: $LARGE_WIDTH) {
+      font-size: 2vw;
+      width: 585px;
    }
-
-   .intro_text {
-      font-weight: bold;
+   @media (max-width: $MEDIUM_WIDTH) {
+      width: 350px;
    }
+   @media (max-width: $SMALL_WIDTH) {
+      margin-top: 30px;
+      margin-right: 50px;
+   }
+   @media (max-width: 620px) {
+      font-size: 2.3vw;
+      width: 270px;
+   }
+   @media (max-width: 545px) {
+      display: none;
+   }
+}
 
-   .fine_print {
-      font-size: smaller;
+.particles_hero_text {
+   float: right;
+   margin-right: 90px;
+   margin-top: 58px;
+   color: white;
+   font-size: 1.6vw;
+   width: 695px;
+   text-align: right;
+   @media (max-width: $LARGE_WIDTH) {
+      font-size: 2vw;
+      width: 585px;
+   }
+   @media (max-width: $MEDIUM_WIDTH) {
+      width: 350px;
+   }
+   @media (max-width: $SMALL_WIDTH) {
+      margin-top: 30px;
+      margin-right: 50px;
+   }
+   @media (max-width: 620px) {
+      font-size: 2.3vw;
+      width: 270px;
+   }
+   @media (max-width: 545px) {
+      display: none;
    }
 }
 
@@ -579,7 +644,7 @@ a.anchor {
          margin-bottom: 20px;
 
          .fa {
-            color:#cccccc;
+            color: #cccccc;
          }
 
          .bubble {
@@ -647,73 +712,114 @@ a.anchor {
       margin-top: 30px;
       margin-bottom: 30px;
       background: #f5f5f5;
-      padding-top: 60px;
+      padding-top: 50px;
       padding-bottom: 108px;
+
+      .title {
+         margin-top: 0;
+         margin-bottom: 40px;
+      }
 
       #testimonials-carousel {
 
-         padding-left:10px;
-         padding-right:10px;
+         padding-left: 10px;
+         padding-right: 10px;
          @media (min-width: $SMALL_WIDTH) {
             margin: 0 100px;
          }
-      }
-      .title {
-         font-size: 27px;
-         font-weight: 300;
-         margin-top: 0;
-         margin-bottom: 60px;
 
-         @media (max-width: $SMALL_WIDTH) {
-            font-size: 23px;
-         }
-      }
-
-      .item {
-         margin: 0;
-
-         .fa {
-            color: #cccccc;
-            font-size: 20px;
-            @media (max-width: $SMALL_WIDTH) {
-               font-size: 18px;
-            }
-         }
-
-         .quote {
-            font-size: 18px;
+         .title {
+            font-size: 27px;
             font-weight: 300;
-            padding-left: 5px;
-            padding-right: 5px;
+            margin-top: 0;
+            margin-bottom: 60px;
+
             @media (max-width: $SMALL_WIDTH) {
-               font-size: 16px;
+               font-size: 23px;
             }
          }
 
-         .source {
-            .title {
-               font-size: 16px;
+         .item {
+            margin: 0;
+
+            .fa {
+               color: #cccccc;
+               font-size: 20px;
+               @media (max-width: $SMALL_WIDTH) {
+                  font-size: 18px;
+               }
+            }
+
+            .quote {
+               font-size: 18px;
+               font-weight: 300;
+               padding-left: 5px;
+               padding-right: 5px;
+               @media (max-width: $SMALL_WIDTH) {
+                  font-size: 16px;
+               }
+            }
+
+            .source {
+               margin-top: 20px;
                color: #666666;
+               font-size: 14px;
+
+               .source_name {
+               }
+
+               .source_title {
+                  color: #999999;
+               }
             }
          }
-      }
 
-      .carousel-indicators {
-         bottom: -60px;
+         .carousel_controls {
+            position: absolute;
+            bottom: -60px;
+            width: 100%;
+            left: 0;
 
-         li {
-            background: #cccccc;
-            border: none;
-            margin: 1px;
+            ol {
+               margin-bottom: 0;
+            }
 
-            &.active {
-               background: $LINK_COLOR;
-               border: none;
-               width: 10px;
-               height: 10px;
-               margin: 1px;
+            .carousel-indicators {
+               position: relative;
+               width: auto;
+               left: auto;
+               margin-left: 15px;
+               margin-right: 15px;
+               bottom: 0;
+
+               li {
+                  background-color: #cccccc;
+                  border: none;
+                  margin: 1px;
+
+                  &.active {
+                     background-color: $LINK_COLOR;
+                     border: none;
+                     width: 10px;
+                     height: 10px;
+                     margin: 1px;
+                  }
+               }
+            }
+
+            .carousel_pager a {
+               color: #cccccc;
+            }
+
+            #carousel_prev_button {
+               left: 25%;
+            }
+
+            #carousel_next_button {
+               right: 25%;
             }
          }
+
       }
    }
 
@@ -728,126 +834,39 @@ a.anchor {
    }
 }
 
-.particles-hero-text {
-   float: right;
-   margin-right: 90px;
-   margin-top: 58px;
-   color: white;
-   font-size: 1.6vw;
-   width: 695px;
-   text-align: right;
-   @media (max-width: $LARGE_WIDTH) {
-      font-size: 2vw;
-      width: 585px;
-   }
-   @media (max-width: $MEDIUM_WIDTH) {
-      width: 350px;
-   }
-   @media (max-width: $SMALL_WIDTH) {
-      margin-top: 30px;
-      margin-right: 50px;
-   }
-   @media (max-width: 620px) {
-      font-size: 2.3vw;
-      width: 270px;
-   }
-   @media (max-width: 545px) {
-      display: none;
-   }
-}
+// =====================================================================================================================
+// Learn: Air Quality
+// =====================================================================================================================
 
-.home-hero-text {
-   .intro {
-      font-weight: 200;
-      @media (max-width: $SMALL_WIDTH) {
-         @media(-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
-            font-weight: 500;
-         }
-      }
-   }
-   position: absolute;
-   margin-left: auto;
-   margin-right: auto;
-   left: -720px;
-   right: 0;
-   top: 200px;
-   color: white;
-   font-size: 30px;
-   font-weight: 100;
-   white-space: nowrap;
-   width: 420px;
-   text-align: left;
-   @media (max-width: $LARGE_WIDTH) {
-      left: -520px;
-   }
-   @media (max-width: $MEDIUM_WIDTH) {
-      left: -370px;
-      top: 175px;
-      font-size: 25px;
-      width: 350px;
-   }
-   @media (max-width: $SMALL_WIDTH) {
-      top: 120px;
-      font-size: 2.9vw;
-      left: -335px;
-      width: 270px;
-      @media(-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
-         font-weight: 200;
-      }
-   }
-   @media (max-width: $EXTRA_SMALL_WIDTH) {
-      left: -275px;
-   }
-   @media (max-width: 565px) {
-      display: none;
-   }
-}
+#air_quality_page {
+   margin-top: 40px;
 
-#intro_video {
-   width: 560px;
-   height: 315px;
+   font-size: 16px;
+   line-height: 1.8;
 
-   @media (max-width: $MEDIUM_WIDTH) {
-      width: 400px;
-      height: 225px;
-   }
-   @media (max-width: $SMALL_WIDTH) {
-      width: 300px;
-      height: 169px;
+   .section_header {
+      font-size: 22px;
+      margin-top: 20px;
    }
 }
 
 // =====================================================================================================================
-// Buy Page
+// Learn: Fine Particles
 // =====================================================================================================================
 
-#buy_page {
-   .order_button_container {
-      margin-left: 227px;
-      margin-top: 30px;
-      margin-bottom: 30px;
-      text-align: left;
+#particles_page {
+
+   margin-top: 40px;
+
+   .fa-external-link {
+      margin-left: 10px;
    }
 
-   @media (max-width: 630px) {
-      .order_button_container {
-         margin-left: 0;
-         text-align: center;
-      }
+   .intro_text {
+      font-size: 16px;
+      line-height: 1.8;
+      margin: 20px 0 30px 0;
    }
-
-   .fine_print {
-      margin-top: 30px;
-      font-size: smaller;
-   }
-}
-
-// =====================================================================================================================
-// Fine Particles Page
-// =====================================================================================================================
-
-#particles {
-   margin-top: 42px;
 
    .panel-heading a:before {
       font-family: 'Glyphicons Halflings';
@@ -887,10 +906,119 @@ a.anchor {
 }
 
 // =====================================================================================================================
-// FAQs Page
+// Learn: Speck and Empowerment
+// =====================================================================================================================
+
+#empowerment_page {
+   margin-top: 40px;
+
+   font-size: 16px;
+   line-height: 1.8;
+
+   .section_header {
+      font-size: 22px;
+      margin-top: 20px;
+   }
+}
+
+// =====================================================================================================================
+// Setup & Support: Getting Started
+// =====================================================================================================================
+
+#getting_started_page {
+
+   .main_feature {
+      .main_feature_text_container {
+         .main_feature_title {
+            font-size: 25px;
+            margin-bottom: 20px;
+         }
+         .main_feature_description {
+            font-size: 16px;
+            line-height: 1.8;
+
+            p {
+               margin-bottom: 15px;
+            }
+         }
+      }
+
+      .main_feature_media_container {
+         text-align: center;
+
+         img {
+            display: inline-block;
+            max-height: 250px;
+            margin: 15px 0;
+
+            @media (max-width: $SMALL_WIDTH) {
+               max-height: 200px;
+            }
+            @media (max-width: $EXTRA_SMALL_WIDTH) {
+               max-height: 175px;
+            }
+         }
+
+         .video {
+            margin-top: 10px;
+         }
+      }
+   }
+
+   .show_when_at_least_medium_width {
+      display: block;
+      @media (max-width: $MEDIUM_WIDTH) {
+         display: none;
+      }
+      @media (max-width: $SMALL_WIDTH) {
+         display: block;
+      }
+   }
+
+   .show_when_other {
+      display: none;
+      @media (max-width: $MEDIUM_WIDTH) {
+         display: block;
+      }
+      @media (max-width: $SMALL_WIDTH) {
+         display: none;
+      }
+   }
+}
+
+// =====================================================================================================================
+// Setup & Support: Software
+// =====================================================================================================================
+
+#software_page {
+   font-size: 16px;
+
+   #screenshot {
+      img {
+         max-width: 420px;
+      }
+   }
+
+   .intro_text {
+      font-weight: bold;
+   }
+
+   .fine_print {
+      font-size: smaller;
+   }
+}
+
+#legacy_software_page {
+   font-size: 16px;
+}
+
+// =====================================================================================================================
+// Setup & Support: FAQs
 // =====================================================================================================================
 
 #faq_page {
+   font-size: 16px;
+
    .question_teaser {
    }
 
@@ -908,12 +1036,54 @@ a.anchor {
 }
 
 // =====================================================================================================================
-// Dashboard
+// Setup & Support: Technical Specifications
+// =====================================================================================================================
+
+#tech_specs_page {
+   font-size: 16px;
+
+   .main_feature {
+      margin: 20px 0;
+   }
+
+   .tech_spec_group {
+      .tech_spec_item {
+         margin-bottom: 10px;
+
+         .tech_spec_label {
+            font-weight: bold;
+            white-space: nowrap;
+            margin-right: 20px;
+         }
+         .tech_spec_value {
+            white-space: nowrap;
+         }
+      }
+   }
+}
+
+// =====================================================================================================================
+// Setup & Support: Contact Us
+// =====================================================================================================================
+
+#contact_us_page {
+   font-size: 16px;
+
+   .social_media_link {
+      .fa {
+         font-size: 30px;
+         color: $DEFAULT_TEXT_COLOR;
+      }
+   }
+}
+
+// =====================================================================================================================
+// My Data: Dashboard
 // =====================================================================================================================
 
 $DASHBOARD_MENU_PANEL_WIDTH: 190px;
 $DASHBOARD_MENU_PANEL_PADDING: 5px;
-#dashboard {
+#dashboard_page {
    margin: 0 auto 0 auto;
 
    #loading_panel {
@@ -1241,10 +1411,10 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 }
 
 // =====================================================================================================================
-// Devices
+// My Data: Devices
 // =====================================================================================================================
 
-#devices {
+#devices_page {
 
    .device_list {
 
@@ -1320,22 +1490,26 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 }
 
 // =====================================================================================================================
-// Account
+// My Data: User Profile
 // =====================================================================================================================
 
-.account_table {
-   display: table;
+#user_profile_page {
+   font-size: 16px;
 
-   .account_row {
-      display: table-row;
+   .account_table {
+      display: table;
 
-      .account_header_cell {
-         font-weight: bold;
-      }
+      .account_row {
+         display: table-row;
 
-      .account_cell {
-         display: table-cell;
-         padding-right: 5px;
+         .account_header_cell {
+            font-weight: bold;
+         }
+
+         .account_cell {
+            display: table-cell;
+            padding-right: 5px;
+         }
       }
    }
 }
@@ -1484,4 +1658,49 @@ body.is_logged_in {
          }
       }
    }
+}
+
+// =====================================================================================================================
+// About Us
+// =====================================================================================================================
+
+#about_us_page {
+   font-size: 16px;
+
+   img {
+      max-width: 340px;
+   }
+
+   @media (max-width: $SMALL_WIDTH) {
+      #about_us_logos {
+         text-align: center;
+      }
+      img {
+         max-width: 50%;
+         text-align: center;
+      }
+   }
+}
+
+// =====================================================================================================================
+// Press
+// =====================================================================================================================
+
+#press_page {
+   font-size: 16px;
+}
+
+// =====================================================================================================================
+// Jobs
+// =====================================================================================================================
+
+#jobs_page {
+   font-size: 16px;
+}
+
+// =====================================================================================================================
+// Terms
+// =====================================================================================================================
+
+#terms_page {
 }

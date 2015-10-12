@@ -55,11 +55,39 @@
                <input type="text" class="form-control input-sm" id="zip_code" name="zip_code" placeholder="Zip Code"/>
                <div style="color: #9d9d9d">See air quality for your zip code</div>
             </li>
-            <li>
-               <a href="/what-is-speck" {{#ifEqual section 'what-is-speck'}}class="active"{{/ifEqual}}>Speck Info</a>
+            <li class="dropdown">
+               <a href="#" class="dropdown-toggle {{#ifEqual parent_section 'learn'}}active{{/ifEqual}}" data-toggle="dropdown">Learn <b class="caret"></b></a>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/learn/air-quality" {{#ifEqual section 'air-quality'}}class="dropdown-menu-active"{{/ifEqual}}>Air Quality</a>
+                  </li>
+                  <li>
+                     <a href="/learn/particles" {{#ifEqual section 'particles'}}class="dropdown-menu-active"{{/ifEqual}}>Fine Particles</a>
+                  </li>
+                  <li>
+                     <a href="/learn/empowerment" {{#ifEqual section 'empowerment'}}class="dropdown-menu-active"{{/ifEqual}}>Speck and Empowerment</a>
+                  </li>
+               </ul>
             </li>
-            <li>
-               <a href="/particles" {{#ifEqual section 'particles'}}class="active"{{/ifEqual}}>Fine Particles</a>
+            <li class="dropdown">
+               <a href="#" class="dropdown-toggle {{#ifEqual parent_section 'support'}}active{{/ifEqual}}" data-toggle="dropdown">Setup &amp; Support <b class="caret"></b></a>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/support/getting-started" {{#ifEqual section 'getting-started'}}class="dropdown-menu-active"{{/ifEqual}}>Getting Started</a>
+                  </li>
+                  <li>
+                     <a href="/support/software" {{#ifEqual section 'software'}}class="dropdown-menu-active"{{/ifEqual}}>Software</a>
+                  </li>
+                  <li>
+                     <a href="/support/faq" {{#ifEqual section 'faq'}}class="dropdown-menu-active"{{/ifEqual}}>FAQs</a>
+                  </li>
+                  <li>
+                     <a href="/support/tech-specs" {{#ifEqual section 'tech-specs'}}class="dropdown-menu-active"{{/ifEqual}}>Technical Specifications</a>
+                  </li>
+                  <li>
+                     <a href="/support/contact-us" {{#ifEqual section 'contact-us'}}class="dropdown-menu-active"{{/ifEqual}}>Contact Us</a>
+                  </li>
+               </ul>
             </li>
             <li class="hide_in_mobile_navbar">
                <a href="http://store.specksensor.com/products/speck" {{#ifEqual section 'buy'}}class="active"{{/ifEqual}}><img class="tiny_buy_icon" src="/images/tiny_buy_icon.png"/> Buy</a>
@@ -75,7 +103,7 @@
                         <a href="/devices" {{#ifEqual section 'devices'}}class="dropdown-menu-active"{{/ifEqual}}>Devices</a>
                      </li>
                      <li>
-                        <a href="/account" {{#ifEqual section 'account'}}class="dropdown-menu-active"{{/ifEqual}}>User Profile</a>
+                        <a href="/account" {{#ifEqual section 'user-profile'}}class="dropdown-menu-active"{{/ifEqual}}>User Profile</a>
                      </li>
                      <li id="logout_divider" class="divider hide_in_mobile_navbar"></li>
                      <li class="hide_in_mobile_navbar">
@@ -89,19 +117,21 @@
                </li>
             {{/if}}
             <li class="show_in_mobile_navbar">
-               <a href="/faq" {{#ifEqual section 'faq'}}class="active"{{/ifEqual}}>FAQs</a>
-            </li>
-            <li class="show_in_mobile_navbar">
                <a href="/about-us" {{#ifEqual section 'about-us'}}class="active"{{/ifEqual}}>About Us</a>
             </li>
             <li class="show_in_mobile_navbar">
+               <a href="/press" {{#ifEqual section 'press'}}class="active"{{/ifEqual}}>Press</a>
+            </li>
+{{!--
+            <li class="show_in_mobile_navbar">
                <a href="/jobs" {{#ifEqual section 'jobs'}}class="active"{{/ifEqual}}>Jobs</a>
+            </li>
+--}}
+            <li class="show_in_mobile_navbar">
+               <a href="//blog.specksensor.com">Blog</a>
             </li>
             <li class="show_in_mobile_navbar">
                <a href="/terms" {{#ifEqual section 'terms'}}class="active"{{/ifEqual}}>Terms</a>
-            </li>
-            <li class="show_in_mobile_navbar">
-               <a href="//blog.specksensor.com">Blog</a>
             </li>
          </ul>
       </div>

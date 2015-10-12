@@ -4,7 +4,7 @@ var config = require('../config');
 
 router.get('/',
            function(req, res) {
-              res.render('devices',
+              res.render('my-data/devices',
                          {
                             title : "Devices",
                             section : "devices",

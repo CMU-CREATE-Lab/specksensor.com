@@ -4,7 +4,7 @@ var config = require('../config');
 
 router.get('/',
            function(req, res) {
-              res.render('dashboard',
+              res.render('my-data/dashboard',
                          {
                             title : "Dashboard",
                             section : "dashboard",

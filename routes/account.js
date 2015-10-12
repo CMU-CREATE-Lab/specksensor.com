@@ -13,17 +13,17 @@ router.get('/',
                     res.render('error',
                                {
                                   title : "Unexpected Error",
-                                  section : "account",
+                                  section : "user-profile",
                                   message : "Sorry, an unexpected error has occurred. Please try again later or contact us for help."
                                });
                  }
                  else {
                     log.debug("req.user=" + JSON.stringify(userInfoResponse, null, 3));
 
-                    res.render('account',
+                    res.render('my-data/user-profile',
                                {
                                   title : "Account",
-                                  section : "account",
+                                  section : "user-profile",
                                   userInfo : userInfoResponse.data
                                });
                  }

@@ -1,0 +1,121 @@
+<script type="text/javascript">
+   $(document).ready(function() {
+      // enable popovers (for the note about humidity)
+      $('[data-toggle="popover"]').popover();
+   });
+</script>
+<div id="tech_specs_page" class="clearfix">
+   <h2>Speck Technical Specifications</h2>
+   <div>
+      <p>
+         The Speck air quality monitor detects fine particulate matter in indoor
+         environments and provides information about trends and changes in particle
+         concentration.
+      </p>
+      <p>
+         Speck has Wi-Fi built in, enabling optional connection to a wireless
+         network. Once online, and after linking it with a specksensor.com account, the
+         Speck will continuously upload its data to specksensor.com where users can see
+         its data in real time and explore its full history with a computer or mobile device.
+      </p>
+   </div>
+   <div class="main_feature">
+      <div class="tech_spec_group">
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Detection method</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Optical, DSM501A</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Size range of detected particles</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">0.5 – 3 microns</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Measurement units</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">ppL or &mu;g/m<sup>3</sup></div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Additional on-board sensors</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">
+               Temperature
+{{!--
+               and humidity
+               <i class="fa fa-exclamation-circle pointer_cursor"
+                     data-toggle="popover"
+                     data-trigger="hover click"
+                     data-placement="bottom"
+                     data-content="Specks shipped prior to July 2015 do not have a humidity sensor."></i>
+--}}
+            </div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Environmental operating range</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">-10 ~ +65 &deg;C, &lt; 95% RH without condensation</div>
+         </div>
+      </div>
+      <div class="tech_spec_group">
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Processor</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Atmel XMEGA</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Data timestamps</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Unix UTC via real-time clock</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Sampling interval</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">5 seconds to 4 minutes (default 1 minute)</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">On-board data storage</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Two years at 1 sample per minute</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Online data storage</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Unlimited via specksensor.com account</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Screen</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">3.2" TFT touchscreen</div>
+         </div>
+      </div>
+      <div class="tech_spec_group">
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Display options</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">On/off, brightness control, colorblind mode</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Connectivity</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">USB 2.0 through Chrome app, Wi-Fi b/g</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Supported wireless encryption</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Unsecured, WEP, WPA, WPA2 personal</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">On-screen data access</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Current, past hour, or past 12 hours</div>
+         </div>
+      </div>
+      <div class="tech_spec_group">
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Power supply</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">Micro USB, 5V 500mA</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Weight</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">5.8 oz (164.4 g)</div>
+         </div>
+         <div class="tech_spec_item row">
+            <div class="tech_spec_label col-sm-4 col-md-3">Size</div>
+            <div class="tech_spec_value col-sm-3 col-md-3">
+               Width: 4.5 in (11.4 cm)<br>
+               Height: 3.5 in (8.9 cm) <br>
+               Depth: 3.7 in (9.4 cm)
+            </div>
+         </div>
+      </div>
+      <div style="margin-top: 30px">
+         Download the <a href="/images/speck_datasheet.pdf" target="_blank">Speck datasheet</a>
+      </div>
+   </div>
+</div>

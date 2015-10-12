@@ -83,7 +83,7 @@ templates['device_and_feeds'] = template({"1":function(depth0,helpers,partials,d
 },"9":function(depth0,helpers,partials,data) {
     return "                              n/a\n";
 },"11":function(depth0,helpers,partials,data) {
-    return "      <div class=\"panel-body feeds_container\">\n         You have not yet defined an installation location for this Speck. Please use\n         the <a href=\"/software\">Speck app</a> to finish the upload configuration\n         process and specify where you have installed this Speck.\n      </div>\n";
+    return "      <div class=\"panel-body feeds_container\">\n         You have not yet defined an installation location for this Speck. Please use\n         the <a href=\"/support/software\">Speck app</a> to finish the upload configuration\n         process and specify where you have installed this Speck.\n      </div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 

@@ -11,70 +11,107 @@ router.get('/', function(req, res) {
       section : "home",
       hero_image : { filename : "white_speck_hero.jpg", css_class : "anchor_right" },
       hero_text : {
-         css_class : "home-hero-text",
+         css_class : "home_hero_text",
          text : '<span class="intro">Meet Speck.</span><br>The indoor air&nbsp;quality&nbsp;monitor<br>empowering you to breathe&nbsp;easier.'
       }
    });
 });
 
+//======================================================================================================================
+// LEARN
 //----------------------------------------------------------------------------------------------------------------------
 
-router.get('/what-is-speck', function(req, res) {
-   res.redirect('/');
-});
-
-router.get('/particles', function(req, res) {
-   res.render('about/particles', {
-      title : "What is PM?",
-      section : "particles",
-      hero_image : { filename : "what-is-pm.png", css_class : "anchor_left" },
-      hero_text : {
-         css_class : "particles-hero-text",
-         text : "Fine particles (PM<sub>2.5</sub>) are invisible pollutants that can be harmful to your health. There may be several sources of PM<sub>2.5</sub> inside your home. Monitoring these particles can help identify ways to improve your indoor air quality and breathe easier."
-      }
+router.get('/learn/air-quality', function(req, res) {
+   res.render('learn/air-quality', {
+      title : "Learn: Air Quality",
+      parent_section : "learn",
+      section : "air-quality",
+      hero_image : { filename : "white_speck_with_air_plant_hero_2.jpg", css_class : "anchor_left" }
    });
 });
 
+router.get('/learn/particles', function(req, res) {
+   res.render('learn/particles', {
+      title : "Learn: Fine Particles",
+      parent_section : "learn",
+      section : "particles",
+      hero_image : { filename : "white_speck_with_bamboo_pot_hero.jpg", css_class : "anchor_left" }
+   });
+});
+
+router.get('/learn/empowerment', function(req, res) {
+   res.render('learn/empowerment', {
+      title : "Learn: Speck and Empowerment",
+      parent_section : "learn",
+      section : "empowerment",
+      //hero_image : { filename : "white_speck_with_green_pot_hero.jpg", css_class : "anchor_right" }
+      hero_image : { filename : "white_speck_with_colorful_pot_hero.jpg", css_class : "anchor_right" }
+   });
+});
+
+
+//======================================================================================================================
+// SETUP & SUPPORT
 //----------------------------------------------------------------------------------------------------------------------
 
-router.get('/about-us', function(req, res) {
-   res.render('about-us', { title : "About Us", section : "about-us" });
+router.get('/support/getting-started', function(req, res) {
+   res.render('support/getting-started', {
+      title : "Support: Getting Started",
+      parent_section : "support",
+      section : "getting-started"
+   });
 });
 
-router.get('/buy', function(req, res) {
-   res.redirect('http://store.specksensor.com/products/speck');
+router.get('/support/software', function(req, res) {
+   res.render('support/software', {
+      title : "Support: Software",
+      parent_section : "support",
+      section : "software"
+   });
 });
 
-router.get('/contact', function(req, res) {
-   res.redirect('about-us');
+router.get('/support/legacy-software', function(req, res) {
+   res.render('support/legacy-software', {
+      title : "Support: Legacy Software",
+      parent_section : "support",
+      section : "software"
+   });
 });
+
+router.get('/support/tech-specs', function(req, res) {
+   res.render('support/tech-specs', {
+      title : "Support: Technical Specifications",
+      parent_section : "support",
+      section : "tech-specs"
+   });
+});
+
+router.get('/support/faq', function(req, res) {
+   res.render('support/faq', {
+      title : "Support: FAQs",
+      parent_section : "support",
+      section : "faq"
+   });
+});
+
+router.get('/support/contact-us', function(req, res) {
+   res.render('support/contact-us', {
+      title : "Support: Contact Us",
+      parent_section : "support",
+      section : "contact-us"
+   });
+});
+
+//======================================================================================================================
+// HEADER LINKS
+//----------------------------------------------------------------------------------------------------------------------
 
 router.get('/data', function(req, res) {
-   res.render('data', { title : "Data", section : "data" });
+   res.render('data', { title : "Public Data", section : "data" });
 });
 
 router.get('/signup', function(req, res) {
    res.render('signup', { title : "Sign Up", section : "login" });
-});
-
-router.get('/software', function(req, res) {
-   res.render('software', { title : "Software", section : "software" });
-});
-
-router.get('/legacy-software', function(req, res) {
-   res.render('legacy-software', { title : "Legacy Software", section : "software" });
-});
-
-router.get('/terms', function(req, res) {
-   res.render('terms', { title : "Terms and Conditions", section : "terms" });
-});
-
-router.get('/jobs', function(req, res) {
-   res.render('jobs', { title : "Jobs", section : "jobs" });
-});
-
-router.get('/faq', function(req, res) {
-   res.render('faq', { title : "FAQs", section : "faq" });
 });
 
 router.get('/air-quality-by-zip-code', function(req, res) {
@@ -85,6 +122,28 @@ router.get('/air-quality-by-zip-code', function(req, res) {
 });
 
 //======================================================================================================================
+// FOOTER LINKS
+//----------------------------------------------------------------------------------------------------------------------
+
+router.get('/about-us', function(req, res) {
+   res.render('about-us', { title : "About Us", section : "about-us" });
+});
+
+router.get('/press', function(req, res) {
+   res.render('press', { title : "Press", section : "press" });
+});
+
+router.get('/jobs', function(req, res) {
+   res.render('jobs', { title : "Jobs", section : "jobs" });
+});
+
+router.get('/terms', function(req, res) {
+   res.render('terms', { title : "Terms and Conditions", section : "terms" });
+});
+
+//======================================================================================================================
+// USER VERIFICATION
+//----------------------------------------------------------------------------------------------------------------------
 
 router.get('/verification/:verificationToken', function(req, res) {
    // since we'll be injecting the verification token into JavaScript,
@@ -98,6 +157,8 @@ router.get('/verification', function(req, res) {
 });
 
 //======================================================================================================================
+// SPECK API
+//----------------------------------------------------------------------------------------------------------------------
 
 router.get('/get_time/', function(req, res) {
    res.set('Content-Type', 'text/plain').send("get_time=" + parseInt(Date.now() / 1000) + "\r\n");
@@ -171,6 +232,38 @@ router.get('/get_scalar/', function(req, res) {
 
 router.get('/get_version/', function(req, res) {
    res.set('Content-Type', 'text/plain').send("get_version=" + config.get("firmware:version") + "\r\n");
+});
+
+//======================================================================================================================
+// DEPRECATED
+//----------------------------------------------------------------------------------------------------------------------
+
+router.get('/what-is-speck', function(req, res) {
+   res.redirect('/');
+});
+
+router.get('/particles', function(req, res) {
+   res.redirect('/learn/particles');
+});
+
+router.get('/faq', function(req, res) {
+   res.redirect('/support/faq');
+});
+
+router.get('/contact', function(req, res) {
+   res.redirect('/support/contact-us');
+});
+
+router.get('/buy', function(req, res) {
+   res.redirect('http://store.specksensor.com/products/speck');
+});
+
+router.get('/software', function(req, res) {
+   res.redirect('/support/software');
+});
+
+router.get('/legacy-software', function(req, res) {
+   res.redirect('/support/legacy-software');
 });
 
 //======================================================================================================================

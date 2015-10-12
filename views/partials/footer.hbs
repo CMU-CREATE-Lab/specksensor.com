@@ -13,19 +13,21 @@
       </div>
       <div class="footer_piece col-sm-6">
          <div class="link">
-            {{#ifEqual section 'faq'}}FAQs{{else}}<a href="/faq">FAQs</a>{{/ifEqual}}
-         </div>
-         <div class="link">
             {{#ifEqual section 'about-us'}}About Us{{else}}<a href="/about-us">About Us</a>{{/ifEqual}}
          </div>
          <div class="link">
+            {{#ifEqual section 'press'}}Press{{else}}<a href="/press">Press</a>{{/ifEqual}}
+         </div>
+{{!--
+         <div class="link">
             {{#ifEqual section 'jobs'}}Jobs{{else}}<a href="/jobs">Jobs</a>{{/ifEqual}}
+         </div>
+--}}
+         <div class="link">
+            <a href="//blog.specksensor.com">Blog</a>
          </div>
          <div class="link">
             {{#ifEqual section 'terms'}}Terms{{else}}<a href="/terms">Terms</a>{{/ifEqual}}
-         </div>
-         <div class="link">
-            <a href="//blog.specksensor.com">Blog</a>
          </div>
       </div>
       <div class="footer_piece col-xs-6 col-sm-3 copyright">

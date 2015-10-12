@@ -1,0 +1,76 @@
+<script src="/lib/ekko-lightbox/ekko-lightbox.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+   $(document).ready(function() {
+      $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+         event.preventDefault();
+         $(this).ekkoLightbox();
+      });
+   });
+</script>
+<div id="getting_started_page">
+   <h2 class="">Getting Started</h2>
+   <div class="row main_feature" style="margin-top:30px">
+      <div class="main_feature_text_container col-sm-12" >
+         <div class="main_feature_description">
+            <p>
+               Welcome to Speck!  We're thrilled you've joined the Speck community, and have taken the first step
+               towards breathing easier.
+            </p>
+         </div>
+      </div>
+   </div>
+   <div class="row main_feature">
+      <div class="main_feature_text_container col-sm-5">
+         <div class="main_feature_description">
+            <p>
+               Watch this video for details on what comes with your Speck, a demonstration of how easy it is to setup and use, and a
+               quick tour of its features.
+            </p>
+            <p>
+               Want more? See the Speck Setup Guide below, read the
+               <a href="/support/faq">frequently asked questions</a>,
+               or
+               <a href="/support/contact-us">contact us</a> if
+               you need help.
+            </p>
+            <p class="show_when_at_least_medium_width">
+               To get your Speck connected to Wi-Fi, configure it to upload data, and for other configuration details,
+               you'll need to use our free Speck software.  Please see our <a href="/support/software">Software</a>
+               page for all the details.
+            </p>
+         </div>
+      </div>
+      <div class="main_feature_media_container col-sm-7">
+         <div class="video embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="//player.vimeo.com/video/128957375" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+         </div>
+      </div>
+   </div>
+   <div class="row main_feature show_when_other">
+      <div class="main_feature_text_container col-sm-12">
+         <div class="main_feature_description">
+            <p>
+               To get your Speck connected to Wi-Fi, configure it to upload data, and for other configuration details,
+               you'll need to use our free Speck software.  Please see our <a href="/support/software">Software</a>
+               page for all the details.
+            </p>
+         </div>
+      </div>
+   </div>
+
+   <div class="panel panel-default" style="margin-top:50px">
+      <div class="panel-heading">
+         <h4>Speck Setup Guide</h4>
+      </div>
+      <div class="row">
+         <div class="col-xs-12 col-sm-6">
+            <a href="/images/speck_setup_guide_1.jpg" data-toggle="lightbox" data-title="Speck Setup Guide"><img src="/images/speck_setup_guide_1.jpg" class="img-responsive setup_guide_image"></a>
+         </div>
+         <div class="col-xs-12 col-sm-6">
+            <a href="/images/speck_setup_guide_2.jpg" data-toggle="lightbox" data-title="Speck Setup Guide"><img src="/images/speck_setup_guide_2.jpg" class="img-responsive setup_guide_image"></a>
+         </div>
+      </div>
+      <div class="panel-footer">Download the <a href="/images/speck_setup_guide.pdf">Speck Setup Guide</a></div>
+   </div>
+</div>
+
