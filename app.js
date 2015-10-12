@@ -149,7 +149,7 @@ flow.series([
 
                         app.engine('hbs', handlebars.engine);
                         app.set('view engine', '.hbs');
-                        app.set('view cache', RunMode.isProduction());           // only cache views in production
+                        app.set('view cache', RunMode.isStaging() || RunMode.isProduction());           // only cache views in staging and production
                         log.info("View cache enabled = " + app.enabled('view cache'));
 
                         // MIDDLEWARE -------------------------------------------------------------------------------------------------
@@ -167,7 +167,9 @@ flow.series([
                                                    }
                                                    return '- -';
                                                 });
-                        if (RunMode.isProduction()) {
+
+                        // set up HTTP request logging (do this AFTER the static file serving so we don't log those)
+                        if (RunMode.isStaging() || RunMode.isProduction()) {
                            // create a write stream (in append mode)
                            var fs = require('fs');
                            var httpAccessLogDirectory = config.get("httpAccessLogDirectory");
@@ -212,7 +214,7 @@ flow.series([
 
                         // CUSTOM MIDDLEWARE ------------------------------------------------------------------------------------------
 
-                        if (RunMode.isProduction()) {
+                        if (RunMode.isStaging() || RunMode.isProduction()) {
                            app.set('trust proxy', 1) // trust first proxy
                         }
 
@@ -234,7 +236,7 @@ flow.series([
                                          httpOnly : true,
                                          secure : RunMode.isProduction()   // enable secure cookies in production, which uses HTTPS
                                       },
-                                      proxy : RunMode.isProduction(),       // we use a proxy in production
+                                      proxy : RunMode.isStaging() || RunMode.isProduction(),       // we use a proxy in staging and production
                                       saveUninitialized : true,
                                       resave : true,
                                       unset : "destroy"
@@ -318,8 +320,8 @@ flow.series([
                         // custom 404
                         app.use(error_handlers.http404);
 
-                        // dev and prod should handle errors differently: e.g. don't show stacktraces in prod
-                        app.use(RunMode.isProduction() ? error_handlers.prod : error_handlers.dev);
+                        // dev and prod should handle errors differently: e.g. don't show stacktraces in staging or production
+                        app.use(RunMode.isStaging() || RunMode.isProduction() ? error_handlers.prod : error_handlers.dev);
 
                         // ------------------------------------------------------------------------------------------------------------
 

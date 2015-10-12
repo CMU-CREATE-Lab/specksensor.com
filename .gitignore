@@ -8,5 +8,6 @@ todo.txt
 newrelic.js
 newrelic_agent.log
 
+config-stage.json
 config-prod.json
 google-services-key.pem
