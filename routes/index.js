@@ -44,7 +44,6 @@ router.get('/learn/empowerment', function(req, res) {
       title : "Learn: Speck and Empowerment",
       parent_section : "learn",
       section : "empowerment",
-      //hero_image : { filename : "white_speck_with_green_pot_hero.jpg", css_class : "anchor_right" }
       hero_image : { filename : "white_speck_with_colorful_pot_hero.jpg", css_class : "anchor_right" }
    });
 });
