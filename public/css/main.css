@@ -239,10 +239,11 @@ a.anchor {
         -webkit-transition: all 0.2s ease;
         -moz-transition: all 0.2s ease;
         -o-transition: all 0.2s ease;
-        transition: all 0.2s ease; }
-        @media (max-width: 767px) {
-          #main_navbar .nav > li > a {
-            padding-top: 10px; } }
+        transition: all 0.2s ease; } }
+    @media (max-width: 767px) and (max-width: 767px) {
+      #main_navbar .nav > li > a {
+        padding-top: 10px; } }
+  @media (max-width: 767px) {
       #main_navbar .navbar-brand {
         font-size: 24px;
         line-height: 46px;
@@ -317,6 +318,7 @@ a.anchor {
 
 #about_us_page img {
   max-width: 340px; }
+
 @media (max-width: 767px) {
   #about_us_page #about_us_logos {
     text-align: center; }
@@ -326,8 +328,10 @@ a.anchor {
 
 #software_page #screenshot img {
   max-width: 420px; }
+
 #software_page .intro_text {
   font-weight: bold; }
+
 #software_page .fine_print {
   font-size: smaller; }
 
@@ -712,10 +716,12 @@ a.anchor {
   margin-top: 30px;
   margin-bottom: 30px;
   text-align: left; }
+
 @media (max-width: 630px) {
   #buy_page .order_button_container {
     margin-left: 0;
     text-align: center; } }
+
 #buy_page .fine_print {
   margin-top: 30px;
   font-size: smaller; }
@@ -739,11 +745,11 @@ a.anchor {
     margin-top: 5px;
     margin-left: 10px; }
   #what_is_speck .speck_icon {
-    background-image: url('/images/speck_icon_grey_139.png'); }
+    background-image: url("/images/speck_icon_grey_139.png"); }
   #what_is_speck .cloud_icon {
-    background-image: url('/images/cloud_icon_grey_139.png'); }
+    background-image: url("/images/cloud_icon_grey_139.png"); }
   #what_is_speck .graph_icon {
-    background-image: url('/images/graph_icon_grey_139.png'); }
+    background-image: url("/images/graph_icon_grey_139.png"); }
   #what_is_speck .main_feature_teaser {
     position: relative;
     cursor: pointer;
@@ -767,11 +773,11 @@ a.anchor {
       transition: box-shadow 0.2s ease-in-out;
       color: #333333; }
       #what_is_speck .main_feature_teaser:hover .speck_icon {
-        background-image: url('/images/speck_icon_grey_51.png'); }
+        background-image: url("/images/speck_icon_grey_51.png"); }
       #what_is_speck .main_feature_teaser:hover .cloud_icon {
-        background-image: url('/images/cloud_icon_grey_51.png'); }
+        background-image: url("/images/cloud_icon_grey_51.png"); }
       #what_is_speck .main_feature_teaser:hover .graph_icon {
-        background-image: url('/images/graph_icon_grey_51.png'); }
+        background-image: url("/images/graph_icon_grey_51.png"); }
       #what_is_speck .main_feature_teaser:hover .teaser_title h4 {
         color: #333333; }
   #what_is_speck .main_feature {
@@ -1039,6 +1045,7 @@ a.anchor {
   @media (max-width: 629px) {
     #devices .device_list .device_list_item .serial_number {
       display: none; } }
+
 #devices .device_list .device_list_item .feeds_container {
   margin: 10px 10px 0 10px; }
   #devices .device_list .device_list_item .feeds_container .panel {
@@ -1064,6 +1071,7 @@ a.anchor {
       font-family: "Courier New", Courier, monospace;
       word-wrap: break-word;
       word-break: break-all; }
+
 @media (max-width: 767px) {
   #devices #page_title {
     display: none; }
@@ -1082,8 +1090,10 @@ a.anchor {
 
 body.is_logged_in #default_footer {
   display: block; }
+
 body.is_logged_in #is_logged_in_and_on_mobile_footer {
   display: none; }
+
 @media (max-width: 767px) {
   body.is_logged_in #default_footer {
     display: none; }
@@ -1162,7 +1172,7 @@ body.is_logged_in #is_logged_in_and_on_mobile_footer {
         display: inline-block;
         width: 25px;
         height: 20px;
-        background: url('../images/speck_icon_grey@2x.png') no-repeat;
+        background: url("../images/speck_icon_grey@2x.png") no-repeat;
         background-size: 25px 20px; }
     #is_logged_in_and_on_mobile_footer .navbar-header .nav > li.active .speck_icon, #is_logged_in_and_on_mobile_footer .navbar-header .nav > li:hover .speck_icon {
-      background-image: url('../images/speck_icon_white@2x.png'); }
+      background-image: url("../images/speck_icon_white@2x.png"); }
