@@ -63,6 +63,10 @@ config.defaults(
                   "shippingTableId" : "1TegIAfrrX5uvCvsu5DqPO_omWJEQQg-awX8mjsKt",
                   "calibrationTableId" : "1zsE1LDtwiXMFCK-PraGzIc1vczD5EYpA8Fm0T-IZ"
                }
+            },
+            "analytics" : {
+               "enabled" : false,
+               "propertyId": "UA-60606644-1"
             }
          },
          "maps" : {

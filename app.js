@@ -247,6 +247,7 @@ flow.series([
                               log.debug("req.isAuthenticated()=[" + req.isAuthenticated() + "]");
                               res.locals.isAuthenticated = req.isAuthenticated();
                               res.locals.esdrUrl = config.get("esdr:rootUrl");
+                              res.locals.googleAnalytics = config.get("googleServices:analytics");
 
                               if (req.isAuthenticated()) {
                                  res.locals.user = {
