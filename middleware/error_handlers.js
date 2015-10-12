@@ -36,17 +36,13 @@ var handleError = function(req, res, message, data, statusCode) {
 
 module.exports = {
    http404 : function(req, res, next) {
-      var message = "Resource not found";
       var statusCode = httpStatus.NOT_FOUND;
 
       if (isApi(req)) {
-         res.jsendClientError(message, {url : req.url}, statusCode);
+         res.jsendClientError("Resource not found", {url : req.url}, statusCode);
       }
       else {
-         res.status(statusCode).render('error', {
-            title : "HTTP " + statusCode,
-            message : message
-         });
+         res.status(statusCode).render('404');
       }
    },
 
