@@ -48,7 +48,6 @@ router.get('/learn/empowerment', function(req, res) {
    });
 });
 
-
 //======================================================================================================================
 // SETUP & SUPPORT
 //----------------------------------------------------------------------------------------------------------------------
@@ -105,8 +104,13 @@ router.get('/support/contact-us', function(req, res) {
 // HEADER LINKS
 //----------------------------------------------------------------------------------------------------------------------
 
-router.get('/data', function(req, res) {
-   res.render('data', { title : "Public Data", section : "data" });
+router.get('/public-data', function(req, res) {
+   res.render('public-data', {
+      title : "Public Data",
+      section : "public-data",
+      googleMapsApiKey : config.get("maps:apiKey"),
+      speckProductId : config.get("product:id")
+   });
 });
 
 router.get('/signup', function(req, res) {
@@ -136,8 +140,11 @@ router.get('/jobs', function(req, res) {
    res.render('jobs', { title : "Jobs", section : "jobs" });
 });
 
-router.get('/terms', function(req, res) {
-   res.render('terms', { title : "Terms and Conditions", section : "terms" });
+router.get('/policies-and-terms', function(req, res) {
+   res.render('policies-and-terms', {
+      title : "Policies and Terms",
+      section : "policies-and-terms"
+   });
 });
 
 //======================================================================================================================
@@ -263,6 +270,14 @@ router.get('/software', function(req, res) {
 
 router.get('/legacy-software', function(req, res) {
    res.redirect('/support/legacy-software');
+});
+
+router.get('/data', function(req, res) {
+   res.redirect('/public-data');
+});
+
+router.get('/terms', function(req, res) {
+   res.redirect('/policies-and-terms');
 });
 
 //======================================================================================================================

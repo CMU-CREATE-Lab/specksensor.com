@@ -7,7 +7,12 @@
    });
 
    function recordAction(category, action, label, value) {
-      ga('send', 'event', category, action, label, value);
+      {{!-- google analytics is not enabled in all environments, so check whether it's defined --}}
+      {{#if googleAnalytics.enabled}}
+         ga('send', 'event', category, action, label, value);
+      {{else}}
+         // noop since analytics is disabled in this environment
+      {{/if}}
       return true;
    }
 </script>

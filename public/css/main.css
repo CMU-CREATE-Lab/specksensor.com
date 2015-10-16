@@ -596,6 +596,27 @@ a.anchor {
     #home_page {
       margin-top: 20px; } }
 
+#public_data_page .feed_name_label {
+  font-size: 16px; }
+
+#public_data_page #grapher_container {
+  background-color: lightcyan; }
+
+#public_data_page #map_container {
+  position: relative; }
+  #public_data_page #map_container #map_area {
+    position: relative;
+    border: 1px solid black;
+    width: auto;
+    height: 300px; }
+  #public_data_page #map_container #map_filters_area .map_filter {
+    display: inline-block;
+    margin-right: 20px; }
+    #public_data_page #map_container #map_filters_area .map_filter label {
+      font-size: 12px;
+      font-weight: normal;
+      margin-bottom: 0; }
+
 #air_quality_page {
   margin-top: 40px;
   font-size: 16px;
@@ -1004,6 +1025,10 @@ body.is_logged_in #is_logged_in_and_on_mobile_footer {
       #default_footer .link {
         margin-left: 10px;
         margin-right: 10px; } }
+  #default_footer .dropdown-toggle {
+    cursor: pointer; }
+  #default_footer .dropdown-menu-active {
+    font-weight: bold; }
 
 #is_logged_in_and_on_mobile_footer {
   display: none;
@@ -1062,3 +1087,14 @@ body.is_logged_in #is_logged_in_and_on_mobile_footer {
 
 #jobs_page {
   font-size: 16px; }
+
+@media (max-width: 449px) {
+  #policies_and_terms_page .nav > li > a {
+    padding-left: 7px;
+    padding-right: 7px; } }
+
+@media (max-width: 320px) {
+  #policies_and_terms_page .nav > li > a {
+    font-size: smaller;
+    padding-left: 5px;
+    padding-right: 5px; } }

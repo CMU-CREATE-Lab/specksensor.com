@@ -1,0 +1,213 @@
+<script type="text/javascript">
+   $(document).ready(function() {
+      // Based on code at http://stackoverflow.com/a/10787789/703200
+
+      // select the appropriate tab on load
+      var suffix = "_tab";
+      var hash = (window.location.hash || "").replace(suffix, "");
+      console.log("Hash: [" + hash + "]");
+      if (hash) {
+         $('.nav-tabs a[href=' + hash + ']').tab('show');
+      }
+
+      // Change hash in the URL when changing tabs, to allow for easy URL copying and reload
+      $('.nav-tabs a').on('shown.bs.tab', function(e) {
+         window.location.hash = e.target.hash + suffix;
+      })
+   });
+</script>
+<div id="policies_and_terms_page">
+   <h2>Policies and Terms</h2>
+   <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+      <li class="active"><a href="#privacy" data-toggle="tab">Privacy</a></li>
+      <li><a href="#terms-of-sale" data-toggle="tab">Terms of Sale</a></li>
+      <li><a href="#returns-and-exchanges" data-toggle="tab">Returns &amp; Exchanges</a></li>
+   </ul>
+   <div id="my-tab-content" class="tab-content">
+      <div class="tab-pane active" id="privacy">
+         <h3>Privacy Policy</h3>
+         <p>
+            At Airviz Inc., we value your trust and partnership and will work as hard as we can to earn it and keep it.
+            Please read our privacy policy for information on:
+         </p>
+         <ul>
+            <li>What information we collect and why we collect it</li>
+            <li>How we use that information</li>
+            <li>The choices we offer, including how to access and update your choices</li>
+         </ul>
+
+         <h4>What information do we collect?</h4>
+         <p>
+            We collect personal information such as your name, billing and shipping address, email address, phone number, and
+            credit card information during purchase. This information is used to fulfill your Speck order, identify you within
+            our systems, issue any additional refunds or charges necessary, and to maintain your relationship as a customer.
+            At any time, you may ask to be removed from our mailing list by contacting us at
+            <a href="mailto:support@specksensor.com?Subject=Unsubscribe%20from%20mailing%20list" target="_top">support@specksensor.com</a>.
+            You are not added to our mailing list simply by sending us an email inquiry.
+         </p>
+
+         <h4>Who views your information?</h4>
+         <p>
+            Your personal information is kept secure and we will never sell it to a third party. Only authorized employees,
+            contractors, or agents of Airviz have access to this information.
+         </p>
+
+         <h4>Your data belongs to you.</h4>
+         <p>
+            We mean it. Your data does not belong to us or any other third parties, it belongs to you. At its core, Speck is
+            about empowerment. Our goal is to provide everyday citizens with an affordable tool that makes the invisible
+            visible, and enables you to make informed decisions about how to improve your air quality. Data collected with
+            Speck belong to you, its user, and you have the power to decide how to apply that information and take action to
+            breathe easier. We will never monetize the information that you collect with your Speck.
+         </p>
+
+         <h4>What happens with the data that I upload to my account on specksensor.com?</h4>
+         <p>
+            You may choose to configure your Speck to upload to our open-source data repository via specksensor.com. In doing
+            so, you may choose whether to register your data as "private," or "public." If you choose "private", the Speck
+            location and associated data will be visible only to you and the Airviz developers. Speck data and associated
+            metadata (location, device name, etc) are not stored in encrypted form, enabling Airviz to look at the data if we
+            need to (e.g. helping a customer resolve issues). If you choose "public", you agree to make the Speck location and
+            associated data publicly accessible and consent to us or the public aggregating that data for future analysis.
+         </p>
+
+         <p>
+            At any time, if you decide to change your settings between "private" or "public," please email us at <a
+               href="mailto:support@specksensor.com" target="_top">support@specksensor.com</a>. We will happily make that change
+            for you. We will soon be adding the ability for you to switch between public and private yourself, as often as you
+            want, enabling you to change your mind at any time and either grant or revoke public access to any Speck
+            installation location dataset.
+         </p>
+
+         <p>
+            The username and password for your specksensor.com account will never be shared with the public or a third party.
+            Even more, we can't ever recover a user password. Passwords are stored in a one-way encrypted form in the
+            database, and there's no way we can decrypt. The Speck device never knows the user's login or password. When
+            configuring a Speck for uploads, the Speck is given a private, unguessable, unique key which it uses to upload
+            data for that particular feed (a.k.a installation location). That key can be used to read and write data from/to
+            the feed, but only that one feed, and can't be used to change the user's password, delete feeds, etc.
+         </p>
+
+         <h4>What types of wireless encryption does the Speck support?</h4>
+         <p>
+            The Speck supports open wireless networks (no encryption), WEP, WPA, and WPA2 Personal. The Speck can use either
+            the 802.11b or 802.11g wireless protocol. It does not support 802.11n. All communication between specksensor.com
+            and your browser is transmitted in a secure, encrypted form using standard HTTPS, which ensures privacy and
+            prevents eavesdropping. The same kind of communication encryption is used by banks. The Speck itself does not
+            upload data using HTTPS.
+         </p>
+
+         <h4>We're not perfect.</h4>
+         <p>
+            We'll do our best to grow and maintain Airviz Inc. as a private company that services our customers. We promise to
+            respond to problems you let us know about, but we can't promise that we will never lose data or make other
+            mistakes. We do keep regular backups and keep our servers maintained and secured as best as possible. When you
+            make a purchase from Airviz Inc., you agree that the only remedies for problems resulting from your use of our
+            products are a sincere and personal apology and possibly a refund of the amount you have paid to Airviz Inc. Our
+            software and products are designed to enable you to take control of your air quality, and we will always strive to
+            improve.
+         </p>
+
+         <p>
+            If you have questions or concerns about our privacy policy, please contact us at
+            <a href="mailto:support@specksensor.com?Subject=Privacy%20policy" target="_top">support@specksensor.com</a>.
+         </p>
+      </div>
+
+      <div class="tab-pane" id="terms-of-sale">
+         <h3>Terms and Conditions of Sale</h3>
+
+         <p>
+            We are committed to empowering you with the Speck sensor to monitor your air quality and to learn how your
+            decisions impact your family's air quality health. Below is the legalese of the Terms of Sale that we need to
+            provide legally. In simple English, here is a summary:
+         </p>
+         <ol>
+            <li>We may need to change prices in the future.</li>
+            <li>
+               We sell the Speck with a six month warranty. We are doing our best to ensure the Speck lasts much longer, of
+               course.
+            </li>
+            <li>
+               The Speck is not a federal device or a medical device. Use the Speck but remember that you are in
+               charge&mdash;this is just an information-gathering device for your consideration. Please don't sue us; instead,
+               use the Speck to empower yourself to improve your air quality exposure.
+            </li>
+         </ol>
+
+         <p>Now the legal version:</p>
+
+         <p>
+            All prices are subject to change by Seller without notice. All prices specified herein are exclusive of any
+            costs of any sales, use, value added, excise, gross receipts, business and occupation or similar present or
+            future taxes imposed by any governmental body on the sale, delivery, use or other handling of the Products
+            or in connection with any related or contemplated transactions, which are to be borne by Buyer. If Seller
+            determines that its ability to supply the total demand for the Products, or to obtain material used directly
+            or indirectly in the manufacture of the Products, is hindered, limited or made impracticable, Seller may
+            allocate its available supply of the Products on such basis as Seller determines to be equitable without
+            liability for any failure of performance which may result therefrom.
+         </p>
+         <p>
+            Seller warrants that the Products manufactured by Seller will be free from defects in material and
+            workmanship under normal use and regular service and maintenance for a period of six months from the date of
+            shipment of the Products by Seller, unless otherwise specified by Seller in writing. Products purchased by
+            Seller from a third party for resale to Buyer will carry only the warranty extended by the original
+            manufacturer. THE WARRANTY SET FORTH IN THIS SECTION ARE THE SOLE AND EXCLUSIVE WARRANTIES GIVEN BY SELLER
+            WITH RESPECT TO THE PRODUCTS AND ARE IN LIEU OF AND EXCLUDE ALL OTHER WARRANTIES, EXPRESS OR IMPLIED,
+            ARISING BY OPERATION OF LAW OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, MERCHANTABILITY AND FITNESS FOR A
+            PARTICULAR PURPOSE WHETHER OR NOT THE PURPOSE OR USE HAS BEEN DISCLOSED TO SELLER IN SPECIFICATIONS,
+            DRAWINGS OR OTHERWISE, AND WHETHER OR NOT SELLER'S PRODUCTS ARE SPECIFICALLY DESIGNED AND/OR MANUFACTURED BY
+            SELLER FOR BUYER'S OR ANY OTHER PERSON'S USE OR PURPOSE.
+         </p>
+         <p>
+            This warranty does not extend to any losses or damages due to misuse, accident, abuse, neglect, normal wear
+            and tear, corrosion, moisture, Buyer's or any other person's negligence, unauthorized modification or
+            alteration, use beyond rated capacity, unsuitable power sources or environmental conditions, improper
+            installation, repair, handling, maintenance or application or any other cause not the fault of Seller, and,
+            unless otherwise specified by Seller in writing, Seller has no duty to install, inspect, observe, advise
+            and/or warn as to the Products, or as to any other products or conditions located on Buyer's property or
+            work site, at the time of sale, delivery, or otherwise.
+         </p>
+         <p>
+            Except for Buyer's express warranties under this section, Buyer assumes all other responsibility for any loss,
+            damage, or injury to persons or property arising out of, connected with, or resulting from the use of Products,
+            either alone or in combination with other products/components, and shall indemnify, defend, and hold Seller
+            harmless for any such loss, damage or injury.
+         </p>
+         <p>
+            LIMITATION OF REMEDY AND LIABILITY &mdash; THE SOLE AND EXCLUSIVE REMEDY FOR BREACH OF ANY WARRANTY HEREUNDER
+            (OTHER THAN THE WARRANTY PROVIDED UNDER THIS SECTION) IS LIMITED TO, AT SELLER'S SOLE OPTION, REPAIR, CORRECTION
+            OR REPLACEMENT, OR REFUND OF THE PURCHASE PRICE.
+         </p>
+         <p>
+            SELLER IS NOT LIABLE FOR DAMAGES CAUSED BY DELAY IN PERFORMANCE AND IN NO EVENT, REGARDLESS OF THE FORM OF THE
+            CLAIM OR CAUSE OF ACTION (WHETHER BASED IN LAW, EQUITY, CONTRACT, INFRINGEMENT, NEGLIGENCE, STRICT LIABILITY,
+            OTHER TORT OR OTHERWISE), DOES SELLER'S LIABILITY TO BUYER AND/OR END USERS FOR ANY OTHER DAMAGES HEREUNDER
+            (INCLUDING, WITHOUT LIMITATION, DAMAGES IN AN ACTION FOR CONTRIBUTION OR INDEMNITY) EXCEED THE PRICE PAID BY BUYER
+            FOR THE SPECIFIC PRODUCTS PROVIDED BY SELLER GIVING RISE TO THE CLAIM OR CAUSE OF ACTION. BUYER AGREES THAT IN NO
+            EVENT DOES SELLER'S LIABILITY TO BUYER AND/OR END USERS EXTEND TO INCLUDE INCIDENTAL, CONSEQUENTIAL, SPECIAL,
+            INDIRECT OR PUNITIVE DAMAGES. The term "consequential damages" includes, but is not limited to, loss of
+            anticipated profits; business interruption; loss of use, revenue, reputation or data; costs incurred, including,
+            without limitation, costs for capital, fuel, or power; loss or damage to property or equipment; and environmental
+            clean-up. Any action arising hereunder or relating hereto, regardless of the form of the action (whether based in
+            law, equity, contract, infringement, negligence, strict liability, other tort or otherwise), must be commenced
+            within one (1) year after the date of shipment or it shall be barred.
+         </p>
+         <p>
+            Unless otherwise specified by Seller in writing, it is expressly understood that any technical advice furnished by
+            Seller with respect to the use of the Products is given without charge, and Seller assumes no obligation or
+            liability for the advice given or not given, or results obtained, all such advice being given and accepted at
+            Buyer's risk.
+         </p>
+         <p>
+            Buyer expressly acknowledges and agrees that Seller has set its prices and entered into the Agreement in reliance
+            upon the limitations of liability and other terms and conditions specified herein, which allocate the risk between
+            Buyer and Seller and form a basis of this bargain between the parties.
+         </p>
+      </div>
+
+      <div class="tab-pane" id="returns-and-exchanges">
+         {{> exchange-and-return-policy}}
+      </div>
+   </div>
+</div>

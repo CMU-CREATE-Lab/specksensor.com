@@ -1,0 +1,347 @@
+<link href="/css/grapher.css" rel="stylesheet" type="text/css"/>
+<script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}" type="text/javascript"></script>
+<script src="/lib/canvas-layer/src/CanvasLayer.js" type="text/javascript"></script>
+<script src="/js/com/specksensor/geo/Map.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/jquery-mousewheel/jquery.mousewheel.min.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/createlab-grapher/grapher.min.js" type="text/javascript"></script>
+<script src="{{esdrUrl}}/lib/plot-manager/org/bodytrack/grapher/PlotManager.js" type="text/javascript"></script>
+<script src="/lib/nimble/nimble.min.js" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript">
+   var DEVICE_PIXEL_RATIO = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
+
+   var ESDR_API_ROOT_URL = 'http://esdr.cmucreatelab.org/api/v1';
+      {{!--var ESDR_API_ROOT_URL = '{{esdrUrl}}/api/v1';--}}
+   var ESDR_QUERY_ITEM_LIMIT = 1000;
+
+   var PRODUCT_ID = 9//;'{{speckProductId}}';
+
+   // grapher stuff
+   var plotManager;
+   var currentDateAxisRange = { min : null, max : null };
+
+   // map stuff
+   var map = new com.specksensor.geo.Map("map_area");
+
+   // marker rendering
+   var LIGHT_BLUE_COLOR = "#337ab7";
+   var POINT_RADIUS_HAS_DATA = 6;
+   var POINT_RADIUS_NO_DATA = 4;
+   var TWO_PI = 2 * Math.PI;
+
+   var govtFeeds = [];
+   var speckFeeds = { indoor : [], outdoor : [] };
+   var feedsById = {};
+   var selectedFeed = null;
+
+   window.grapherLoad = function() {
+
+      map.initialize({ zoom : 3 },
+            {
+               handleInitializationComplete : function() {
+                  _.parallel(
+                        [
+                           function(done) {
+                              loadGovtFeeds(0, done);
+                           },
+                           function(done) {
+                              loadSpeckFeeds(0, done);
+                           }
+                        ],
+                        function(err) {
+                           if (err) {
+                              // TODO
+                              console.log("Failed to load feeds: " + err);
+                           }
+                           else {
+                              console.log("Done loading feeds: [" + govtFeeds.length + "] government, [" + (speckFeeds.indoor.length + speckFeeds.outdoor.length) + "] speck");
+
+                              initializeGrapher();
+                              initializeMarkers();
+                              map.renderMarkers();
+                           }
+                        });
+               },
+               handleMarkerSelected : function(marker) {
+                  setFeedSelected(marker.id);
+               }
+            }
+      );
+   };
+
+   function loadSpeckFeeds(page, done) {
+      var offset = ESDR_QUERY_ITEM_LIMIT * page;
+
+      // load the Speck feeds
+      superagent
+            .get(ESDR_API_ROOT_URL + "/feeds?where=productId=" + PRODUCT_ID + "&fields=id,name,latitude,longitude,exposure,maxTimeSecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .end(function(err, res) {
+                    if (err) {
+                       done(err);
+                    }
+                    else {
+                       // got the data
+                       if (res.body.code == 200 &&
+                           typeof res.body.data !== 'undefined' &&
+                           res.body.data != null) {
+
+                          // concatenate the new rows, separating indoor and outdoor
+                          Array.prototype.push.apply(speckFeeds.indoor, res.body.data.rows.filter(function(feed) {
+                             return feed.exposure == 'indoor';
+                          }));
+                          Array.prototype.push.apply(speckFeeds.outdoor, res.body.data.rows.filter(function(feed) {
+                             return feed.exposure == 'outdoor';
+                          }));
+
+                          // see whether we need to load more
+                          if ((speckFeeds.indoor.length + speckFeeds.outdoor.length) < res.body.data.totalCount) {
+                             loadSpeckFeeds(++page, done);
+                          }
+                          else {
+                             done();
+                          }
+                       }
+                       else {
+                          done(new Error("Failed to load speck feeds: " + JSON.stringify(res.body, null, 3)));
+                       }
+                    }
+                 });
+   }
+
+   function loadGovtFeeds(page, done) {
+      var offset = ESDR_QUERY_ITEM_LIMIT * page;
+
+      superagent
+            .get(ESDR_API_ROOT_URL + "/multifeeds/pm_25/feeds?fields=id,name,latitude,longitude,maxTimeSecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .end(function(err, res) {
+                    if (err) {
+                       done(err);
+                    }
+                    else {
+                       // got the data
+                       if (res.body.code == 200 &&
+                           typeof res.body.data !== 'undefined' &&
+                           res.body.data != null) {
+
+                          // concatenate the new rows
+                          Array.prototype.push.apply(govtFeeds, res.body.data.rows);
+
+                          // see whether we need to load more
+                          if (govtFeeds.length < res.body.data.totalCount) {
+                             loadGovtFeeds(++page, done);
+                          }
+                          else {
+                             done();
+                          }
+                       }
+                       else {
+                          done(new Error("Failed to load govt feeds: " + JSON.stringify(res.body, null, 3)));
+                       }
+                    }
+                 });
+   }
+
+   function initializeGrapher() {
+      console.log("In initializeGrapher(): " + $("#grapher_container").width());
+
+      var now = new Date();
+      var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      var channelMinTimeSecs = midnight.getTime() / 1000;
+      var channelMaxTimeSecs = now.getTime() / 1000;
+
+      // Grapher is not happy if min time equals max time.  Adjust them if necessary
+      if (channelMinTimeSecs == channelMaxTimeSecs) {
+         channelMinTimeSecs--;
+         channelMaxTimeSecs++;
+      }
+
+      plotManager = new org.bodytrack.grapher.PlotManager("date_axis", channelMinTimeSecs, channelMaxTimeSecs);
+      plotManager.setWillAutoResizeWidth(true, function() {
+         return $("#grapher_container").width()         // window width
+                - $(".y_axis").width()             // Y axis width
+                //- $("#y_axis_label").height()      // the height of the Y axis label
+                //- 5                                // right margin
+                - 3;                               // grapher and Y axis borders
+      });
+
+      plotManager.getDateAxis().addAxisChangeListener(function(axisChangeEvent) {
+         var hasDateRangeChanged = currentDateAxisRange.min != axisChangeEvent.min ||
+                                   currentDateAxisRange.max != axisChangeEvent.max;
+
+         // remember the new date range
+         currentDateAxisRange = {
+            min : axisChangeEvent.min,
+            max : axisChangeEvent.max
+         };
+      });
+
+      // create the plot container so that we can turn autoscaling on by default (but don't pad)
+      plotManager.addPlotContainer("plot_container").setAutoScaleEnabled(true, false);
+
+      $("#export_this_channel_button").click(function() {
+         doExport(false);
+      });
+      $("#export_all_channels_button").click(function() {
+         doExport(true);
+      });
+
+      $("#grapher").show();
+   }
+
+   function initializeMarkers() {
+      //var feed = govtFeeds[0];
+      //var latitude = feed['latitude'];
+      //var longitude = feed['longitude'];
+      //if (latitude != null && longitude != null) {
+      //   feedsById[feed.id] = feed;
+      //   var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+      //   map.addMarker(feed.id, latLong, renderMarker);
+      //}
+
+      // add the govt feeds
+      govtFeeds.forEach(function(feed) {
+         var latitude = feed['latitude'];
+         var longitude = feed['longitude'];
+         if (latitude != null && longitude != null) {
+            feedsById[feed.id] = feed;
+            var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+            map.addMarker(feed.id, latLong, renderMarker);
+         }
+      });
+
+      // add the indoor speck feeds
+      speckFeeds.indoor.forEach(function(feed) {
+         var latitude = feed['latitude'];
+         var longitude = feed['longitude'];
+         if (latitude != null && longitude != null) {
+            feedsById[feed.id] = feed;
+            var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+            map.addMarker(feed.id, latLong, renderMarker);
+         }
+      });
+
+      // add the outdoor speck feeds
+      speckFeeds.outdoor.forEach(function(feed) {
+         var latitude = feed['latitude'];
+         var longitude = feed['longitude'];
+         if (latitude != null && longitude != null) {
+            feedsById[feed.id] = feed;
+            var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+            map.addMarker(feed.id, latLong, renderMarker);
+         }
+      });
+   }
+
+   function renderMarker(marker, canvasPosition, context) {
+      var isNoData = marker['value'] == null;
+      var radius = (isNoData ? POINT_RADIUS_NO_DATA : POINT_RADIUS_HAS_DATA);
+
+      if (selectedFeed && selectedFeed.id == marker.id) {
+         context.beginPath();
+         context.arc(canvasPosition.x, canvasPosition.y, radius + 1, 0, TWO_PI, false);
+         context.lineWidth = 2;
+         context.strokeStyle = LIGHT_BLUE_COLOR;
+         context.stroke();
+      }
+
+      // draw a circle
+      context.beginPath();
+      context.arc(canvasPosition.x, canvasPosition.y, radius, 0, TWO_PI, false);
+      context.fillStyle = "rgba(10, 10, 10, 0.6)";
+      context.fill();
+   }
+
+   function setFeedSelected(feedId) {
+      var feed = feedsById[feedId];
+
+      $(".feed_name_label").text(feed.name);
+      if (selectedFeed == null || selectedFeed.id != feedId) {
+         selectedFeed = feed;
+
+         // update markers
+         map.renderMarkers();
+      }
+   }
+
+   function setSizes() {
+      // TODO: anything to do?
+   }
+
+</script>
+<div id="public_data_page">
+   <h2>Public Data</h2>
+   <div class="row">
+      <div id="selected_feed_name_label" class="col-xs-12">
+         <div class="feed_name_label"></div>
+      </div>
+   </div>
+   <div class="row">
+      <div id="map_container" class="col-lg-5 col-lg-push-7">
+         <div id="map_area"></div>
+         <div id="map_filters_area">
+            <div class="map_filter">
+               <input type="checkbox" id="govt_feed_checkbox" name="govt_feed_checkbox" checked="checked"/>
+               <label for="govt_feed_checkbox">Government PM2.5 Stations</label>
+            </div>
+            <div class="map_filter">
+               <input type="checkbox" id="outdoor_speck_checkbox" name="outdoor_speck_checkbox" checked="checked"/>
+               <label for="outdoor_speck_checkbox">Outdoor Specks</label>
+            </div>
+            <div class="map_filter">
+               <input type="checkbox" id="indoor_speck_checkbox" name="indoor_speck_checkbox" checked="checked"/>
+               <label for="indoor_speck_checkbox">Indoor Specks</label>
+            </div>
+         </div>
+      </div>
+      <div id="grapher_container" class="noselect col-lg-7 col-lg-pull-5">
+         <table id="grapher" border="0" cellpadding="0" cellspacing="0" style="display:none">
+            <tr>
+               <td>
+                  <div id="date_axis" class="date_axis"></div>
+               </td>
+               <td align="center" valign="bottom">
+                  <div id="export_button_container" class="btn-group">
+                     <button id="export_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Download your data">
+                        <i class="fa fa-cloud-download"></i>
+                     </button>
+                     <ul id="export_button_menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a id="export_this_channel_button" href="#">This Channel</a></li>
+                        <li><a id="export_all_channels_button" href="#">All Channels</a></li>
+                     </ul>
+                  </div>
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <div id="plot_container" class="plot_container" style="height:300px; border: 1px solid black;">
+                     <div id="value_and_time"></div>
+                  </div>
+               </td>
+               <td>
+                  <div id="y_axis" class="y_axis" style="height:300px">
+                     <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
+                  </div>
+               </td>
+            </tr>
+            <tr>
+               <td colspan="2" align="right">
+                  <div id="grapher_toolbar_bottom" class="grapher_toolbar">
+                     <div class="pull-left">
+                        <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group">
+                           <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                              <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
+                           </button>
+                           <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
+                        </div>
+                     </div>
+
+                     <div class="btn-group pull-right">
+                        <a id="auto_scale_toggle_button" class="btn btn-default btn-sm active" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
+                     </div>
+                  </div>
+               </td>
+            </tr>
+         </table>
+      </div>
+   </div>
+</div>

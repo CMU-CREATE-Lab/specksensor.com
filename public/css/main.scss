@@ -834,6 +834,46 @@ a.anchor {
 }
 
 // =====================================================================================================================
+// Public Data
+// =====================================================================================================================
+
+#public_data_page {
+
+   .feed_name_label {
+      font-size: 16px;
+   }
+
+   #grapher_container {
+      background-color: lightcyan;
+   }
+
+   #map_container {
+      position: relative;
+
+      #map_area {
+         position: relative;
+         border: 1px solid black;
+         width: auto;
+         height: 300px;
+      }
+
+      #map_filters_area {
+         .map_filter {
+            display: inline-block;
+            margin-right: 20px;
+
+            label {
+               font-size: 12px;
+               font-weight: normal;
+               margin-bottom: 0;
+            }
+         }
+      }
+   }
+
+}
+
+// =====================================================================================================================
 // Learn: Air Quality
 // =====================================================================================================================
 
@@ -993,10 +1033,10 @@ a.anchor {
    font-size: 16px;
 
    .main_section {
-      margin-bottom:30px;
+      margin-bottom: 30px;
 
       .sub_section {
-         margin-bottom:20px;
+         margin-bottom: 20px;
       }
    }
 
@@ -1594,6 +1634,14 @@ body.is_logged_in {
          margin-right: 10px;
       }
    }
+
+   .dropdown-toggle {
+      cursor: pointer;
+   }
+
+   .dropdown-menu-active {
+      font-weight: bold;
+   }
 }
 
 #is_logged_in_and_on_mobile_footer {
@@ -1700,8 +1748,20 @@ body.is_logged_in {
 }
 
 // =====================================================================================================================
-// Terms
+// Policies and Terms
 // =====================================================================================================================
 
-#terms_page {
+#policies_and_terms_page {
+   // override bootstrap's padding and font-sizing for small screens so that all the tabs fit on one row
+   .nav > li > a {
+      @media (max-width: $EXTRA_EXTRA_SMALL_WIDTH) {
+         padding-left:7px;
+         padding-right:7px;
+      }
+      @media (max-width: $TINY_WIDTH) {
+         font-size:smaller;
+         padding-left:5px;
+         padding-right:5px;
+      }
+   }
 }
