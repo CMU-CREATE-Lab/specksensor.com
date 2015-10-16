@@ -61,7 +61,7 @@
   </component>
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{specksensor.com node_modules}" />
-    <file url="PROJECT" libraries="{Handlebars Runtime 2.0.0, Node.js v0.12.7 Core Modules, Superagent, googlemaps-DefinitelyTyped, jQuery 1.11.2, mocha-DefinitelyTyped, nconf-DefinitelyTyped, should-DefinitelyTyped, specksensor.com node_modules}" />
+    <file url="PROJECT" libraries="{Handlebars Runtime 2.0.0, Nimble.js, Node.js v0.12.7 Core Modules, Superagent, googlemaps-DefinitelyTyped, jQuery 1.11.2, mocha-DefinitelyTyped, nconf-DefinitelyTyped, should-DefinitelyTyped, specksensor.com node_modules}" />
     <includedPredefinedLibrary name="Node.js Globals" />
   </component>
   <component name="ProjectCodeStyleSettingsManager">
@@ -486,6 +486,19 @@
       <CLASSES>
         <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.2.min.js" />
         <root url="file://$PROJECT_DIR$/public/lib/jquery/jquery-1.11.2.js" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Nimble.js" type="javaScript">
+      <properties>
+        <sourceFilesUrls>
+          <item url="file://$PROJECT_DIR$/public/lib/nimble/nimble.js" />
+        </sourceFilesUrls>
+      </properties>
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/public/lib/nimble/nimble.js" />
+        <root url="file://$PROJECT_DIR$/public/lib/nimble/nimble.min.js" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
