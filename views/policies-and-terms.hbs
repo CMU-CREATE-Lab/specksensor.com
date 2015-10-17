@@ -38,79 +38,89 @@
 
          <h4>What information do we collect?</h4>
          <p>
-            We collect personal information such as your name, billing and shipping address, email address, phone number, and
-            credit card information during purchase. This information is used to fulfill your Speck order, identify you within
-            our systems, issue any additional refunds or charges necessary, and to maintain your relationship as a customer.
-            At any time, you may ask to be removed from our mailing list by contacting us at
-            <a href="mailto:support@specksensor.com?Subject=Unsubscribe%20from%20mailing%20list" target="_top">support@specksensor.com</a>.
-            You are not added to our mailing list simply by sending us an email inquiry.
+            We collect personal information such as your name, billing and shipping address, email address, phone
+            number, and credit card information during purchase. This information is used to fulfill your Speck order,
+            identify you within our systems, issue any additional refunds or charges necessary, and to maintain your
+            relationship as a customer. At any time, you may ask to be removed from our mailing list by contacting us at
+            {{> mailto email="support@specksensor.com" subject="Unsubscribe%20from%20mailing%20list"}} You are not added
+            to our mailing list simply by sending us an email inquiry.
          </p>
 
          <h4>Who views your information?</h4>
          <p>
-            Your personal information is kept secure and we will never sell it to a third party. Only authorized employees,
-            contractors, or agents of Airviz have access to this information.
+            Your personal information is kept secure and we will never sell it to a third party. Only authorized
+            employees, contractors, or agents of Airviz have access to this information.
          </p>
 
          <h4>Your data belongs to you.</h4>
          <p>
-            We mean it. Your data does not belong to us or any other third parties, it belongs to you. At its core, Speck is
-            about empowerment. Our goal is to provide everyday citizens with an affordable tool that makes the invisible
-            visible, and enables you to make informed decisions about how to improve your air quality. Data collected with
-            Speck belong to you, its user, and you have the power to decide how to apply that information and take action to
-            breathe easier. We will never monetize the information that you collect with your Speck.
+            We mean it. Your data does not belong to us or any other third parties, it belongs to you. At its core,
+            Speck is about empowerment. Our goal is to provide everyday citizens with an affordable tool that makes the
+            invisible visible, and enables you to make informed decisions about how to improve your air quality. Data
+            collected with Speck belong to you, its user, and you have the power to decide how to apply that information
+            and take action to breathe easier. We will never monetize the information that you collect with your Speck.
          </p>
 
          <h4>What happens with the data that I upload to my account on specksensor.com?</h4>
          <p>
-            You may choose to configure your Speck to upload to our open-source data repository via specksensor.com. In doing
-            so, you may choose whether to register your data as "private," or "public." If you choose "private", the Speck
-            location and associated data will be visible only to you and the Airviz developers. Speck data and associated
-            metadata (location, device name, etc) are not stored in encrypted form, enabling Airviz to look at the data if we
-            need to (e.g. helping a customer resolve issues). If you choose "public", you agree to make the Speck location and
-            associated data publicly accessible and consent to us or the public aggregating that data for future analysis.
+            You may choose to configure your Speck to upload to our open-source data repository via specksensor.com. In
+            doing so, you may choose whether to register your data as "private," or "public." If you choose "private",
+            the Speck location and associated data will be visible only to you and the Airviz developers. Speck data and
+            associated metadata (location, device name, etc) are not stored in encrypted form, enabling Airviz to look
+            at the data if we need to (e.g. helping a customer resolve issues). If you choose "public", you agree to
+            make the Speck location and associated data publicly accessible and consent to us or the public aggregating
+            that data for future analysis.
          </p>
 
          <p>
-            At any time, if you decide to change your settings between "private" or "public," please email us at <a
-               href="mailto:support@specksensor.com" target="_top">support@specksensor.com</a>. We will happily make that change
-            for you. We will soon be adding the ability for you to switch between public and private yourself, as often as you
-            want, enabling you to change your mind at any time and either grant or revoke public access to any Speck
-            installation location dataset.
+            At any time, if you decide to change your settings between "private" or "public," please email us at
+            {{> mailto email="support@specksensor.com"}}. We will happily make that change for you. We will soon be adding
+            the ability for you to switch between public and private yourself, as often as you want, enabling you to
+            change your mind at any time and either grant or revoke public access to any Speck installation location
+            dataset.
          </p>
 
+{{!--
          <p>
-            The username and password for your specksensor.com account will never be shared with the public or a third party.
-            Even more, we can't ever recover a user password. Passwords are stored in a one-way encrypted form in the
-            database, and there's no way we can decrypt. The Speck device never knows the user's login or password. When
-            configuring a Speck for uploads, the Speck is given a private, unguessable, unique key which it uses to upload
-            data for that particular feed (a.k.a installation location). That key can be used to read and write data from/to
-            the feed, but only that one feed, and can't be used to change the user's password, delete feeds, etc.
+            The username and password for your specksensor.com account will never be shared with the public or a third
+            party. Even more, we can't ever recover a user password. Passwords are stored in a one-way encrypted form in
+            the database, and there's no way we can decrypt. The Speck device never knows the user's login or password.
+            When configuring a Speck for uploads, the Speck is given a private, unguessable, unique key which it uses to
+            upload data for that particular feed (a.k.a installation location). That key can be used to read and write
+            data from/to the feed, but only that one feed, and can't be used to change the user's password, delete
+            feeds, etc.
+         </p>
+--}}
+
+         <h4>What types of wireless encryption does Speck support?</h4>
+         <p>
+            For connecting to your Wi-Fi network, the Speck supports open wireless networks (no encryption), WEP, WPA,
+            and WPA2 Personal. We strongly recommend using WPA2 Personal when possible. The Speck can use either the
+            802.11b or 802.11g wireless protocol. It does not support 802.11n.
          </p>
 
-         <h4>What types of wireless encryption does the Speck support?</h4>
+{{!--
          <p>
-            The Speck supports open wireless networks (no encryption), WEP, WPA, and WPA2 Personal. The Speck can use either
-            the 802.11b or 802.11g wireless protocol. It does not support 802.11n. All communication between specksensor.com
-            and your browser is transmitted in a secure, encrypted form using standard HTTPS, which ensures privacy and
-            prevents eavesdropping. The same kind of communication encryption is used by banks. The Speck itself does not
-            upload data using HTTPS.
+            All communication between specksensor.com and your browser is transmitted in a secure, encrypted form using
+            standard HTTPS, which ensures privacy and prevents eavesdropping. This is the same kind of communication
+            encryption used by banks. The Speck itself does not yet upload data using HTTPS, but future Speck models will.
          </p>
+--}}
 
          <h4>We're not perfect.</h4>
          <p>
-            We'll do our best to grow and maintain Airviz Inc. as a private company that services our customers. We promise to
-            respond to problems you let us know about, but we can't promise that we will never lose data or make other
-            mistakes. We do keep regular backups and keep our servers maintained and secured as best as possible. When you
-            make a purchase from Airviz Inc., you agree that the only remedies for problems resulting from your use of our
-            products are a sincere and personal apology and possibly a refund of the amount you have paid to Airviz Inc. Our
-            software and products are designed to enable you to take control of your air quality, and we will always strive to
-            improve.
+            We'll do our best to grow and maintain Airviz Inc. as a private company that services our customers. We
+            promise to respond to problems you let us know about, but we can't promise that we will never lose data or
+            make other mistakes. We do keep regular backups and keep our servers maintained and secured as best as
+            possible. When you make a purchase from Airviz Inc., you agree that the only remedies for problems resulting
+            from your use of our products are a sincere and personal apology and possibly a refund of the amount you
+            have paid to Airviz Inc. Our software and products are designed to enable you to take control of your air
+            quality, and we will always strive to improve.
          </p>
 
          <p>
             If you have questions or concerns about our privacy policy, please contact us at
-            <a href="mailto:support@specksensor.com?Subject=Privacy%20policy" target="_top">support@specksensor.com</a>.
+            {{> mailto email="support@specksensor.com" subject="Privacy%20policy"}}.
          </p>
       </div>
 
