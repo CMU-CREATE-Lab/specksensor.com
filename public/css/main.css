@@ -1084,6 +1084,15 @@ body.is_logged_in #is_logged_in_and_on_mobile_footer {
 
 #press_page {
   font-size: 16px; }
+  #press_page .articles {
+    margin-top: 20px; }
+    #press_page .articles .article {
+      margin-bottom: 10px; }
+      #press_page .articles .article .title {
+        font-size: 18px; }
+      #press_page .articles .article .author_and_source {
+        font-size: 14px;
+        color: #999999; }
 
 #jobs_page {
   font-size: 16px; }

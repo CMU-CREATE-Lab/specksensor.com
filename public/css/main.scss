@@ -1737,6 +1737,23 @@ body.is_logged_in {
 
 #press_page {
    font-size: 16px;
+
+   .articles {
+      margin-top: 20px;
+
+      .article {
+         margin-bottom: 10px;
+
+         .title {
+            font-size: 18px;
+         }
+
+         .author_and_source {
+            font-size: 14px;
+            color:#999999;
+         }
+      }
+   }
 }
 
 // =====================================================================================================================
@@ -1755,13 +1772,13 @@ body.is_logged_in {
    // override bootstrap's padding and font-sizing for small screens so that all the tabs fit on one row
    .nav > li > a {
       @media (max-width: $EXTRA_EXTRA_SMALL_WIDTH) {
-         padding-left:7px;
-         padding-right:7px;
+         padding-left: 7px;
+         padding-right: 7px;
       }
       @media (max-width: $TINY_WIDTH) {
-         font-size:smaller;
-         padding-left:5px;
-         padding-right:5px;
+         font-size: smaller;
+         padding-left: 5px;
+         padding-right: 5px;
       }
    }
 }

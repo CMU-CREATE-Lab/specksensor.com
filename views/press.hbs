@@ -3,4 +3,23 @@
    <div>
       For all press-related inquires, please contact {{> mailto email="info@specksensor.com" subject="Press%20inquiry"}}.
    </div>
+   <div class="articles">
+      {{#each articles}}
+         <div class="article">
+            <div class="title">
+               {{#if url}}
+                  <a href="{{url}}" target="press">{{{title}}}</a>
+               {{else}}
+                  {{title}}
+               {{/if}}
+            </div>
+            <div class="author_and_source">
+               {{#if author}}{{author}}, {{/if}}{{source}} on {{#dateToString date}}{{/dateToString}}
+               {{#if file}}
+                  <a href="/docs/press/{{file.name}}" target="_blank"><i class="fa fa-file-{{file.type}}-o"></i></a>
+               {{/if}}
+            </div>
+         </div>
+      {{/each}}
+   </div>
 </div>
