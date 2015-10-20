@@ -63,6 +63,10 @@ else {
       overviewMapControl : false
    };
 
+   var DEFAULT_MARKER_OPTIONS = {
+      searchDistanceFromMarkerInPixels : 10
+   };
+
    com.specksensor.geo.Map = function(domElementId) {
       var map = null;
       var mapProjection;
@@ -70,23 +74,43 @@ else {
       var canvasLayer;
       var context;
       var isCanvasInitialized = false;
+      var markerOptions = null;
+      var markerRenderingCallbacks = {
+         onBeforeRender : null,
+         onAfterRender : null
+      };
 
       var markers = {};
       var self = this;
 
-      this.initialize = function(mapOptions, callbacks) {
-         callbacks = callbacks || {
-                  handleInitializationComplete : null,
-                  handleMarkerSelected : null
-               };
+      this.getMarkerById = function(id) {
+         return markers[id];
+      };
 
+      this.initialize = function(mapOptions, mapMarkerOptions, callbacks) {
          // copy map option defaults
          mapOptions = mapOptions || {};
          for (var key in DEFAULT_MAP_OPTIONS) {
             mapOptions[key] = mapOptions[key] || DEFAULT_MAP_OPTIONS[key];
          }
 
-         console.log("Loading map...");
+         // copy marker option defaults
+         mapMarkerOptions = mapMarkerOptions || {};
+         for (var key in DEFAULT_MARKER_OPTIONS) {
+            mapMarkerOptions[key] = mapMarkerOptions[key] || DEFAULT_MARKER_OPTIONS[key];
+         }
+         markerOptions = mapMarkerOptions;
+
+         callbacks = callbacks || {
+                  handleInitializationComplete : null,
+                  handleMarkerSelected : null,
+                  onBeforeRenderMarkers : null,
+                  onAfterRenderMarkers : null
+               };
+
+         markerRenderingCallbacks.onBeforeRender = callbacks.onBeforeRenderMarkers;
+         markerRenderingCallbacks.onAfterRender = callbacks.onAfterRenderMarkers;
+
          map = new google.maps.Map(document.getElementById(domElementId), mapOptions);
 
          // Add an idle event listener ONCE to handle map loading.
@@ -104,7 +128,6 @@ else {
             }
          });
 
-
          // listen for mouse move and click events
          google.maps.event.addListener(map, 'mousemove', createCanvasFeatureDetectingMouseEventHandler(
                function(marker) {
@@ -115,12 +138,12 @@ else {
                }
          ));
          google.maps.event.addListener(map, 'click', createCanvasFeatureDetectingMouseEventHandler(
-               function(marker) {
+               function(marker, nearbyMarkers) {
                   var id = marker['id'];
 
                   if (typeof callbacks.handleMarkerSelected === 'function') {
                      try {
-                        callbacks.handleMarkerSelected(marker);
+                        callbacks.handleMarkerSelected(marker, nearbyMarkers);
                      }
                      catch (e) {
                         console.log("Error calling the handleMarkerSelected() callback function given to Map.initialize(): " + e);
@@ -131,7 +154,6 @@ else {
                   // nothing to do
                }
          ));
-
 
          // keep track of the map's center so that we can recenter it upon resize of the browser (found at http://stackoverflow.com/q/8792676/703200)
          google.maps.event.addDomListener(map, 'idle', function() {
@@ -145,7 +167,7 @@ else {
          });
       };
 
-      // Add a marker to the map (TODO: add note about using black in marker color!)
+      // Add a marker to the map (TODO: add warning about using black in marker color!)
       this.addMarker = function(id, location, renderingStrategy) {
          markers[id] = {
             id : id,
@@ -158,6 +180,16 @@ else {
 
       this.renderMarkers = function() {
 
+         var beforeRenderObj = null;
+         if (typeof markerRenderingCallbacks.onBeforeRender === 'function') {
+            try {
+               beforeRenderObj = markerRenderingCallbacks.onBeforeRender(context);
+            }
+            catch (e) {
+               console.log("Error calling the onBeforeRenderMarkers() callback function given to Map.initialize(): " + e);
+            }
+         }
+
          // clear previous canvas contents
          context.clearRect(0, 0, canvasLayer.canvas.width, canvasLayer.canvas.height);
 
@@ -168,11 +200,20 @@ else {
             if (mapBounds.contains(marker['location'])) {
 
                // compute the canvas position for this point
-               var markerCoords = worldPointToCanvasPixelCoords(marker['worldPoint']);
+               var markerCoords = self.worldPointToCanvasPixelCoords(marker['worldPoint']);
 
-               marker.render(marker, markerCoords, context);
+               marker.render(marker, markerCoords, context, beforeRenderObj);
             }
          });
+
+         if (typeof markerRenderingCallbacks.onAfterRender === 'function') {
+            try {
+               markerRenderingCallbacks.onAfterRender(context);
+            }
+            catch (e) {
+               console.log("Error calling the onAfterRenderMarkers() callback function given to Map.initialize(): " + e);
+            }
+         }
       };
 
       // fit the map to show all markers
@@ -213,11 +254,11 @@ else {
             if (evt && evt.latLng && mapProjection != null) {
 
                // convert the mouse event latLng to canvas coords
-               var eventPoint = worldPointToCanvasPixelCoords(mapProjection.fromLatLngToPoint(evt.latLng));
+               var eventPoint = self.worldPointToCanvasPixelCoords(mapProjection.fromLatLngToPoint(evt.latLng));
 
                // get the canvas color at this pixel to see whether there's a point drawn here (very important to take
                // the DEVICE_PIXEL_RATIO into account here!)
-               var imageData = context.getImageData(eventPoint.x , eventPoint.y , 1, 1);
+               var imageData = context.getImageData(eventPoint.x, eventPoint.y, 1, 1);
 
                if (imageData.data[0] != 0 ||
                    imageData.data[1] != 0 ||
@@ -226,27 +267,33 @@ else {
                   // iterate over all the points to see which is closest to this pixel
                   var mapBounds = map.getBounds();
                   var bestPoint = null;
-                  var bestDistance = Number.MAX_VALUE;
+                  var bestDistance = markerOptions.searchDistanceFromMarkerInPixels;
+                  var matchingPoints = [];
                   $.each(markers, function(markerId, marker) {
                      // TODO: this bounds containment check could be smarter...
                      if (mapBounds.contains(marker['location'])) {
 
                         // compute the canvas position for this marker
-                        var candidate = worldPointToCanvasPixelCoords(marker['worldPoint']);
+                        var candidate = self.worldPointToCanvasPixelCoords(marker['worldPoint']);
 
                         // compute the distance between this marker's point and the event point
                         var distance = Math.sqrt(Math.pow(candidate.x - eventPoint.x, 2) + Math.pow(candidate.y - eventPoint.y, 2));
 
-                        // if the distance is less than the bestDistance found so far, then we've found a hit
-                        if (distance <= bestDistance) {
-                           bestPoint = marker;
-                           bestDistance = distance;
+                        if (distance <= markerOptions.searchDistanceFromMarkerInPixels) {
+                           // remember all the markers that are close
+                           matchingPoints.push(marker);
+
+                           // if the distance is less than the bestDistance found so far, then we've found a hit
+                           if (distance <= bestDistance) {
+                              bestPoint = marker;
+                              bestDistance = distance;
+                           }
                         }
                      }
                   });
 
                   if (bestPoint != null) {
-                     featureDetectedCallback(bestPoint);
+                     featureDetectedCallback(bestPoint, matchingPoints);
                   }
                   else {
                      featureNotDetectedCallback();
@@ -259,7 +306,7 @@ else {
          }
       };
 
-      var worldPointToCanvasPixelCoords = function(worldPoint) {
+      this.worldPointToCanvasPixelCoords = function(worldPoint) {
          var translation = canvasLayer.getMapTranslation();
          var scale = canvasLayer.getMapScale();
          return {

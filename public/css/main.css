@@ -596,14 +596,14 @@ a.anchor {
     #home_page {
       margin-top: 20px; } }
 
-#public_data_page .feed_name_label {
-  font-size: 16px; }
-
-#public_data_page #grapher_container {
-  background-color: lightcyan; }
+#public_data_page #selected_feed_name_label {
+  margin-bottom: 10px; }
+  #public_data_page #selected_feed_name_label .feed_name_label {
+    font-size: 16px; }
 
 #public_data_page #map_container {
-  position: relative; }
+  position: relative;
+  margin-bottom: 10px; }
   #public_data_page #map_container #map_area {
     position: relative;
     border: 1px solid black;
@@ -616,6 +616,46 @@ a.anchor {
       font-size: 12px;
       font-weight: normal;
       margin-bottom: 0; }
+
+#public_data_page #grapher_container .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.selected {
+  font-weight: bold; }
+
+#public_data_page #grapher_container .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.unselected {
+  font-weight: normal; }
+
+#public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list {
+  padding: 0;
+  margin-bottom: 0; }
+  #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 12px;
+    line-height: 24px; }
+    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.selected {
+      cursor: default;
+      font-weight: bold;
+      color: black;
+      text-decoration: none; }
+    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected {
+      cursor: pointer;
+      color: #337ab7; }
+    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected:hover {
+      text-decoration: underline; }
+  #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item:last-of-type {
+    margin-right: 0; }
+
+#public_data_page #grapher_container #export_button_container #export_button {
+  padding: 2px 5px 2px 5px;
+  font-size: 18px;
+  margin-bottom: 7px; }
+
+#public_data_page #grapher_container #export_button_container #export_button_menu {
+  margin-top: -5px; }
+
+#public_data_page #grapher_container #grapher_toolbar_bottom {
+  padding-top: 5px;
+  height: 30px;
+  line-height: 30px; }
 
 #air_quality_page {
   margin-top: 40px;

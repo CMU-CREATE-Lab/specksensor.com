@@ -40,7 +40,7 @@
    var map = new com.specksensor.geo.Map("map_area");
 
    // marker rendering
-   var LIGHT_BLUE_COLOR = "#337ab7";
+   var SELECTED_MARKER_COLOR = "#ff0000";
    var POINT_RADIUS_HAS_DATA = 6;
    var POINT_RADIUS_NO_DATA = 4;
    var TWO_PI = 2 * Math.PI;
@@ -169,7 +169,21 @@
                                        });
 
                                        contentAreaElement.show();
-                                       map.initialize(null,
+                                       map.initialize(
+                                             {
+                                                styles : [
+                                                   {
+                                                      featureType : "poi",
+                                                      elementType : "labels",
+                                                      stylers : [
+                                                         { visibility : "off" }
+                                                      ]
+                                                   }
+                                                ]
+                                             },
+                                             {
+                                                searchDistanceFromMarkerInPixels : 5
+                                             },
                                              {
                                                 handleInitializationComplete : function() {
                                                    initializeGrapher();
@@ -348,7 +362,7 @@
          context.beginPath();
          context.arc(canvasPosition.x, canvasPosition.y, radius + 1, 0, TWO_PI, false);
          context.lineWidth = 2;
-         context.strokeStyle = LIGHT_BLUE_COLOR;
+         context.strokeStyle = SELECTED_MARKER_COLOR;
          context.stroke();
       }
 

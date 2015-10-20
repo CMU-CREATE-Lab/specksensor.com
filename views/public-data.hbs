@@ -7,13 +7,26 @@
 <script src="{{esdrUrl}}/lib/plot-manager/org/bodytrack/grapher/PlotManager.js" type="text/javascript"></script>
 <script src="/lib/nimble/nimble.min.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
-   var DEVICE_PIXEL_RATIO = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ? window.devicePixelRatio : 1;
-
+   // hardcode these to production since dev/test/stage don't have enough data to be interesting
    var ESDR_API_ROOT_URL = 'http://esdr.cmucreatelab.org/api/v1';
-      {{!--var ESDR_API_ROOT_URL = '{{esdrUrl}}/api/v1';--}}
+   var PRODUCT_ID = 9;
+
    var ESDR_QUERY_ITEM_LIMIT = 1000;
 
-   var PRODUCT_ID = 9//;'{{speckProductId}}';
+   var DEFAULT_CHANNEL_NAMES = [
+      "particle_count",
+      "particle_concentration",
+      "PM2_5",
+      "PM25B_UG_M3",
+      "PM25_2__UG_M3",
+      "PM25_UG_M3"
+   ];
+
+   var SEVEN_DAYS_IN_SECS = 604800;
+
+   var TINY_DEVICE_WIDTH_PIXELS = 630;
+   var SMALL_DEVICE_WIDTH_PIXELS = 768;
+   var MEDIUM_DEVICE_WIDTH_PIXELS = 992;
 
    // grapher stuff
    var plotManager;
@@ -23,19 +36,36 @@
    var map = new com.specksensor.geo.Map("map_area");
 
    // marker rendering
-   var LIGHT_BLUE_COLOR = "#337ab7";
-   var POINT_RADIUS_HAS_DATA = 6;
-   var POINT_RADIUS_NO_DATA = 4;
+   var SELECTED_MARKER_COLOR = "#ff0000";
+   var MARKER_RADIUS = 5;
    var TWO_PI = 2 * Math.PI;
 
    var govtFeeds = [];
+   var govtFeedsById = {};
    var speckFeeds = { indoor : [], outdoor : [] };
+   var speckFeedsById = { indoor : {}, outdoor : {} };
    var feedsById = {};
    var selectedFeed = null;
+   var selectedChannelName = DEFAULT_CHANNEL_NAMES[0];
 
    window.grapherLoad = function() {
 
-      map.initialize({ zoom : 3 },
+      map.initialize(
+            {
+               zoom : 3,
+               styles : [
+                  {
+                     featureType : "poi",
+                     elementType : "labels",
+                     stylers : [
+                        { visibility : "off" }
+                     ]
+                  }
+               ]
+            },
+            {
+               searchDistanceFromMarkerInPixels : MARKER_RADIUS
+            },
             {
                handleInitializationComplete : function() {
                   _.parallel(
@@ -61,8 +91,31 @@
                            }
                         });
                },
-               handleMarkerSelected : function(marker) {
+               handleMarkerSelected : function(marker, nearbyMarkers) {
+                  // TODO show a popup with all matching markers
                   setFeedSelected(marker.id);
+               },
+               onBeforeRenderMarkers : function(context) {
+                  // calculate and remember feed filter states before rendering, since rendering of each marker needs
+                  // to check these states to see whether to draw the marker
+                  return {
+                     willShowGovtFeeds : $("#govt_feed_checkbox")[0].checked,
+                     willShowIndoorSpeckFeeds : $("#indoor_speck_checkbox")[0].checked,
+                     willShowOutdoorSpeckFeeds : $("#outdoor_speck_checkbox")[0].checked
+                  };
+               },
+               onAfterRenderMarkers : function(context) {
+                  // render the highlight around the selected marker (if any).  We do this last, in onAfterRenderMarkers,
+                  // to ensure the highlight appears on top of all the markers
+                  if (selectedFeed) {
+                     var selectedMarker = map.getMarkerById(selectedFeed.id);
+                     var markerCanvasPosition = map.worldPointToCanvasPixelCoords(selectedMarker.worldPoint);
+                     context.beginPath();
+                     context.arc(markerCanvasPosition.x, markerCanvasPosition.y, MARKER_RADIUS + 1, 0, TWO_PI, false);
+                     context.lineWidth = 2;
+                     context.strokeStyle = SELECTED_MARKER_COLOR;
+                     context.stroke();
+                  }
                }
             }
       );
@@ -71,9 +124,9 @@
    function loadSpeckFeeds(page, done) {
       var offset = ESDR_QUERY_ITEM_LIMIT * page;
 
-      // load the Speck feeds
+      // load the Speck feeds (public feeds, having data, and with lat/long defined)
       superagent
-            .get(ESDR_API_ROOT_URL + "/feeds?where=productId=" + PRODUCT_ID + "&fields=id,name,latitude,longitude,exposure,maxTimeSecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .get(ESDR_API_ROOT_URL + "/feeds?where=productId=" + PRODUCT_ID + ",maxTimeSecs<>__NULL__,latitude<>__NULL__,longitude<>__NULL__&fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,apiKeyReadOnly,channelBounds,channelSpecs,exposure&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
             .end(function(err, res) {
                     if (err) {
                        done(err);
@@ -111,7 +164,7 @@
       var offset = ESDR_QUERY_ITEM_LIMIT * page;
 
       superagent
-            .get(ESDR_API_ROOT_URL + "/multifeeds/pm_25/feeds?fields=id,name,latitude,longitude,maxTimeSecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .get(ESDR_API_ROOT_URL + "/multifeeds/pm_25/feeds?fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,apiKeyReadOnly,channelBounds,channelSpecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
             .end(function(err, res) {
                     if (err) {
                        done(err);
@@ -141,8 +194,6 @@
    }
 
    function initializeGrapher() {
-      console.log("In initializeGrapher(): " + $("#grapher_container").width());
-
       var now = new Date();
       var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -157,22 +208,9 @@
 
       plotManager = new org.bodytrack.grapher.PlotManager("date_axis", channelMinTimeSecs, channelMaxTimeSecs);
       plotManager.setWillAutoResizeWidth(true, function() {
-         return $("#grapher_container").width()         // window width
+         return $("#grapher_container").width()    // window width
                 - $(".y_axis").width()             // Y axis width
-                //- $("#y_axis_label").height()      // the height of the Y axis label
-                //- 5                                // right margin
                 - 3;                               // grapher and Y axis borders
-      });
-
-      plotManager.getDateAxis().addAxisChangeListener(function(axisChangeEvent) {
-         var hasDateRangeChanged = currentDateAxisRange.min != axisChangeEvent.min ||
-                                   currentDateAxisRange.max != axisChangeEvent.max;
-
-         // remember the new date range
-         currentDateAxisRange = {
-            min : axisChangeEvent.min,
-            max : axisChangeEvent.max
-         };
       });
 
       // create the plot container so that we can turn autoscaling on by default (but don't pad)
@@ -185,25 +223,20 @@
          doExport(true);
       });
 
-      $("#grapher").show();
+      setSizes();
+
+      // set up window resize handler
+      $(window).resize(setSizes);
    }
 
    function initializeMarkers() {
-      //var feed = govtFeeds[0];
-      //var latitude = feed['latitude'];
-      //var longitude = feed['longitude'];
-      //if (latitude != null && longitude != null) {
-      //   feedsById[feed.id] = feed;
-      //   var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
-      //   map.addMarker(feed.id, latLong, renderMarker);
-      //}
-
       // add the govt feeds
       govtFeeds.forEach(function(feed) {
          var latitude = feed['latitude'];
          var longitude = feed['longitude'];
          if (latitude != null && longitude != null) {
             feedsById[feed.id] = feed;
+            govtFeedsById[feed.id] = feed;
             var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
             map.addMarker(feed.id, latLong, renderMarker);
          }
@@ -215,6 +248,7 @@
          var longitude = feed['longitude'];
          if (latitude != null && longitude != null) {
             feedsById[feed.id] = feed;
+            speckFeedsById.indoor[feed.id] = feed;
             var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
             map.addMarker(feed.id, latLong, renderMarker);
          }
@@ -226,29 +260,34 @@
          var longitude = feed['longitude'];
          if (latitude != null && longitude != null) {
             feedsById[feed.id] = feed;
+            speckFeedsById.outdoor[feed.id] = feed;
             var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
             map.addMarker(feed.id, latLong, renderMarker);
          }
       });
+
+      // add handler to redraw markers if the user toggles the feed filter checkboxes
+      $(".feed_filter").change(function() {
+         map.renderMarkers();
+      });
    }
 
-   function renderMarker(marker, canvasPosition, context) {
-      var isNoData = marker['value'] == null;
-      var radius = (isNoData ? POINT_RADIUS_NO_DATA : POINT_RADIUS_HAS_DATA);
+   function renderMarker(marker, canvasPosition, context, filterStates) {
+      var feed = feedsById[marker.id];
 
-      if (selectedFeed && selectedFeed.id == marker.id) {
+      var willDrawMarker = (govtFeedsById[feed.id] && filterStates.willShowGovtFeeds) ||
+                           (speckFeedsById.indoor[feed.id] && filterStates.willShowIndoorSpeckFeeds) ||
+                           (speckFeedsById.outdoor[feed.id] && filterStates.willShowOutdoorSpeckFeeds);
+
+      if (willDrawMarker) {
+         var radius = MARKER_RADIUS;//(isNoData ? POINT_RADIUS_NO_DATA : POINT_RADIUS_HAS_DATA);
+
+         // draw a circle
          context.beginPath();
-         context.arc(canvasPosition.x, canvasPosition.y, radius + 1, 0, TWO_PI, false);
-         context.lineWidth = 2;
-         context.strokeStyle = LIGHT_BLUE_COLOR;
-         context.stroke();
+         context.arc(canvasPosition.x, canvasPosition.y, radius, 0, TWO_PI, false);
+         context.fillStyle = "rgba(10, 10, 10, 0.6)";
+         context.fill();
       }
-
-      // draw a circle
-      context.beginPath();
-      context.arc(canvasPosition.x, canvasPosition.y, radius, 0, TWO_PI, false);
-      context.fillStyle = "rgba(10, 10, 10, 0.6)";
-      context.fill();
    }
 
    function setFeedSelected(feedId) {
@@ -256,15 +295,281 @@
 
       $(".feed_name_label").text(feed.name);
       if (selectedFeed == null || selectedFeed.id != feedId) {
+
+         // remove the current feed from the grapher (if any)
+         removeFeedFromGrapher(selectedFeed);
+
          selectedFeed = feed;
+
+         // update the grapher
+         addFeedToGrapher(selectedFeed);
 
          // update markers
          map.renderMarkers();
       }
    }
 
+   function removeFeedFromGrapher(feed) {
+      if (feed) {
+         var plotId = feed.id;
+
+         plotManager.getPlotContainer().removePlot(plotId);
+
+         $("#y_axis_label").empty();
+         $("#channel_switcher_menu_items").empty();
+         $("#value_and_time").empty();
+      }
+   }
+
+   function addFeedToGrapher(feed, willPreserveDateAxis) {
+      if (feed) {
+         willPreserveDateAxis = !!willPreserveDateAxis;
+
+         $("#grapher").show();
+
+         // Since different feeds can have different sets of channels, we need to make sure that the selectedChannelName
+         // actually exists in the new feed.  If not, try the DEFAULT_CHANNEL_NAMES or, if that fails too, then just use
+         // the first channel (alphabetically)
+         if (!(selectedChannelName in feed.channelBounds.channels)) {
+            var channelNameToUse = null;
+            for (var i = 0; i < DEFAULT_CHANNEL_NAMES.length; i++) {
+               var channelName = DEFAULT_CHANNEL_NAMES[i];
+               if (channelName in feed.channelBounds.channels) {
+                  channelNameToUse = channelName;
+                  break;
+               }
+            }
+            if (channelNameToUse != null) {
+               selectedChannelName = channelNameToUse;
+            }
+            else {
+               selectedChannelName = Object.keys(feed.channelBounds.channels).sort()[0];
+            }
+         }
+
+         if (!willPreserveDateAxis) {
+            // If we're not preserving the time range, then try to show up to 7 days of history.  See inline comments
+            // for details about the logic...
+
+            var now = Date.now() / 1000;
+            var sevenDaysAgoBeforeMax = now - SEVEN_DAYS_IN_SECS;
+
+            var channelMinTimeSecs = feed.channelBounds.channels[selectedChannelName].minTimeSecs;
+            var channelMaxTimeSecs = feed.channelBounds.channels[selectedChannelName].maxTimeSecs;
+
+            // if the feed's most recent data is older than 7 days ago, then make the max time on the date axis equal
+            // to the channel's max time.  Otherwise, just set it to now.
+            var max = now;
+            if (channelMaxTimeSecs < sevenDaysAgoBeforeMax) {
+               max = channelMaxTimeSecs;
+
+               // recompute the sevenDaysAgoBeforeMax, since we've changed the max
+               sevenDaysAgoBeforeMax = max - SEVEN_DAYS_IN_SECS;
+            }
+
+            // set the date range's min to either the channel's min time, or 7 days ago before the max time computed
+            // above, whichever is more recent.
+            var min = Math.max(channelMinTimeSecs, sevenDaysAgoBeforeMax);
+
+            // Grapher is not happy if min time equals max time.  Adjust them if necessary
+            if (min == max) {
+               min--;
+               max++;
+            }
+
+            plotManager.getDateAxis().constrainRangeTo(channelMinTimeSecs, now);
+            plotManager.getDateAxis().setRange(min, max);
+         }
+
+         // set the Y axis label
+         var channelUnits = null;
+         var yAxisLabel = null;
+         if (feed['channelSpecs'] && feed['channelSpecs'][selectedChannelName]) {
+            var prettyName = feed['channelSpecs'][selectedChannelName]['prettyName'];
+            var units = feed['channelSpecs'][selectedChannelName]['units'];
+            if (prettyName) {
+               yAxisLabel = prettyName;
+            }
+            if (units) {
+               channelUnits = units;
+               yAxisLabel += " (" + units + ")";
+            }
+         }
+         else {
+            yAxisLabel = selectedChannelName;
+         }
+         $("#y_axis_label").html(yAxisLabel == null ? "" : yAxisLabel);
+
+         // set the channel menu button label to the currently-selected channel name, but first make sure the channelSpecs
+         // has this channel name
+         var currentlySelectChannelPrettyName = selectedChannelName;
+         if (selectedChannelName in feed['channelSpecs']) {
+            currentlySelectChannelPrettyName = feed['channelSpecs'][selectedChannelName]['prettyName'] || selectedChannelName;
+         }
+         $("#channel_switcher_menu_label").text(currentlySelectChannelPrettyName);
+
+         // render the links to change channels
+         $("#channel_switcher_menu_items").empty();
+         if (feed['channelBounds'] && feed['channelBounds']['channels']) {
+            var availableChannels = Object.keys(feed['channelBounds']['channels']).sort();
+            if (!(selectedChannelName in feed['channelBounds']['channels'])) {
+               selectedChannelName = availableChannels[0];
+            }
+
+            var channelNameMenuItemTemplate = Handlebars.templates['grapher_channel_menu_item'];
+            availableChannels.forEach(function(channelName) {
+               var prettyChannelName = channelName;
+               if (channelName in feed['channelSpecs']) {
+                  prettyChannelName = feed['channelSpecs'][channelName]['prettyName'] || channelName;
+               }
+               var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
+
+               var menuItemElement = $(channelNameMenuItemTemplate({
+                  channelName : prettyChannelName,
+                  cssClass : selectionStateClass
+               }));
+
+               // add click event handler to the channel change links
+               if (channelName != selectedChannelName) {
+                  menuItemElement.click(function() {
+                     // update the grapher to show the newly selected channel
+                     selectedChannelName = channelName;
+                     removeFeedFromGrapher(selectedFeed);
+                     addFeedToGrapher(selectedFeed, true);
+                  });
+               }
+               $("#channel_switcher_menu_items").append(menuItemElement);
+            });
+         }
+
+         var plotId = feed.id;
+         plotManager.addDataSeriesPlot(plotId,
+                                       function(level, offset, successCallback) {
+                                          superagent
+                                                .get(ESDR_API_ROOT_URL + "/feeds/" + feed.apiKeyReadOnly + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
+                                                .end(function(err, res) {
+                                                        if (err) {
+                                                           console.log(err);
+                                                        }
+                                                        else {
+                                                           // got the data
+                                                           if (res.body.code == 200 &&
+                                                               typeof res.body.data !== 'undefined' &&
+                                                               res.body.data != null) {
+
+                                                              successCallback(res.body.data);
+                                                           }
+                                                           else {
+                                                              console.log(new Error("Failed to get tile [" + level + "." + offset + "] for feed.channel [" + feed.apiKeyReadOnly + "." + selectedChannelName + "]"));
+                                                           }
+                                                        }
+                                                     });
+                                       },
+                                       "plot_container",
+                                       "y_axis",
+                                       feed.channelBounds.channels[selectedChannelName].minValue,
+                                       feed.channelBounds.channels[selectedChannelName].maxValue);
+
+         plotManager.getPlot(plotId).addDataPointListener(function(val) {
+            var valueAndTimeElement = $("#value_and_time");
+            if (val == null) {
+               valueAndTimeElement.empty().hide();
+            }
+            else {
+               valueAndTimeElement.html(val.valueString + (channelUnits == null ? "" : " " + channelUnits) + " at " + val.dateString).show();
+            }
+         });
+
+         var isParticleConcentrationChannel = (selectedChannelName == "particle_concentration");
+         var isParticleCountChannel = (selectedChannelName == "particle_count");
+         var yAxis = plotManager.getYAxis();
+         if (isParticleConcentrationChannel) {
+            yAxis.constrainRangeTo(0, 640, true);
+         }
+         else if (isParticleCountChannel) {
+            yAxis.constrainRangeTo(0, 16000, true);
+         }
+         else {
+            yAxis.constrainRangeTo(-1 * Number.MAX_VALUE, Number.MAX_VALUE);
+         }
+
+         setSizes();
+      }
+   }
+
+   function toggleYAxisAutoScaling() {
+      var autoScaleToggleButton = $("#auto_scale_toggle_button");
+      var isAutoScaleOn = !autoScaleToggleButton.hasClass("active");
+      plotManager.getPlotContainer().setAutoScaleEnabled(isAutoScaleOn, false);  // toggle autoscaling, but don't pad
+      if (isAutoScaleOn) {
+         autoScaleToggleButton.addClass("active");
+      }
+      else {
+         autoScaleToggleButton.removeClass("active");
+      }
+   }
+
    function setSizes() {
-      // TODO: anything to do?
+      var windowWidth = $(window).width();
+
+      // Only show the y axis label if the grapher is tall enough.  If it is, then position it accordingly.
+      var yAxisLabelElement = $("#y_axis_label");
+      if ($("#plot_container").outerHeight() >= 150) {
+         var yAxisElement = $("#y_axis");
+         var yAxisWidth = yAxisElement.width();
+         var yAxisHeight = yAxisElement.height();
+         yAxisLabelElement.width(yAxisHeight); // set the width == height since we're rotating
+         var yAxisLabelHeight = yAxisLabelElement.height();
+
+         // compute the position of the y-axis label
+         var yAxisLabelLeft = Math.round(yAxisWidth + yAxisLabelHeight / 2 - yAxisHeight / 2 + 2);
+         var yAxisLabelTop = Math.round(yAxisHeight / 2 - yAxisLabelHeight / 2);
+
+         // set position and then show it
+         yAxisLabelElement
+               .css("top", yAxisLabelTop + "px")
+               .css("left", yAxisLabelLeft + "px")
+               .show();
+      }
+      else {
+         yAxisLabelElement.hide();
+      }
+
+      // Change the UI for the channel menu depending on window size.  First, define a function to expand or collapse
+      // the channel switcher.  Then we explicitly set it to expanded so that we can get a measurement of its desired
+      // size.  Then compute whether it's too big and collapse accordingly.
+      var collapseOrExpandChannelSwitcher = function(isCollapsed) {
+         $(".horizontal_list_or_menu_button_items")
+               .toggleClass("dropdown-menu", isCollapsed)
+               .toggleClass("horizontal-list", !isCollapsed);
+         if (isCollapsed) {
+            $(".menu_button").show();
+         }
+         else {
+            $(".menu_button").hide();
+         }
+      };
+
+      // force the channel switcher to be expanded so we can measure its desired width next
+      collapseOrExpandChannelSwitcher(false);
+
+      // measure the channel switcher's desired width, compute whether it will fit in the available space (with padding)
+      // and then collapse or expand accordingly.  Not that if it should be expanded, we don't bother again here, since
+      // we just did so above.
+      var channelSwitcherMenuItemsWidth = $("#channel_switcher_menu_items").width();
+      var autoScaleButtonWidth = $("#auto_scale_toggle_button").width();
+      var grapherWidth = $("#grapher").width();
+      var willCollapseToMenuButton = (channelSwitcherMenuItemsWidth + 30) > (grapherWidth - autoScaleButtonWidth);
+      if (willCollapseToMenuButton) {
+         collapseOrExpandChannelSwitcher(willCollapseToMenuButton);
+      }
+   }
+
+   function doExport(willExportAllChannels) {
+      var idOrApiKey = selectedFeed.isPublic ? selectedFeed.id : selectedFeed.apiKeyReadOnly;
+      var channels = willExportAllChannels ? Object.keys(selectedFeed.channelBounds.channels).sort().join(',') : selectedChannelName;
+      var dateAxisRange = plotManager.getDateAxis().getRange();
+      window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxisRange.min + "&to=" + dateAxisRange.max, '_blank');
    }
 
 </script>
@@ -272,23 +577,25 @@
    <h2>Public Data</h2>
    <div class="row">
       <div id="selected_feed_name_label" class="col-xs-12">
-         <div class="feed_name_label"></div>
+         <div class="feed_name_label">
+            Select a location on the map to see the historical air quality near that location.
+         </div>
       </div>
    </div>
    <div class="row">
-      <div id="map_container" class="col-lg-5 col-lg-push-7">
+      <div id="map_container" class="noselect col-lg-5 col-lg-push-7">
          <div id="map_area"></div>
          <div id="map_filters_area">
             <div class="map_filter">
-               <input type="checkbox" id="govt_feed_checkbox" name="govt_feed_checkbox" checked="checked"/>
-               <label for="govt_feed_checkbox">Government PM2.5 Stations</label>
+               <input type="checkbox" id="govt_feed_checkbox" class="feed_filter" name="govt_feed_checkbox" checked="checked"/>
+               <label for="govt_feed_checkbox">Government PM<sub>2.5</sub> Stations</label>
             </div>
             <div class="map_filter">
-               <input type="checkbox" id="outdoor_speck_checkbox" name="outdoor_speck_checkbox" checked="checked"/>
+               <input type="checkbox" id="outdoor_speck_checkbox" class="feed_filter" name="outdoor_speck_checkbox" checked="checked"/>
                <label for="outdoor_speck_checkbox">Outdoor Specks</label>
             </div>
             <div class="map_filter">
-               <input type="checkbox" id="indoor_speck_checkbox" name="indoor_speck_checkbox" checked="checked"/>
+               <input type="checkbox" id="indoor_speck_checkbox" class="feed_filter" name="indoor_speck_checkbox" checked="checked"/>
                <label for="indoor_speck_checkbox">Indoor Specks</label>
             </div>
          </div>
@@ -327,7 +634,7 @@
                <td colspan="2" align="right">
                   <div id="grapher_toolbar_bottom" class="grapher_toolbar">
                      <div class="pull-left">
-                        <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group">
+                        <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group dropup">
                            <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                               <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
                            </button>
