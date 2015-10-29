@@ -781,6 +781,31 @@ a.anchor {
       margin-right: 20px; }
     #tech_specs_page .tech_spec_group .tech_spec_item .tech_spec_value {
       white-space: nowrap; }
+  #tech_specs_page #measurement_scales .heading_explanation {
+    font-size: smaller;
+    font-weight: normal; }
+  #tech_specs_page #measurement_scales .header {
+    background-color: #cccccc; }
+  #tech_specs_page #measurement_scales .level {
+    color: #fcfcfc; }
+  #tech_specs_page #measurement_scales .level_3, #tech_specs_page #measurement_scales .level_4 {
+    color: #666666; }
+  #tech_specs_page #measurement_scales .level_1 {
+    background-color: #1a9850; }
+  #tech_specs_page #measurement_scales .level_2 {
+    background-color: #91cf60; }
+  #tech_specs_page #measurement_scales .level_3 {
+    background-color: #d9ef8b; }
+  #tech_specs_page #measurement_scales .level_4 {
+    background-color: #fee08b; }
+  #tech_specs_page #measurement_scales .level_5 {
+    background-color: #fc8d59; }
+  #tech_specs_page #measurement_scales .level_6 {
+    background-color: #d73027; }
+  #tech_specs_page #measurement_scales th, #tech_specs_page #measurement_scales td {
+    padding: 10px 5px;
+    font-size: smaller;
+    text-align: center; }
 
 #contact_us_page {
   font-size: 16px; }

@@ -840,7 +840,7 @@ a.anchor {
 #public_data_page {
 
    #selected_feed_name_label {
-      margin-bottom:10px;
+      margin-bottom: 10px;
       .feed_name_label {
          font-size: 16px;
       }
@@ -1165,6 +1165,39 @@ a.anchor {
          .tech_spec_value {
             white-space: nowrap;
          }
+      }
+   }
+
+   #measurement_scales {
+
+      .heading_explanation {
+         font-size: smaller;
+         font-weight: normal;
+      }
+
+      .header {
+         background-color: #cccccc;
+      }
+
+      .level {
+         color: #fcfcfc;
+      }
+      .level_3, .level_4 {
+         color: #666666;
+      }
+
+      $PALETTE_COLORS: #1a9850 #91cf60 #d9ef8b #fee08b #fc8d59 #d73027;
+      @for $i from 1 through 6 {
+         .level_#{$i} {
+            background-color: #{nth($PALETTE_COLORS,$i)};
+         }
+      }
+
+
+      th, td {
+         padding: 10px 5px;
+         font-size: smaller;
+         text-align: center;
       }
    }
 }
