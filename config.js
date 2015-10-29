@@ -86,6 +86,9 @@ config.defaults(
             "message" : "NULL",
             "scalar" : 408,
             "version" : 8
+         },
+         "affiliateMarketing" : {
+            "enabled" : false
          }
       });
 
