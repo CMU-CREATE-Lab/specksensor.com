@@ -277,7 +277,8 @@
 
       var willDrawMarker = (govtFeedsById[feed.id] && filterStates.willShowGovtFeeds) ||
                            (speckFeedsById.indoor[feed.id] && filterStates.willShowIndoorSpeckFeeds) ||
-                           (speckFeedsById.outdoor[feed.id] && filterStates.willShowOutdoorSpeckFeeds);
+                           (speckFeedsById.outdoor[feed.id] && filterStates.willShowOutdoorSpeckFeeds) ||
+                           (selectedFeed != null && selectedFeed.id == feed.id);    // make sure the selected marker is drawn, even if the filter for it is disabled
 
       if (willDrawMarker) {
          var radius = MARKER_RADIUS;//(isNoData ? POINT_RADIUS_NO_DATA : POINT_RADIUS_HAS_DATA);
