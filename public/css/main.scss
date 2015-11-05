@@ -1098,6 +1098,10 @@ a.anchor {
 #software_page {
    font-size: 16px;
 
+   h2 {
+      margin-bottom: 30px;
+   }
+
    .main_section {
       margin-bottom: 30px;
 
@@ -1107,7 +1111,8 @@ a.anchor {
    }
 
    .intro_text {
-      font-weight: bold;
+      font-size: larger;
+      margin-top: 30px;
    }
 
    .fine_print {

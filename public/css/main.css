@@ -747,12 +747,15 @@ a.anchor {
 
 #software_page {
   font-size: 16px; }
+  #software_page h2 {
+    margin-bottom: 30px; }
   #software_page .main_section {
     margin-bottom: 30px; }
     #software_page .main_section .sub_section {
       margin-bottom: 20px; }
   #software_page .intro_text {
-    font-weight: bold; }
+    font-size: larger;
+    margin-top: 30px; }
   #software_page .fine_print {
     font-size: smaller; }
 
