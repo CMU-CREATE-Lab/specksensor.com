@@ -234,6 +234,25 @@ else {
          google.maps.event.trigger(map, 'resize');
       };
 
+      this.setCenter = function(latOrLatLng, lng) {
+         var center = null;
+         if (latOrLatLng instanceof google.maps.LatLng) {
+            center = latOrLatLng
+         } else {
+            center = new google.maps.LatLng(latOrLatLng, lng);
+         }
+
+         map.setCenter(center);
+      };
+
+      this.setZoomLevel = function(zoomLevel) {
+         map.setZoom(zoomLevel);
+      };
+
+      this.getWrappedMap = function() {
+         return map;
+      };
+
       var initializeCanvas = function() {
          // initialize the canvasLayer
          var canvasLayerOptions = {
