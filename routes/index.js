@@ -138,6 +138,20 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "New App Helps Pittsburghers Breathe Easier About Local Air Quality",
+            author : "Anthony Priore",
+            source : "WESA",
+            date : new Date("2015-11-05 00:00:00"),
+            url : "http://wesa.fm/post/new-app-helps-pittsburghers-breathe-easier-about-local-air-quality"
+         },
+         {
+            title : "SpeckSensor App Compares Air Quality Locally and Across the Nation",
+            author : "Byron Spice",
+            source : "CMU",
+            date : new Date("2015-11-02 00:00:00"),
+            url : "http://www.cmu.edu/news/stories/archives/2015/november/air-quality-app.html"
+         },
+         {
             title : "Pike library to lend air-pollution monitors",
             author : "Jessica Cohen",
             source : "Times Herald-Record",
