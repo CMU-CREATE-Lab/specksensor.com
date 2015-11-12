@@ -138,6 +138,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "SpeckSensor app lets users monitor region's air pollution on the go",
+            author : "Mia Bencivenga",
+            source : "Next Pittsburgh",
+            date : new Date("2015-11-10 00:00:00"),
+            url : "http://www.nextpittsburgh.com/city-design/creators-of-the-specksensor-app-want-pittsburgh-to-breathe-easier/"
+         },
+         {
             title : "New App Helps Pittsburghers Breathe Easier About Local Air Quality",
             author : "Anthony Priore",
             source : "WESA",
