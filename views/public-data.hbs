@@ -41,7 +41,7 @@
 
    // look within a bounding box with radius of 50 km around geocoded location
    var SEARCH_RADIUS_IN_KM = 50;
-   // when geocoding, ignore govt feeds which have a PM2.5 feed which hasn't been updated withing the past 6 hours
+   // when geocoding, ignore govt feeds which have a PM2.5 feed which hasn't been updated within the past 6 hours
    var SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
 
    // grapher stuff
@@ -825,7 +825,7 @@
             map.setZoomLevel(12);
 
             // move the marker to the newly geocoded location
-            setGeolocationMarkerLocation(latLng)
+            setGeolocationMarkerLocation(latLng);
             var boundingBox = map.getBoundingBoxAroundLocation(latLng, SEARCH_RADIUS_IN_KM);
             var foundFeeds = findGovtFeedsWithinBoundingBox(boundingBox);
 
