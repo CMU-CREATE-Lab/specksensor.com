@@ -150,4 +150,38 @@ templates['grapher_value_range_color_box'] = template({"compiler":[6,">= 2.0.0-b
     + alias3(((helper = (helper = helpers.zIndex || (depth0 != null ? depth0.zIndex : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"zIndex","hash":{},"data":data}) : helper)))
     + ";\"></div>";
 },"useData":true});
+templates['public_data_geocode_failed'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div class=\"alert alert-danger\">Sorry, that doesn't appear to be a valid location or address.</div>\n";
+},"useData":true});
+templates['public_data_geocode_found_one'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper;
+
+  return "<div class=\"alert alert-success\">\n   The closest government station with recent PM<sub>2.5</sub> data is "
+    + this.escapeExpression(((helper = (helper = helpers.feedName || (depth0 != null ? depth0.feedName : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"feedName","hash":{},"data":data}) : helper)))
+    + ".\n   A plot of its historical data is shown below.\n</div>";
+},"useData":true});
+templates['public_data_geocode_found_two'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing, alias4="function";
+
+  return "<div class=\"alert alert-success\">\n   The closest government sensor with recent PM<sub>2.5</sub> data is\n   <a href=\"javascript:setFeedSelected("
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.id : stack1), depth0))
+    + ");\">"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.name : stack1), depth0))
+    + "</a>.\n   A plot of its historical data is shown below.\n   Alternatively, the <a href=\"javascript:setFeedSelected("
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.mostRecent : depth0)) != null ? stack1.id : stack1), depth0))
+    + ");\">"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.mostRecent : depth0)) != null ? stack1.name : stack1), depth0))
+    + "</a>\n   station is "
+    + alias2(((helper = (helper = helpers.distanceDiffKm || (depth0 != null ? depth0.distanceDiffKm : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"distanceDiffKm","hash":{},"data":data}) : helper)))
+    + " km ("
+    + alias2(((helper = (helper = helpers.distanceDiffMi || (depth0 != null ? depth0.distanceDiffMi : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"distanceDiffMi","hash":{},"data":data}) : helper)))
+    + " mi) further away, but has data which is more recent by\n   "
+    + alias2(((helper = (helper = helpers.timeDiff || (depth0 != null ? depth0.timeDiff : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"timeDiff","hash":{},"data":data}) : helper)))
+    + " hour"
+    + alias2(((helper = (helper = helpers.hourPlurality || (depth0 != null ? depth0.hourPlurality : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"hourPlurality","hash":{},"data":data}) : helper)))
+    + ".\n</div>\n\n\n";
+},"useData":true});
+templates['public_data_no_nearby_stations'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div class=\"alert alert-warning\">\n   Sorry, there are no government stations with recent PM<sub>2.5</sub> data near the specified location, or no such\n   stations exist in our database.\n</div>";
+},"useData":true});
 })();

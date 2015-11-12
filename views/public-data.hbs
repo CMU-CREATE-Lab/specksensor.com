@@ -1,5 +1,5 @@
 <link href="/css/grapher.css" rel="stylesheet" type="text/css"/>
-<script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}&libraries=geometry" type="text/javascript"></script>
 <script src="/lib/canvas-layer/src/CanvasLayer.js" type="text/javascript"></script>
 <script src="/js/com/specksensor/geo/Map.js" type="text/javascript"></script>
 <script src="{{esdrUrl}}/lib/jquery-mousewheel/jquery.mousewheel.min.js" type="text/javascript"></script>
@@ -22,11 +22,27 @@
       "PM25_UG_M3"
    ];
 
+   var GOVT_PM_2_5_CHANNEL_NAMES = [
+      "PM2_5",
+      "PM25B_UG_M3",
+      "PM25_2__UG_M3",
+      "PM25_UG_M3"
+   ];
+
    var SEVEN_DAYS_IN_SECS = 604800;
 
-   var TINY_DEVICE_WIDTH_PIXELS = 630;
-   var SMALL_DEVICE_WIDTH_PIXELS = 768;
-   var MEDIUM_DEVICE_WIDTH_PIXELS = 992;
+   var EXTRA_SMALL_DEVICE_WIDTH_PIXELS = 629;
+
+   // map and marker rendering
+   var MAP_CENTER = new google.maps.LatLng(26.59657854674542, 7.913147269592282);
+   var SELECTED_MARKER_COLOR = "#ff0000";
+   var MARKER_RADIUS = 5;
+   var TWO_PI = 2 * Math.PI;
+
+   // look within a bounding box with radius of 50 km around geocoded location
+   var SEARCH_RADIUS_IN_KM = 50;
+   // when geocoding, ignore govt feeds which have a PM2.5 feed which hasn't been updated withing the past 6 hours
+   var SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
 
    // grapher stuff
    var plotManager;
@@ -34,11 +50,7 @@
 
    // map stuff
    var map = new com.specksensor.geo.Map("map_area");
-
-   // marker rendering
-   var SELECTED_MARKER_COLOR = "#ff0000";
-   var MARKER_RADIUS = 5;
-   var TWO_PI = 2 * Math.PI;
+   var geocodedLocationMarker = null;
 
    var govtFeeds = [];
    var govtFeedsById = {};
@@ -48,11 +60,43 @@
    var selectedFeed = null;
    var selectedChannelName = DEFAULT_CHANNEL_NAMES[0];
 
+   function getHashParam(paramName) {
+      var hash = window.location.hash.substr(1);
+      if (hash == '') {
+         return null;
+      }
+
+      var hashParts = hash.split('&');
+      for (var i = 0; i < hashParts.length; ++i) {
+         var keyAndVal = hashParts[i].split('=');
+         if (keyAndVal.length != 2) {
+            continue;
+         }
+         if (keyAndVal[0] == paramName) {
+            return decodeURIComponent(keyAndVal[1].replace(/\+/g, " "));
+         }
+      }
+      return "";
+   }
+
+   function getDefaultMapZoomLevel() {
+      return $(window).width() < 600 ? 1 : 2;   // zoom out more for small screens
+   }
+
+   // make the height a little smaller when on a screen with a smallish width
+   function adjustMapHeightForSmallScreens() {
+      //if ($(window).width() < 600) {
+      //   map.setHeight(400);
+      //}
+   }
+
    window.grapherLoad = function() {
+      window.onhashchange = handleGeocode;
 
       map.initialize(
             {
-               zoom : 3,
+               center : MAP_CENTER,
+               zoom : getDefaultMapZoomLevel(),
                styles : [
                   {
                      featureType : "poi",
@@ -83,11 +127,16 @@
                               console.log("Failed to load feeds: " + err);
                            }
                            else {
+                              // shrink map height when on a screen with a smallish width
+                              adjustMapHeightForSmallScreens();
+
                               console.log("Done loading feeds: [" + govtFeeds.length + "] government, [" + (speckFeeds.indoor.length + speckFeeds.outdoor.length) + "] speck");
 
                               initializeGrapher();
                               initializeMarkers();
                               map.renderMarkers();
+
+                              handleGeocode();
                            }
                         });
                },
@@ -121,6 +170,14 @@
       );
    };
 
+   function handleGeocode() {
+      var location = getHashParam('loc');
+      if (typeof location !== 'undefined' && location != null && location.length > 0) {
+         $(".geocode_location").val(location);
+         geocodeAddress(location);
+      }
+   }
+
    function loadSpeckFeeds(page, done) {
       var offset = ESDR_QUERY_ITEM_LIMIT * page;
 
@@ -128,36 +185,36 @@
       superagent
             .get(ESDR_API_ROOT_URL + "/feeds?where=productId=" + PRODUCT_ID + ",maxTimeSecs<>__NULL__,latitude<>__NULL__,longitude<>__NULL__&fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,apiKeyReadOnly,channelBounds,channelSpecs,exposure&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
             .end(function(err, res) {
-                    if (err) {
-                       done(err);
-                    }
-                    else {
-                       // got the data
-                       if (res.body.code == 200 &&
-                           typeof res.body.data !== 'undefined' &&
-                           res.body.data != null) {
+               if (err) {
+                  done(err);
+               }
+               else {
+                  // got the data
+                  if (res.body.code == 200 &&
+                      typeof res.body.data !== 'undefined' &&
+                      res.body.data != null) {
 
-                          // concatenate the new rows, separating indoor and outdoor
-                          Array.prototype.push.apply(speckFeeds.indoor, res.body.data.rows.filter(function(feed) {
-                             return feed.exposure == 'indoor';
-                          }));
-                          Array.prototype.push.apply(speckFeeds.outdoor, res.body.data.rows.filter(function(feed) {
-                             return feed.exposure == 'outdoor';
-                          }));
+                     // concatenate the new rows, separating indoor and outdoor
+                     Array.prototype.push.apply(speckFeeds.indoor, res.body.data.rows.filter(function(feed) {
+                        return feed.exposure == 'indoor';
+                     }));
+                     Array.prototype.push.apply(speckFeeds.outdoor, res.body.data.rows.filter(function(feed) {
+                        return feed.exposure == 'outdoor';
+                     }));
 
-                          // see whether we need to load more
-                          if ((speckFeeds.indoor.length + speckFeeds.outdoor.length) < res.body.data.totalCount) {
-                             loadSpeckFeeds(++page, done);
-                          }
-                          else {
-                             done();
-                          }
-                       }
-                       else {
-                          done(new Error("Failed to load speck feeds: " + JSON.stringify(res.body, null, 3)));
-                       }
-                    }
-                 });
+                     // see whether we need to load more
+                     if ((speckFeeds.indoor.length + speckFeeds.outdoor.length) < res.body.data.totalCount) {
+                        loadSpeckFeeds(++page, done);
+                     }
+                     else {
+                        done();
+                     }
+                  }
+                  else {
+                     done(new Error("Failed to load speck feeds: " + JSON.stringify(res.body, null, 3)));
+                  }
+               }
+            });
    }
 
    function loadGovtFeeds(page, done) {
@@ -166,31 +223,36 @@
       superagent
             .get(ESDR_API_ROOT_URL + "/multifeeds/pm_25/feeds?fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,apiKeyReadOnly,channelBounds,channelSpecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
             .end(function(err, res) {
-                    if (err) {
-                       done(err);
-                    }
-                    else {
-                       // got the data
-                       if (res.body.code == 200 &&
-                           typeof res.body.data !== 'undefined' &&
-                           res.body.data != null) {
+               if (err) {
+                  done(err);
+               }
+               else {
+                  // got the data
+                  if (res.body.code == 200 &&
+                      typeof res.body.data !== 'undefined' &&
+                      res.body.data != null) {
 
-                          // concatenate the new rows
-                          Array.prototype.push.apply(govtFeeds, res.body.data.rows);
+                     // create a google.maps.LatLng for each feed, for easy bounds containment checking later
+                     res.body.data.rows.forEach(function(feed) {
+                        feed.latLng = new google.maps.LatLng(feed.latitude, feed.longitude);
+                     });
 
-                          // see whether we need to load more
-                          if (govtFeeds.length < res.body.data.totalCount) {
-                             loadGovtFeeds(++page, done);
-                          }
-                          else {
-                             done();
-                          }
-                       }
-                       else {
-                          done(new Error("Failed to load govt feeds: " + JSON.stringify(res.body, null, 3)));
-                       }
-                    }
-                 });
+                     // concatenate the new rows
+                     Array.prototype.push.apply(govtFeeds, res.body.data.rows);
+
+                     // see whether we need to load more
+                     if (govtFeeds.length < res.body.data.totalCount) {
+                        loadGovtFeeds(++page, done);
+                     }
+                     else {
+                        done();
+                     }
+                  }
+                  else {
+                     done(new Error("Failed to load govt feeds: " + JSON.stringify(res.body, null, 3)));
+                  }
+               }
+            });
    }
 
    function initializeGrapher() {
@@ -237,8 +299,8 @@
          if (latitude != null && longitude != null) {
             feedsById[feed.id] = feed;
             govtFeedsById[feed.id] = feed;
-            var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
-            map.addMarker(feed.id, latLong, renderMarker);
+            var latLng = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+            map.addMarker(feed.id, latLng, renderMarker);
          }
       });
 
@@ -249,8 +311,8 @@
          if (latitude != null && longitude != null) {
             feedsById[feed.id] = feed;
             speckFeedsById.indoor[feed.id] = feed;
-            var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
-            map.addMarker(feed.id, latLong, renderMarker);
+            var latLng = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+            map.addMarker(feed.id, latLng, renderMarker);
          }
       });
 
@@ -261,13 +323,26 @@
          if (latitude != null && longitude != null) {
             feedsById[feed.id] = feed;
             speckFeedsById.outdoor[feed.id] = feed;
-            var latLong = new google.maps.LatLng(feed['latitude'], feed['longitude']);
-            map.addMarker(feed.id, latLong, renderMarker);
+            var latLng = new google.maps.LatLng(feed['latitude'], feed['longitude']);
+            map.addMarker(feed.id, latLng, renderMarker);
          }
       });
 
       // add handler to redraw markers if the user toggles the feed filter checkboxes
       $(".feed_filter").change(function() {
+         // update the map with which markers are active (i.e. visible)
+         var markerIds = null;
+         switch (this.id) {
+            case "indoor_speck_checkbox":
+               markerIds = Object.keys(speckFeedsById.indoor);
+               break;
+            case "outdoor_speck_checkbox":
+               markerIds = Object.keys(speckFeedsById.outdoor);
+               break;
+            default:
+               markerIds = Object.keys(govtFeedsById);
+         }
+         map.setMarkersActiveById(markerIds, this.checked);
          map.renderMarkers();
       });
    }
@@ -281,7 +356,7 @@
                            (selectedFeed != null && selectedFeed.id == feed.id);    // make sure the selected marker is drawn, even if the filter for it is disabled
 
       if (willDrawMarker) {
-         var radius = MARKER_RADIUS;//(isNoData ? POINT_RADIUS_NO_DATA : POINT_RADIUS_HAS_DATA);
+         var radius = MARKER_RADIUS;
 
          // draw a circle
          context.beginPath();
@@ -292,21 +367,46 @@
    }
 
    function setFeedSelected(feedId) {
-      var feed = feedsById[feedId];
-
-      $(".feed_name_label").text(feed.name);
-      if (selectedFeed == null || selectedFeed.id != feedId) {
-
+      if (feedId == null) {
          // remove the current feed from the grapher (if any)
          removeFeedFromGrapher(selectedFeed);
 
-         selectedFeed = feed;
+         $(".grapher_item").hide();
 
-         // update the grapher
-         addFeedToGrapher(selectedFeed);
+         selectedFeed = null;
 
          // update markers
          map.renderMarkers();
+      }
+      else {
+         var feed = feedsById[feedId];
+
+         // shrink the map height to make room for the grapher, and the set the center of the map
+         if ($(window).width() > EXTRA_SMALL_DEVICE_WIDTH_PIXELS) {
+            map.setHeight(300);
+         }
+
+         // if this is the first time a marker is selected, center the marker on the map
+         if (selectedFeed == null) {
+            map.setCenter(feed.latitude, feed.longitude);
+         }
+
+         // display the feed name (important to use .text here instead of .html to prevent XSS)
+         $(".feed_name_label").text(feed.name);
+
+         if (selectedFeed == null || selectedFeed.id != feedId) {
+
+            // remove the current feed from the grapher (if any)
+            removeFeedFromGrapher(selectedFeed);
+
+            selectedFeed = feed;
+
+            // update the grapher
+            addFeedToGrapher(selectedFeed);
+
+            // update markers
+            map.renderMarkers();
+         }
       }
    }
 
@@ -326,7 +426,7 @@
       if (feed) {
          willPreserveDateAxis = !!willPreserveDateAxis;
 
-         $("#grapher").show();
+         $(".grapher_item").show();
 
          // Since different feeds can have different sets of channels, we need to make sure that the selectedChannelName
          // actually exists in the new feed.  If not, try the DEFAULT_CHANNEL_NAMES or, if that fails too, then just use
@@ -383,7 +483,6 @@
          }
 
          // set the Y axis label
-         var channelUnits = null;
          var yAxisLabel = null;
          if (feed['channelSpecs'] && feed['channelSpecs'][selectedChannelName]) {
             var prettyName = feed['channelSpecs'][selectedChannelName]['prettyName'];
@@ -392,14 +491,14 @@
                yAxisLabel = prettyName;
             }
             if (units) {
-               channelUnits = units;
                yAxisLabel += " (" + units + ")";
             }
          }
          else {
             yAxisLabel = selectedChannelName;
          }
-         $("#y_axis_label").html(yAxisLabel == null ? "" : yAxisLabel);
+         // TODO: sanitize!
+         $("#y_axis_label").text(yAxisLabel == null ? "" : yAxisLabel);
 
          // set the channel menu button label to the currently-selected channel name, but first make sure the channelSpecs
          // has this channel name
@@ -426,9 +525,9 @@
                var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
 
                var menuItemElement = $(channelNameMenuItemTemplate({
-                  channelName : prettyChannelName,
-                  cssClass : selectionStateClass
-               }));
+                                                                      channelName : prettyChannelName,
+                                                                      cssClass : selectionStateClass
+                                                                   }));
 
                // add click event handler to the channel change links
                if (channelName != selectedChannelName) {
@@ -449,22 +548,22 @@
                                           superagent
                                                 .get(ESDR_API_ROOT_URL + "/feeds/" + feed.apiKeyReadOnly + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
                                                 .end(function(err, res) {
-                                                        if (err) {
-                                                           console.log(err);
-                                                        }
-                                                        else {
-                                                           // got the data
-                                                           if (res.body.code == 200 &&
-                                                               typeof res.body.data !== 'undefined' &&
-                                                               res.body.data != null) {
+                                                   if (err) {
+                                                      console.log(err);
+                                                   }
+                                                   else {
+                                                      // got the data
+                                                      if (res.body.code == 200 &&
+                                                          typeof res.body.data !== 'undefined' &&
+                                                          res.body.data != null) {
 
-                                                              successCallback(res.body.data);
-                                                           }
-                                                           else {
-                                                              console.log(new Error("Failed to get tile [" + level + "." + offset + "] for feed.channel [" + feed.apiKeyReadOnly + "." + selectedChannelName + "]"));
-                                                           }
-                                                        }
-                                                     });
+                                                         successCallback(res.body.data);
+                                                      }
+                                                      else {
+                                                         console.log(new Error("Failed to get tile [" + level + "." + offset + "] for feed.channel [" + feed.apiKeyReadOnly + "." + selectedChannelName + "]"));
+                                                      }
+                                                   }
+                                                });
                                        },
                                        "plot_container",
                                        "y_axis",
@@ -477,7 +576,7 @@
                valueAndTimeElement.empty().hide();
             }
             else {
-               valueAndTimeElement.html(val.valueString + (channelUnits == null ? "" : " " + channelUnits) + " at " + val.dateString).show();
+               valueAndTimeElement.text(val.valueString + " at " + val.dateString).show();
             }
          });
 
@@ -511,8 +610,6 @@
    }
 
    function setSizes() {
-      var windowWidth = $(window).width();
-
       // Only show the y axis label if the grapher is tall enough.  If it is, then position it accordingly.
       var yAxisLabelElement = $("#y_axis_label");
       if ($("#plot_container").outerHeight() >= 150) {
@@ -573,18 +670,207 @@
       window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxisRange.min + "&to=" + dateAxisRange.max, '_blank');
    }
 
+   // This is annoying. We need to read the timestamp of the PM2.5 channel for govt feeds so we can determine whether
+   // the data is stale and whether it's more recent than other feeds in the geocoded area.  But, since there are a
+   // variety of channel names which all mean PM2.5, we need to check the feed for each one until we find the right
+   // one.  And THEN, we return that channel's maxTimeSecs field. Dude.
+   function getMaxTimeSecsOfGovtFeedPM25Channel(feed) {
+      if (feed && feed.channelBounds && feed.channelBounds.channels) {
+         for (var i = 0; i < GOVT_PM_2_5_CHANNEL_NAMES.length; i++) {
+            var channelName = GOVT_PM_2_5_CHANNEL_NAMES[i];
+            if (channelName in feed.channelBounds.channels) {
+               return feed.channelBounds.channels[channelName].maxTimeSecs;
+            }
+         }
+      }
+      return null;
+   }
+
+   function findGovtFeedsWithinBoundingBox(boundingBox) {
+      var center = boundingBox.getCenter();
+      var currentTimeSecs = Date.now() / 1000;
+      var sixHoursAgo = currentTimeSecs - SIX_HOURS_IN_SECONDS;
+
+      var obj = {
+         feeds : null,
+         nearest : {
+            feed : null,
+            distanceKm : Number.MAX_VALUE,
+            maxTimeSecs : -Number.MAX_VALUE
+         },
+         mostRecent : {
+            feed : null,
+            distanceKm : Number.MAX_VALUE,
+            maxTimeSecs : -Number.MAX_VALUE
+         }
+      };
+
+      var distanceByFeedId = {};
+      var maxTimeSecsByFeedId = {};
+      obj.feeds = govtFeeds.filter(function(feed) {
+         var isContained = boundingBox.contains(feed.latLng);
+
+         // if this feed is within the bounding box, see whether it's either the closest feed, or the one with the
+         // most recent data
+         if (isContained) {
+
+            // only consider this feed if the data isn't stale (i.e. more than 6 hours old)
+            var maxTimeSecs = getMaxTimeSecsOfGovtFeedPM25Channel(feed);
+            if (maxTimeSecs > sixHoursAgo) {
+               // compute the distance, but divide by 1000 to get kilometers
+               var distanceKm = google.maps.geometry.spherical.computeDistanceBetween(center, feed.latLng) / 1000;
+
+               // check whether this is the new closest feed
+               if (distanceKm < obj.nearest.distanceKm) {
+                  obj.nearest.feed = feed;
+                  obj.nearest.distanceKm = distanceKm;
+                  obj.nearest.maxTimeSecs = maxTimeSecs;
+               }
+
+               distanceByFeedId[feed.id] = distanceKm;
+               maxTimeSecsByFeedId[feed.id] = maxTimeSecs;
+
+               return true;
+            }
+         }
+         return false;
+      });
+
+      if (obj.feeds.length > 0) {
+         // now that we have a subset of contained feeds with data that isn't stale, run through that subset and
+         // see if any of them has data newer than the closest feed.
+         obj.mostRecent.feed = obj.nearest.feed;
+         obj.mostRecent.distanceKm = distanceByFeedId[obj.nearest.feed.id];
+         obj.mostRecent.maxTimeSecs = maxTimeSecsByFeedId[obj.nearest.feed.id];
+         obj.feeds.forEach(function(feed) {
+            if (feed.id != obj.nearest.feed.id) {
+               var maxTimeSecs = maxTimeSecsByFeedId[feed.id];
+               // check whether this is the new most-recent feed
+               if (maxTimeSecs > obj.mostRecent.maxTimeSecs) {
+                  obj.mostRecent.feed = feed;
+                  obj.mostRecent.distanceKm = distanceByFeedId[feed.id];
+                  obj.mostRecent.maxTimeSecs = maxTimeSecs;
+               }
+            }
+         });
+      }
+
+      return obj;
+   }
+
+   function displayGeocodeResults(address, latLng, results) {
+      var template = null;
+      var templateOptions = null;
+      if (results) {
+         if (results.feeds.length > 0) {
+            if (results.nearest.feed.id == results.mostRecent.feed.id) {
+               template = Handlebars.templates['public_data_geocode_found_one'];
+               templateOptions = { feedName : results.nearest.feed.name };
+            }
+            else {
+               var distanceDiff = results.mostRecent.distanceKm - results.nearest.distanceKm;
+               var distanceDiffKm = distanceDiff.toFixed(2);
+               var distanceDiffMi = (distanceDiff * 0.621371).toFixed(2);
+               var timeDiff = ((results.mostRecent.maxTimeSecs - results.nearest.maxTimeSecs) / 3600).toFixed(1);
+               timeDiff = (Math.round(timeDiff) == timeDiff) ? Math.round(timeDiff) : timeDiff;
+
+               template = Handlebars.templates['public_data_geocode_found_two'];
+               templateOptions = {
+                  nearest : results.nearest.feed,
+                  mostRecent : results.mostRecent.feed,
+                  distanceDiffKm : distanceDiffKm,
+                  distanceDiffMi : distanceDiffMi,
+                  timeDiff : timeDiff,
+                  hourPlurality : (timeDiff <= 1 ? '' : 's')
+               };
+            }
+         }
+         else {
+            template = Handlebars.templates['public_data_no_nearby_stations'];
+         }
+      }
+      else {
+         template = Handlebars.templates['public_data_geocode_failed'];
+         map.setCenter(MAP_CENTER);
+         map.setZoomLevel(getDefaultMapZoomLevel());
+         setGeolocationMarkerLocation(null);
+      }
+
+      $("#results").empty().append($(template(templateOptions)));
+   }
+
+   function setGeolocationMarkerLocation(latLng) {
+      // move the marker (if any) to the newly geocoded location
+      if (geocodedLocationMarker != null) {
+         geocodedLocationMarker.setMap(null);
+      }
+      if (latLng instanceof google.maps.LatLng) {
+         geocodedLocationMarker = new google.maps.Marker({
+            position : latLng,
+            map : map.getWrappedMap()
+         });
+      }
+   }
+
+   function geocodeAddress(address) {
+      map.geocodeAddress(address, function(err, latLng, results) {
+         if (err) {
+            console.log(err);
+            setFeedSelected(null);
+            displayGeocodeResults(address, null, null);
+         }
+         else {
+            console.log("Geocoded [" + address + "] --> " + latLng.toString());
+            map.setCenter(latLng);
+            map.setZoomLevel(12);
+
+            // move the marker to the newly geocoded location
+            setGeolocationMarkerLocation(latLng)
+            var boundingBox = map.getBoundingBoxAroundLocation(latLng, SEARCH_RADIUS_IN_KM);
+            var foundFeeds = findGovtFeedsWithinBoundingBox(boundingBox);
+
+            // if we found a feed in the search area, then fit the geocoded location, the nearest found feed, and the
+            // feed with the most-recent data on the map
+            if (foundFeeds.feeds.length > 0) {
+               setFeedSelected(foundFeeds.nearest.feed.id);
+               map.fitMapBoundsToLocations([latLng, foundFeeds.nearest.feed.latLng, foundFeeds.mostRecent.feed.latLng]);
+            }
+            else {
+               setFeedSelected(null);
+               map.fitBounds(boundingBox);
+            }
+
+            displayGeocodeResults(address, latLng, foundFeeds);
+         }
+      });
+   }
+
 </script>
 <div id="public_data_page">
    <h2>Public Data</h2>
    <div class="row">
-      <div id="selected_feed_name_label" class="col-xs-12">
-         <div class="feed_name_label">
-            Select a location on the map to see the historical air quality near that location.
+      <div id="instructions" class="col-xs-12">
+         <p>
+            This map shows the locations of government PM<sub>2.5</sub> stations and all public
+            Specks. Enter an address or location to find the nearest government station and see the
+            current air quality. Or, select a marker on the map to see a plot of the historical air quality at that
+            location.
+         </p>
+         <div class="geocode_form_container">
+            <form class="geocode_form" action="/public-data" method="get" style="display:none"></form>
+            <div class="input-group">
+               <input id="googoo" type="text" class="form-control geocode_location" placeholder="Search for an address or location"/>
+               <span class="input-group-btn">
+                 <button class="btn btn-default geocode_submit_button" type="button"><i class="fa fa-search"></i>
+                 </button>
+               </span>
+            </div>
          </div>
       </div>
+      <div id="results" class="col-xs-12"></div>
    </div>
    <div class="row">
-      <div id="map_container" class="noselect col-lg-5 col-lg-push-7">
+      <div id="map_container" class="noselect col-sm-12">
          <div id="map_area"></div>
          <div id="map_filters_area">
             <div class="map_filter">
@@ -601,8 +887,11 @@
             </div>
          </div>
       </div>
-      <div id="grapher_container" class="noselect col-lg-7 col-lg-pull-5">
-         <table id="grapher" border="0" cellpadding="0" cellspacing="0" style="display:none">
+      <div id="grapher_container" class="noselect col-sm-12">
+         <div id="selected_feed_name_label">
+            <div class="feed_name_label grapher_item"></div>
+         </div>
+         <table id="grapher" class="grapher_item" border="0" cellpadding="0" cellspacing="0" style="display:none">
             <tr>
                <td>
                   <div id="date_axis" class="date_axis"></div>

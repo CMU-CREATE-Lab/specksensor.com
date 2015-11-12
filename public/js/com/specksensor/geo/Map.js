@@ -67,8 +67,11 @@ else {
       searchDistanceFromMarkerInPixels : 10
    };
 
+   var RADIUS_OF_EARTH_KM = 6371; // radius of the Earth in kilometers
+
    com.specksensor.geo.Map = function(domElementId) {
       var map = null;
+      var geocoder = new google.maps.Geocoder();
       var mapProjection;
       var mapCenter; // keep track of the map's center point so we can recenter the map upon resizing the browser
       var canvasLayer;
@@ -81,6 +84,7 @@ else {
       };
 
       var markers = {};
+      var activeMarkers = {};
       var self = this;
 
       this.getMarkerById = function(id) {
@@ -176,6 +180,17 @@ else {
             value : null,
             render : renderingStrategy
          };
+         this.setMarkersActiveById([id], true);
+      };
+
+      this.setMarkersActiveById = function(markerIds, isActive){
+         markerIds.forEach(function(id){
+            if (isActive && id in markers) {
+               activeMarkers[id] = markers[id];
+            } else {
+               delete activeMarkers[id];
+            }
+         });
       };
 
       this.renderMarkers = function() {
@@ -195,7 +210,7 @@ else {
 
          // render the points
          var mapBounds = map.getBounds();
-         $.each(markers, function(markerId, marker) {
+         $.each(activeMarkers, function(markerId, marker) {
             // TODO: this bounds containment check could be smarter...
             if (mapBounds.contains(marker['location'])) {
 
@@ -229,16 +244,46 @@ else {
          }
       };
 
+      /**
+       * Fits the map to show all the <code>LatLng</code>s in the given array.
+       *
+       * @param {google.maps.LatLng[]} latLngs
+       */
+      this.fitMapBoundsToLocations = function(latLngs) {
+         var bounds = new google.maps.LatLngBounds();
+         latLngs.forEach(function(latLng) {
+            bounds.extend(latLng);
+         });
+         map.fitBounds(bounds);
+      };
+
+      /**
+       * Sets the map view to fit the given bounds.
+       *
+       * @param {google.maps.LatLngBounds} bounds
+       */
+      this.fitBounds = function(bounds) {
+         map.fitBounds(bounds);
+      };
+
       this.setWidth = function(desiredWidth) {
          $("#" + domElementId).width(desiredWidth);
          google.maps.event.trigger(map, 'resize');
+         map.setCenter(mapCenter);
+      };
+
+      this.setHeight = function(desiredHeight) {
+         $("#" + domElementId).height(desiredHeight);
+         google.maps.event.trigger(map, 'resize');
+         map.setCenter(mapCenter);
       };
 
       this.setCenter = function(latOrLatLng, lng) {
          var center = null;
          if (latOrLatLng instanceof google.maps.LatLng) {
             center = latOrLatLng
-         } else {
+         }
+         else {
             center = new google.maps.LatLng(latOrLatLng, lng);
          }
 
@@ -251,6 +296,86 @@ else {
 
       this.getWrappedMap = function() {
          return map;
+      };
+
+      // Google's geocoding API docs: https://developers.google.com/maps/documentation/javascript/geocoding
+      this.geocodeAddress = function(address, callback) {
+         // don't bother doing anything if the callback isn't a function
+         if (typeof callback == 'function') {
+            geocoder.geocode({ 'address' : address }, function(results, status) {
+               if (status === google.maps.GeocoderStatus.OK) {
+                  callback(null, results && results[0] && results[0].geometry ? results[0].geometry.location : null, results);
+               }
+               else {
+                  callback(new Error("Geocoding failed: " + status));
+               }
+            });
+         }
+      };
+
+      var PI_OVER_180 = Math.PI / 180;
+      var INVERSE_OF_PI_OVER_180 = 180 / Math.PI;
+      var PI_OVER_2 = Math.PI / 2;
+
+      var degreesToRadians = function(degrees) {
+         return degrees * PI_OVER_180;
+      };
+      var radiansToDegrees = function(radians) {
+         return radians * INVERSE_OF_PI_OVER_180;
+      };
+
+      // Got this from http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates
+      // will return a google.maps.LatLngBounds
+      this.getBoundingBoxAroundLocation = function(centerLatLong, distanceFromCenterInKm) {
+         // make sure distanceFromCenterInKm is numeric, and positive
+         var distanceFromCenterInKmAsFloat = parseFloat(distanceFromCenterInKm);
+         if ($.isNumeric(distanceFromCenterInKm) && distanceFromCenterInKmAsFloat > 0) {
+            // make sure the center is a LatLng
+            if (centerLatLong instanceof google.maps.LatLng) {
+
+               var r = distanceFromCenterInKmAsFloat / RADIUS_OF_EARTH_KM;  // angular radius of the query circle
+               var lat = degreesToRadians(centerLatLong.lat());
+               var lng = degreesToRadians(centerLatLong.lng());
+               var latMin = lat - r;
+               var latMax = lat + r;
+               var deltaLng = Math.asin(Math.sin(r) / Math.cos(lat));
+               var lngMin = lng - deltaLng;
+               var lngMax = lng + deltaLng;
+
+               // Now deal with poles: "If latmax...is greater than PI/2, then the North Pole is within the query
+               // circle, which means that parts of all meridians are within the query circle as well. If latmin is smaller
+               // than -PI/2, then the South Pole is within the query circle..."
+               if (latMax > PI_OVER_2) {           // if the North Pole is within the query circle
+                  lngMin = -Math.PI;
+                  latMax = PI_OVER_2;
+                  lngMax = Math.PI;
+               }
+               else if (latMin < -PI_OVER_2) {     // if the South Pole is within the query circle
+                  latMin = -PI_OVER_2;
+                  lngMin = -Math.PI;
+                  lngMax = Math.PI;
+               }
+
+               // Google's LatLngBounds class knows how to deal with spanning the 180th meridian, so we don't need
+               // to bother with the special cases in the article.
+               return new google.maps.LatLngBounds(
+                     new google.maps.LatLng(
+                           radiansToDegrees(latMin),
+                           radiansToDegrees(lngMin)
+                     ),
+                     new google.maps.LatLng(
+                           radiansToDegrees(latMax),
+                           radiansToDegrees(lngMax)
+                     )
+               );
+            }
+            else {
+               throw Error("Invalid centerLatLong. Must be an instance of google.maps.LatLng.");
+            }
+         }
+         else {
+            throw Error("Invalid distanceFromCenterInKm. Must be numeric and positive.");
+         }
       };
 
       var initializeCanvas = function() {
@@ -275,51 +400,55 @@ else {
                // convert the mouse event latLng to canvas coords
                var eventPoint = self.worldPointToCanvasPixelCoords(mapProjection.fromLatLngToPoint(evt.latLng));
 
-               // get the canvas color at this pixel to see whether there's a point drawn here (very important to take
-               // the DEVICE_PIXEL_RATIO into account here!)
-               var imageData = context.getImageData(eventPoint.x, eventPoint.y, 1, 1);
+               if (eventPoint) {
+                  // get the canvas color at this pixel to see whether there's a point drawn here (very important to take
+                  // the DEVICE_PIXEL_RATIO into account here!)
+                  var imageData = context.getImageData(eventPoint.x, eventPoint.y, 1, 1);
 
-               if (imageData.data[0] != 0 ||
-                   imageData.data[1] != 0 ||
-                   imageData.data[2] != 0) {
+                  if (imageData.data[0] != 0 ||
+                      imageData.data[1] != 0 ||
+                      imageData.data[2] != 0) {
 
-                  // iterate over all the points to see which is closest to this pixel
-                  var mapBounds = map.getBounds();
-                  var bestPoint = null;
-                  var bestDistance = markerOptions.searchDistanceFromMarkerInPixels;
-                  var matchingPoints = [];
-                  $.each(markers, function(markerId, marker) {
-                     // TODO: this bounds containment check could be smarter...
-                     if (mapBounds.contains(marker['location'])) {
+                     // iterate over all the points to see which is closest to this pixel
+                     var mapBounds = map.getBounds();
+                     var bestPoint = null;
+                     var bestDistance = markerOptions.searchDistanceFromMarkerInPixels;
+                     var matchingPoints = [];
+                     $.each(activeMarkers, function(markerId, marker) {
+                        // TODO: this bounds containment check could be smarter...
+                        if (mapBounds.contains(marker['location'])) {
 
-                        // compute the canvas position for this marker
-                        var candidate = self.worldPointToCanvasPixelCoords(marker['worldPoint']);
+                           // compute the canvas position for this marker
+                           var candidate = self.worldPointToCanvasPixelCoords(marker['worldPoint']);
 
-                        // compute the distance between this marker's point and the event point
-                        var distance = Math.sqrt(Math.pow(candidate.x - eventPoint.x, 2) + Math.pow(candidate.y - eventPoint.y, 2));
+                           if (candidate) {
+                              // compute the distance between this marker's point and the event point
+                              var distance = Math.sqrt(Math.pow(candidate.x - eventPoint.x, 2) + Math.pow(candidate.y - eventPoint.y, 2));
 
-                        if (distance <= markerOptions.searchDistanceFromMarkerInPixels) {
-                           // remember all the markers that are close
-                           matchingPoints.push(marker);
+                              if (distance <= markerOptions.searchDistanceFromMarkerInPixels) {
+                                 // remember all the markers that are close
+                                 matchingPoints.push(marker);
 
-                           // if the distance is less than the bestDistance found so far, then we've found a hit
-                           if (distance <= bestDistance) {
-                              bestPoint = marker;
-                              bestDistance = distance;
+                                 // if the distance is less than the bestDistance found so far, then we've found a hit
+                                 if (distance <= bestDistance) {
+                                    bestPoint = marker;
+                                    bestDistance = distance;
+                                 }
+                              }
                            }
                         }
-                     }
-                  });
+                     });
 
-                  if (bestPoint != null) {
-                     featureDetectedCallback(bestPoint, matchingPoints);
+                     if (bestPoint != null) {
+                        featureDetectedCallback(bestPoint, matchingPoints);
+                     }
+                     else {
+                        featureNotDetectedCallback();
+                     }
                   }
                   else {
                      featureNotDetectedCallback();
                   }
-               }
-               else {
-                  featureNotDetectedCallback();
                }
             }
          }
@@ -328,10 +457,15 @@ else {
       this.worldPointToCanvasPixelCoords = function(worldPoint) {
          var translation = canvasLayer.getMapTranslation();
          var scale = canvasLayer.getMapScale();
-         return {
-            x : (worldPoint.x + translation.x) * scale,
-            y : (worldPoint.y + translation.y) * scale
-         };
+         if (typeof translation !== 'undefined' && translation != null &&
+             typeof scale !== 'undefined' && scale != null) {
+            return {
+               x : (worldPoint.x + translation.x) * scale,
+               y : (worldPoint.y + translation.y) * scale
+            };
+         }
+
+         return null;
       };
 
       // the "constructor"

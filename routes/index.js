@@ -117,13 +117,6 @@ router.get('/signup', function(req, res) {
    res.render('signup', { title : "Sign Up", section : "login" });
 });
 
-router.get('/air-quality-by-zip-code', function(req, res) {
-   res.render('air-quality-by-zip-code', {
-      title : "Air Quality Zip Code Search",
-      section : "air-quality-by-zip-code"
-   });
-});
-
 //======================================================================================================================
 // FOOTER LINKS
 //----------------------------------------------------------------------------------------------------------------------
@@ -526,6 +519,10 @@ router.get('/data', function(req, res) {
 
 router.get('/terms', function(req, res) {
    res.redirect('/policies-and-terms');
+});
+
+router.get('/air-quality-by-zip-code', function(req, res) {
+   res.redirect('/public-data');
 });
 
 //======================================================================================================================

@@ -1,23 +1,20 @@
 <script type="text/javascript">
    $(document).ready(function() {
-      $("#zip_code_form").submit(function(e) {
+      $(".geocode_form").submit(function(e) {
          e.preventDefault();
-         window.location.href = $(this).prop('action') + "?zip=" + $("#zip_code").val();
+         window.location.href = $(this).prop('action') + "#loc=" + encodeURIComponent($(this).parents(".geocode_form_container").find(".geocode_location").val());
       });
 
-      $("#zip_code")
+      $(".geocode_location")
             .keypress(function(e) {
-                         if (e.which == 13) {
-                            $("#zip_code_form").submit();
-                         }
-                      })
-            .click(function() {
-                      // No, in a kind and loving world, I should not have to manually set focus on an element
-                      // when clicking on it for it to receive focus.  But, for reasons unknown to me, form text input
-                      // fields fail to receive focus after we've constructed a new PlotContainer object for the
-                      // bodytrack grapher (i.e. called new PlotContainer()). Absolute madness. Blame GWT? I do.
-                      $(this).focus();
-                   });
+               if (e.which == 13) {
+                  $(this).parents(".geocode_form_container").find(".geocode_form").submit();
+               }
+            });
+
+      $(".geocode_submit_button").click(function() {
+         $(this).parents(".geocode_form_container").find(".geocode_form").submit();
+      });
 
       $(window).scroll(function() {
          var bodyElement = $('body');
@@ -50,10 +47,10 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
          <ul class="nav navbar-nav navbar-right">
-            <li id="zip_code_container">
-               <form id="zip_code_form" action="/air-quality-by-zip-code" method="get" style="display:none"></form>
-               <input type="text" class="form-control input-sm" id="zip_code" name="zip_code" placeholder="Zip Code"/>
-               <div style="color: #9d9d9d">See air quality for your zip code</div>
+            <li class="geocode_form_container">
+               <form class="geocode_form" action="/public-data" method="get" style="display:none"></form>
+               <input type="text" class="form-control input-sm geocode_location" placeholder="Enter address or location"/>
+               <div style="color: #9d9d9d">See air quality for your location</div>
             </li>
             <li class="dropdown">
                <a href="#" class="dropdown-toggle {{#ifEqual parent_section 'learn'}}active{{/ifEqual}}" data-toggle="dropdown">Learn <b class="caret"></b></a>
@@ -116,6 +113,9 @@
                   <a href="/login">My Data</a>
                </li>
             {{/if}}
+            <li class="show_in_mobile_navbar">
+               <a href="/public-data" {{#ifEqual section 'public-data'}}class="active"{{/ifEqual}}>Public Data</a>
+            </li>
             <li class="show_in_mobile_navbar">
                <a href="/about-us" {{#ifEqual section 'about-us'}}class="active"{{/ifEqual}}>About Us</a>
             </li>

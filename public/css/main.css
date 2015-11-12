@@ -240,14 +240,7 @@ a.anchor {
     @media (max-width: 767px) {
       #main_navbar .show_in_mobile_navbar {
         display: block; } }
-  #main_navbar #zip_code {
-    margin-top: 20px;
-    height: 25px;
-    -webkit-transition: all 0.2s ease;
-    -moz-transition: all 0.2s ease;
-    -o-transition: all 0.2s ease;
-    transition: all 0.2s ease; }
-  #main_navbar #zip_code_container {
+  #main_navbar .geocode_form_container {
     margin-right: 10px;
     right: 10px;
     font-size: 12px;
@@ -255,11 +248,18 @@ a.anchor {
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease; }
+    #main_navbar .geocode_form_container .geocode_location {
+      margin-top: 20px;
+      height: 25px;
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      transition: all 0.2s ease; }
     @media (max-width: 991px) {
-      #main_navbar #zip_code_container {
+      #main_navbar .geocode_form_container {
         right: -5px !important; } }
     @media (max-width: 767px) {
-      #main_navbar #zip_code_container {
+      #main_navbar .geocode_form_container {
         display: none; } }
   @media (max-width: 767px) {
     #main_navbar {
@@ -305,21 +305,21 @@ a.anchor {
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease; }
-  #main_navbar.shrink #zip_code_container {
+  #main_navbar.shrink .geocode_form_container {
     -ms-transform: scale(0.8);
     -webkit-transform: scale(0.8);
     transform: scale(0.8);
-    right: 0px;
+    right: 0;
     -webkit-transition: all 0.2s ease;
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease; }
-  #main_navbar.shrink #zip_code {
-    margin-top: 5px;
-    -webkit-transition: all 0.2s ease;
-    -moz-transition: all 0.2s ease;
-    -o-transition: all 0.2s ease;
-    transition: all 0.2s ease; }
+    #main_navbar.shrink .geocode_form_container .geocode_location {
+      margin-top: 5px;
+      -webkit-transition: all 0.2s ease;
+      -moz-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      transition: all 0.2s ease; }
 
 #hero_image {
   height: 450px; }
@@ -596,10 +596,21 @@ a.anchor {
     #home_page {
       margin-top: 20px; } }
 
+#public_data_page #instructions {
+  margin-bottom: 10px; }
+
+#public_data_page #results .fa {
+  font-size: 36px;
+  padding-right: 10px; }
+
+#public_data_page #results .alert {
+  margin-bottom: 10px; }
+
 #public_data_page #selected_feed_name_label {
+  margin-top: 10px;
   margin-bottom: 10px; }
   #public_data_page #selected_feed_name_label .feed_name_label {
-    font-size: 16px; }
+    font-size: 18px; }
 
 #public_data_page #map_container {
   position: relative;
@@ -608,7 +619,16 @@ a.anchor {
     position: relative;
     border: 1px solid black;
     width: auto;
-    height: 300px; }
+    height: 600px; }
+    @media (max-width: 629px) {
+      #public_data_page #map_container #map_area {
+        height: 400px; } }
+    @media (max-width: 449px) {
+      #public_data_page #map_container #map_area {
+        height: 300px; } }
+    @media (max-width: 320px) {
+      #public_data_page #map_container #map_area {
+        height: 200px; } }
   #public_data_page #map_container #map_filters_area .map_filter {
     display: inline-block;
     margin-right: 20px; }
@@ -617,45 +637,42 @@ a.anchor {
       font-weight: normal;
       margin-bottom: 0; }
 
-#public_data_page #grapher_container .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.selected {
-  font-weight: bold; }
-
-#public_data_page #grapher_container .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.unselected {
-  font-weight: normal; }
-
-#public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list {
-  padding: 0;
-  margin-bottom: 0; }
-  #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item {
-    display: inline-block;
-    margin-right: 20px;
-    font-size: 12px;
-    line-height: 24px; }
-    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.selected {
-      cursor: default;
-      font-weight: bold;
-      color: black;
-      text-decoration: none; }
-    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected {
-      cursor: pointer;
-      color: #337ab7; }
-    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected:hover {
-      text-decoration: underline; }
-  #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item:last-of-type {
-    margin-right: 0; }
-
-#public_data_page #grapher_container #export_button_container #export_button {
-  padding: 2px 5px 2px 5px;
-  font-size: 18px;
-  margin-bottom: 7px; }
-
-#public_data_page #grapher_container #export_button_container #export_button_menu {
-  margin-top: -5px; }
-
-#public_data_page #grapher_container #grapher_toolbar_bottom {
-  padding-top: 5px;
-  height: 30px;
-  line-height: 30px; }
+#public_data_page #grapher_container {
+  margin-bottom: 10px; }
+  #public_data_page #grapher_container .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.selected {
+    font-weight: bold; }
+  #public_data_page #grapher_container .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.unselected {
+    font-weight: normal; }
+  #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list {
+    padding: 0;
+    margin-bottom: 0; }
+    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item {
+      display: inline-block;
+      margin-right: 20px;
+      font-size: 12px;
+      line-height: 24px; }
+      #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.selected {
+        cursor: default;
+        font-weight: bold;
+        color: black;
+        text-decoration: none; }
+      #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected {
+        cursor: pointer;
+        color: #337ab7; }
+      #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item a.unselected:hover {
+        text-decoration: underline; }
+    #public_data_page #grapher_container .horizontal_list_or_menu_button .horizontal-list .menu_item:last-of-type {
+      margin-right: 0; }
+  #public_data_page #grapher_container #export_button_container #export_button {
+    padding: 2px 5px 2px 5px;
+    font-size: 18px;
+    margin-bottom: 7px; }
+  #public_data_page #grapher_container #export_button_container #export_button_menu {
+    margin-top: -5px; }
+  #public_data_page #grapher_container #grapher_toolbar_bottom {
+    padding-top: 5px;
+    height: 30px;
+    line-height: 30px; }
 
 #air_quality_page {
   margin-top: 40px;
