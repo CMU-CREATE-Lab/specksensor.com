@@ -280,9 +280,11 @@
 
       $("#export_this_channel_button").click(function() {
          doExport(false);
+         return false;
       });
       $("#export_all_channels_button").click(function() {
          doExport(true);
+         return false;
       });
 
       setSizes();
