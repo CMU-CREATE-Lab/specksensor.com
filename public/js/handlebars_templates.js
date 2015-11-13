@@ -154,11 +154,13 @@ templates['public_data_geocode_failed'] = template({"compiler":[6,">= 2.0.0-beta
     return "<div class=\"alert alert-danger\">Sorry, that doesn't appear to be a valid location or address.</div>\n";
 },"useData":true});
 templates['public_data_geocode_found_one'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var helper;
+    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "<div class=\"alert alert-success\">\n   The closest government station with recent PM<sub>2.5</sub> data is "
-    + this.escapeExpression(((helper = (helper = helpers.feedName || (depth0 != null ? depth0.feedName : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"feedName","hash":{},"data":data}) : helper)))
-    + ".\n   A plot of its historical data is shown below.\n</div>";
+  return "<div class=\"alert alert-success\">\n   The closest government station with recent PM<sub>2.5</sub> data is <a href=\"javascript:setFeedSelected("
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.id : stack1), depth0))
+    + ");\">"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.name : stack1), depth0))
+    + "</a>.\n   A plot of its historical data is shown below.\n</div>";
 },"useData":true});
 templates['public_data_geocode_found_two'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing, alias4="function";

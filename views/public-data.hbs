@@ -801,7 +801,9 @@
          if (results.feeds.length > 0) {
             if (results.nearest.feed.id == results.mostRecent.feed.id) {
                template = Handlebars.templates['public_data_geocode_found_one'];
-               templateOptions = { feedName : results.nearest.feed.name };
+               templateOptions = {
+                  nearest : results.nearest.feed
+               };
             }
             else {
                var distanceDiff = results.mostRecent.distanceKm - results.nearest.distanceKm;
