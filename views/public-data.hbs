@@ -889,15 +889,14 @@
    <div class="row">
       <div id="instructions" class="col-xs-12">
          <p>
-            This map shows the locations of government PM<sub>2.5</sub> stations and all public
-            Specks. Enter an address or location to find the nearest government station and see the
-            current air quality. Or, select a marker on the map to see a plot of the historical air quality at that
-            location.
+            This map shows the locations of regulated PM<sub>2.5</sub> stations and all public Specks. Enter an address
+            or location to find the nearest regulated station and see the current and historical air quality. Or, select
+            a marker on the map to see a plot of the air quality at that location.
          </p>
          <div class="geocode_form_container">
             <form class="geocode_form" action="/public-data" method="get" style="display:none"></form>
             <div class="input-group">
-               <input id="googoo" type="text" class="form-control geocode_location" placeholder="Search for an address or location"/>
+               <input type="text" class="form-control geocode_location" placeholder="Search for an address or location"/>
                <span class="input-group-btn">
                  <button class="btn btn-default geocode_submit_button" type="button"><i class="fa fa-search"></i>
                  </button>
@@ -913,7 +912,7 @@
          <div id="map_filters_area">
             <div class="map_filter">
                <input type="checkbox" id="govt_feed_checkbox" class="feed_filter" name="govt_feed_checkbox" checked="checked"/>
-               <label for="govt_feed_checkbox">Government PM<sub>2.5</sub> Stations</label>
+               <label for="govt_feed_checkbox">Regulated PM<sub>2.5</sub> Stations</label>
             </div>
             <div class="map_filter">
                <input type="checkbox" id="outdoor_speck_checkbox" class="feed_filter" name="outdoor_speck_checkbox" checked="checked"/>
