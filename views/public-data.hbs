@@ -424,6 +424,42 @@
       }
    }
 
+   function isChannelInChannelSpecs(channelSpecs, channelName) {
+      if (channelSpecs) {
+         // deal with different versions of channelSpecs
+         var version = channelSpecs.version || -1;
+         switch (version) {
+            case 1:
+               return ("channels" in channelSpecs && channelName in channelSpecs['channels']);
+               break;
+            default:
+               return channelName in channelSpecs;
+         }
+      }
+
+      return false;
+   }
+
+   function getChannelPropertyFromChannelSpecs(channelSpecs, channelName, propertyName) {
+      if (channelSpecs) {
+         // deal with different versions of channelSpecs
+         var version = channelSpecs.version || 0;
+         switch (version) {
+            case 1:
+               if ("channels" in channelSpecs && channelName in channelSpecs['channels']) {
+                  return channelSpecs["channels"][channelName][propertyName];
+               }
+               break;
+            default:
+               if (channelName in channelSpecs) {
+                  return channelSpecs[channelName][propertyName];
+               }
+         }
+      }
+
+      return undefined;
+   }
+
    function addFeedToGrapher(feed, willPreserveDateAxis) {
       if (feed) {
          willPreserveDateAxis = !!willPreserveDateAxis;
@@ -485,30 +521,27 @@
          }
 
          // set the Y axis label
+         var channelUnits = null;
          var yAxisLabel = null;
-         if (feed['channelSpecs'] && feed['channelSpecs'][selectedChannelName]) {
-            var prettyName = feed['channelSpecs'][selectedChannelName]['prettyName'];
-            var units = feed['channelSpecs'][selectedChannelName]['units'];
+         var prettyName = selectedChannelName;
+         if (isChannelInChannelSpecs(feed['channelSpecs'], selectedChannelName)) {
+            prettyName = getChannelPropertyFromChannelSpecs(feed['channelSpecs'], selectedChannelName, 'prettyName');
+            var units = getChannelPropertyFromChannelSpecs(feed['channelSpecs'], selectedChannelName, 'units');
             if (prettyName) {
                yAxisLabel = prettyName;
             }
             if (units) {
+               channelUnits = units;
                yAxisLabel += " (" + units + ")";
             }
          }
          else {
             yAxisLabel = selectedChannelName;
          }
-         // TODO: sanitize!
-         $("#y_axis_label").text(yAxisLabel == null ? "" : yAxisLabel);
+         $("#y_axis_label").text(yAxisLabel == null ? "" : yAxisLabel); // important to use .text here instead of .html to prevent XSS
 
-         // set the channel menu button label to the currently-selected channel name, but first make sure the channelSpecs
-         // has this channel name
-         var currentlySelectChannelPrettyName = selectedChannelName;
-         if (selectedChannelName in feed['channelSpecs']) {
-            currentlySelectChannelPrettyName = feed['channelSpecs'][selectedChannelName]['prettyName'] || selectedChannelName;
-         }
-         $("#channel_switcher_menu_label").text(currentlySelectChannelPrettyName);
+         // set the channel menu button label to the currently-selected channel name (important to use .text here instead of .html to prevent XSS)
+         $("#channel_switcher_menu_label").text(prettyName);
 
          // render the links to change channels
          $("#channel_switcher_menu_items").empty();
@@ -521,8 +554,8 @@
             var channelNameMenuItemTemplate = Handlebars.templates['grapher_channel_menu_item'];
             availableChannels.forEach(function(channelName) {
                var prettyChannelName = channelName;
-               if (channelName in feed['channelSpecs']) {
-                  prettyChannelName = feed['channelSpecs'][channelName]['prettyName'] || channelName;
+               if (isChannelInChannelSpecs(feed['channelSpecs'], channelName)) {
+                  prettyChannelName = getChannelPropertyFromChannelSpecs(feed['channelSpecs'], channelName, 'prettyName');
                }
                var selectionStateClass = (channelName == selectedChannelName) ? 'selected' : 'unselected';
 
@@ -578,7 +611,8 @@
                valueAndTimeElement.empty().hide();
             }
             else {
-               valueAndTimeElement.text(val.valueString + " at " + val.dateString).show();
+               // important to use .text here instead of .html to prevent XSS
+               valueAndTimeElement.text(val.valueString + (channelUnits == null ? "" : " " + channelUnits) + " at " + val.dateString).show();
             }
          });
 
