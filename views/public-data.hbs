@@ -755,17 +755,21 @@
                // compute the distance, but divide by 1000 to get kilometers
                var distanceKm = google.maps.geometry.spherical.computeDistanceBetween(center, feed.latLng) / 1000;
 
-               // check whether this is the new closest feed
-               if (distanceKm < obj.nearest.distanceKm) {
-                  obj.nearest.feed = feed;
-                  obj.nearest.distanceKm = distanceKm;
-                  obj.nearest.maxTimeSecs = maxTimeSecs;
+               // ignore this feed if it's not within the search radius (we want a circular radius, but the bounding
+               // box containment check is rectangular)
+               if (distanceKm < SEARCH_RADIUS_IN_KM) {
+                  // check whether this is the new closest feed
+                  if (distanceKm < obj.nearest.distanceKm) {
+                     obj.nearest.feed = feed;
+                     obj.nearest.distanceKm = distanceKm;
+                     obj.nearest.maxTimeSecs = maxTimeSecs;
+                  }
+
+                  distanceByFeedId[feed.id] = distanceKm;
+                  maxTimeSecsByFeedId[feed.id] = maxTimeSecs;
+
+                  return true;
                }
-
-               distanceByFeedId[feed.id] = distanceKm;
-               maxTimeSecsByFeedId[feed.id] = maxTimeSecs;
-
-               return true;
             }
          }
          return false;
