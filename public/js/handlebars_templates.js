@@ -164,7 +164,7 @@ templates['public_data_geocode_found_one'] = template({"1":function(container,de
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<div class=\"alert alert-success\">\n   The closest government station with recent PM<sub>2.5</sub> data is <a href=\"javascript:setFeedSelected("
+  return "<div class=\"alert alert-success\">\n   The closest regulated station with recent PM<sub>2.5</sub> data is <a href=\"javascript:setFeedSelected("
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.id : stack1), depth0))
     + ");\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.name : stack1), depth0))
@@ -189,7 +189,7 @@ templates['public_data_geocode_found_two'] = template({"1":function(container,de
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
 
-  return "<div class=\"alert alert-success\">\n   The closest government sensor with recent PM<sub>2.5</sub> data is\n   <a href=\"javascript:setFeedSelected("
+  return "<div class=\"alert alert-success\">\n   The closest regulated sensor with recent PM<sub>2.5</sub> data is\n   <a href=\"javascript:setFeedSelected("
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.id : stack1), depth0))
     + ");\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.name : stack1), depth0))
@@ -212,6 +212,6 @@ templates['public_data_geocode_found_two'] = template({"1":function(container,de
     + ".\n</div>";
 },"useData":true});
 templates['public_data_no_nearby_stations'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<div class=\"alert alert-warning\">\n   Sorry, there are no government stations with recent PM<sub>2.5</sub> data near the specified location, or no such\n   stations exist in our database.\n</div>";
+    return "<div class=\"alert alert-warning\">\n   Sorry, there are no regulated stations with recent PM<sub>2.5</sub> data near the specified location, or no such\n   stations exist in our database.\n</div>";
 },"useData":true});
 })();
