@@ -190,7 +190,7 @@
                }
                else {
                   // got the data
-                  if (res.body.code == 200 &&
+                  if (res.body.code == 200                 &&
                       typeof res.body.data !== 'undefined' &&
                       res.body.data != null) {
 
@@ -813,11 +813,11 @@
                }
                else {
                   // got the data
-                  if (res.body.code == 200 &&
-                      typeof res.body.data !== 'undefined' &&
-                      res.body.data != null &&
-                      res.body.data['channels'] &&
-                      res.body.data['channels'] &&
+                  if (res.body.code == 200                   &&
+                      typeof res.body.data !== 'undefined'   &&
+                      res.body.data != null                  &&
+                      res.body.data['channels']              &&
+                      res.body.data['channels']              &&
                       res.body.data['channels'][channelName] &&
                       res.body.data['channels'][channelName]['mostRecentDataSample']
                   ) {

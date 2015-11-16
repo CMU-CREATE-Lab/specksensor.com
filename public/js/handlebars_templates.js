@@ -209,7 +209,7 @@ templates['public_data_geocode_found_two'] = template({"1":function(depth0,helpe
     + alias2(((helper = (helper = helpers.timeDiff || (depth0 != null ? depth0.timeDiff : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"timeDiff","hash":{},"data":data}) : helper)))
     + " hour"
     + alias2(((helper = (helper = helpers.hourPlurality || (depth0 != null ? depth0.hourPlurality : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"hourPlurality","hash":{},"data":data}) : helper)))
-    + ".\n</div>\n\n\n";
+    + ".\n</div>";
 },"useData":true});
 templates['public_data_no_nearby_stations'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"alert alert-warning\">\n   Sorry, there are no government stations with recent PM<sub>2.5</sub> data near the specified location, or no such\n   stations exist in our database.\n</div>";
