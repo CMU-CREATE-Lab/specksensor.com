@@ -153,23 +153,49 @@ templates['grapher_value_range_color_box'] = template({"compiler":[6,">= 2.0.0-b
 templates['public_data_geocode_failed'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"alert alert-danger\">Sorry, that doesn't appear to be a valid location or address.</div>\n";
 },"useData":true});
-templates['public_data_geocode_found_one'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+templates['public_data_geocode_found_one'] = template({"1":function(depth0,helpers,partials,data) {
+    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "      It recorded a PM<sub>2.5</sub> value of "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataSample : depth0)) != null ? stack1.value : stack1), depth0))
+    + " &mu;g/m<sup>3</sup> at "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataSample : depth0)) != null ? stack1.timeStr : stack1), depth0))
+    + ".\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression;
 
   return "<div class=\"alert alert-success\">\n   The closest government station with recent PM<sub>2.5</sub> data is <a href=\"javascript:setFeedSelected("
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.id : stack1), depth0))
     + ");\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.name : stack1), depth0))
-    + "</a>.\n   A plot of its historical data is shown below.\n</div>";
+    + "</a>.\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.dataSample : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "   A plot of its historical data is shown below.\n</div>";
 },"useData":true});
-templates['public_data_geocode_found_two'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+templates['public_data_geocode_found_two'] = template({"1":function(depth0,helpers,partials,data) {
+    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "      It recorded a PM<sub>2.5</sub> value of "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearestDataSample : depth0)) != null ? stack1.value : stack1), depth0))
+    + " &mu;g/m<sup>3</sup> at "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearestDataSample : depth0)) != null ? stack1.timeStr : stack1), depth0))
+    + ".\n";
+},"3":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "      ("
+    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.mostRecentDataSample : depth0)) != null ? stack1.value : stack1), depth0))
+    + " &mu;g/m<sup>3</sup>)\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing, alias4="function";
 
   return "<div class=\"alert alert-success\">\n   The closest government sensor with recent PM<sub>2.5</sub> data is\n   <a href=\"javascript:setFeedSelected("
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.id : stack1), depth0))
     + ");\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.nearest : depth0)) != null ? stack1.name : stack1), depth0))
-    + "</a>.\n   A plot of its historical data is shown below.\n   Alternatively, the <a href=\"javascript:setFeedSelected("
+    + "</a>.\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.nearestDataSample : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "   A plot of its historical data is shown below.\n   Alternatively, the <a href=\"javascript:setFeedSelected("
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.mostRecent : depth0)) != null ? stack1.id : stack1), depth0))
     + ");\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.mostRecent : depth0)) != null ? stack1.name : stack1), depth0))
@@ -177,7 +203,9 @@ templates['public_data_geocode_found_two'] = template({"compiler":[6,">= 2.0.0-b
     + alias2(((helper = (helper = helpers.distanceDiffKm || (depth0 != null ? depth0.distanceDiffKm : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"distanceDiffKm","hash":{},"data":data}) : helper)))
     + " km ("
     + alias2(((helper = (helper = helpers.distanceDiffMi || (depth0 != null ? depth0.distanceDiffMi : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"distanceDiffMi","hash":{},"data":data}) : helper)))
-    + " mi) further away, but has data which is more recent by\n   "
+    + " mi) further away, but has data\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.mostRecentDataSample : depth0),{"name":"if","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "   which is more recent by\n   "
     + alias2(((helper = (helper = helpers.timeDiff || (depth0 != null ? depth0.timeDiff : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"timeDiff","hash":{},"data":data}) : helper)))
     + " hour"
     + alias2(((helper = (helper = helpers.hourPlurality || (depth0 != null ? depth0.hourPlurality : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"hourPlurality","hash":{},"data":data}) : helper)))

@@ -183,7 +183,7 @@
 
       // load the Speck feeds (public feeds, having data, and with lat/long defined)
       superagent
-            .get(ESDR_API_ROOT_URL + "/feeds?where=productId=" + PRODUCT_ID + ",maxTimeSecs<>__NULL__,latitude<>__NULL__,longitude<>__NULL__&fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,apiKeyReadOnly,channelBounds,channelSpecs,exposure&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .get(ESDR_API_ROOT_URL + "/feeds?where=productId=" + PRODUCT_ID + ",maxTimeSecs<>__NULL__,latitude<>__NULL__,longitude<>__NULL__&fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,channelBounds,channelSpecs,exposure&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
             .end(function(err, res) {
                if (err) {
                   done(err);
@@ -221,7 +221,7 @@
       var offset = ESDR_QUERY_ITEM_LIMIT * page;
 
       superagent
-            .get(ESDR_API_ROOT_URL + "/multifeeds/pm_25/feeds?fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,apiKeyReadOnly,channelBounds,channelSpecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .get(ESDR_API_ROOT_URL + "/multifeeds/pm_25/feeds?fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,channelBounds,channelSpecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
             .end(function(err, res) {
                if (err) {
                   done(err);
@@ -581,7 +581,7 @@
          plotManager.addDataSeriesPlot(plotId,
                                        function(level, offset, successCallback) {
                                           superagent
-                                                .get(ESDR_API_ROOT_URL + "/feeds/" + feed.apiKeyReadOnly + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
+                                                .get(ESDR_API_ROOT_URL + "/feeds/" + feed.id + "/channels/" + selectedChannelName + "/tiles/" + level + "." + offset)
                                                 .end(function(err, res) {
                                                    if (err) {
                                                       console.log(err);
@@ -595,7 +595,7 @@
                                                          successCallback(res.body.data);
                                                       }
                                                       else {
-                                                         console.log(new Error("Failed to get tile [" + level + "." + offset + "] for feed.channel [" + feed.apiKeyReadOnly + "." + selectedChannelName + "]"));
+                                                         console.log(new Error("Failed to get tile [" + level + "." + offset + "] for feed.channel [" + feed.id + "." + selectedChannelName + "]"));
                                                       }
                                                    }
                                                 });
@@ -700,10 +700,9 @@
    }
 
    function doExport(willExportAllChannels) {
-      var idOrApiKey = selectedFeed.isPublic ? selectedFeed.id : selectedFeed.apiKeyReadOnly;
       var channels = willExportAllChannels ? Object.keys(selectedFeed.channelBounds.channels).sort().join(',') : selectedChannelName;
       var dateAxisRange = plotManager.getDateAxis().getRange();
-      window.open(ESDR_API_ROOT_URL + "/feeds/" + idOrApiKey + "/channels/" + channels + "/export?from=" + dateAxisRange.min + "&to=" + dateAxisRange.max, '_blank');
+      window.open(ESDR_API_ROOT_URL + "/feeds/" + selectedFeed.id + "/channels/" + channels + "/export?from=" + dateAxisRange.min + "&to=" + dateAxisRange.max, '_blank');
    }
 
    // This is annoying. We need to read the timestamp of the PM2.5 channel for govt feeds so we can determine whether
@@ -794,33 +793,101 @@
       return obj;
    }
 
+   function getMostRecentDataSample(feed, callback) {
+      var channelName = "PM2_5";
+
+      // find the PM2.5 channel name for this feed
+      for (var i = 0; i < GOVT_PM_2_5_CHANNEL_NAMES.length; i++) {
+         var name = GOVT_PM_2_5_CHANNEL_NAMES[i];
+         if (name in feed.channelBounds.channels) {
+            channelName = name;
+            break;
+         }
+      }
+
+      superagent
+            .get(ESDR_API_ROOT_URL + "/feeds/" + feed.id + "/channels/" + channelName + "/most-recent")
+            .end(function(err, res) {
+               if (err) {
+                  callback(err);
+               }
+               else {
+                  // got the data
+                  if (res.body.code == 200 &&
+                      typeof res.body.data !== 'undefined' &&
+                      res.body.data != null &&
+                      res.body.data['channels'] &&
+                      res.body.data['channels'] &&
+                      res.body.data['channels'][channelName] &&
+                      res.body.data['channels'][channelName]['mostRecentDataSample']
+                  ) {
+                     var dataSample = res.body.data['channels'][channelName]['mostRecentDataSample'];
+                     dataSample.timeStr = new Date(dataSample.timeSecs * 1000).toTimeString();
+                     callback(null, dataSample);
+                  }
+                  else {
+                     callback(new Error("Failed to get most recent value for for feed.channel [" + feed.id + "." + channelName + "]"));
+                  }
+               }
+            });
+   }
+
    function displayGeocodeResults(address, latLng, results) {
       var template = null;
       var templateOptions = null;
       if (results) {
          if (results.feeds.length > 0) {
             if (results.nearest.feed.id == results.mostRecent.feed.id) {
-               template = Handlebars.templates['public_data_geocode_found_one'];
-               templateOptions = {
-                  nearest : results.nearest.feed
-               };
+               return getMostRecentDataSample(results.nearest.feed, function(err, dataSample) {
+                  template = Handlebars.templates['public_data_geocode_found_one'];
+                  templateOptions = {
+                     dataSample : dataSample,
+                     nearest : results.nearest.feed
+                  };
+                  $("#results").empty().append($(template(templateOptions)));
+               });
             }
             else {
-               var distanceDiff = results.mostRecent.distanceKm - results.nearest.distanceKm;
-               var distanceDiffKm = distanceDiff.toFixed(2);
-               var distanceDiffMi = (distanceDiff * 0.621371).toFixed(2);
-               var timeDiff = ((results.mostRecent.maxTimeSecs - results.nearest.maxTimeSecs) / 3600).toFixed(1);
-               timeDiff = (Math.round(timeDiff) == timeDiff) ? Math.round(timeDiff) : timeDiff;
 
-               template = Handlebars.templates['public_data_geocode_found_two'];
-               templateOptions = {
-                  nearest : results.nearest.feed,
-                  mostRecent : results.mostRecent.feed,
-                  distanceDiffKm : distanceDiffKm,
-                  distanceDiffMi : distanceDiffMi,
-                  timeDiff : timeDiff,
-                  hourPlurality : (timeDiff <= 1 ? '' : 's')
-               };
+               var nearestDataSample = null;
+               var mostRecentDataSample = null;
+               return _.parallel(
+                     [
+                        function(done) {
+                           getMostRecentDataSample(results.nearest.feed, function(err, dataSample) {
+                              nearestDataSample = dataSample;
+                              done();
+                           });
+                        },
+                        function(done) {
+                           getMostRecentDataSample(results.mostRecent.feed, function(err, dataSample) {
+                              mostRecentDataSample = dataSample;
+                              done();
+                           });
+                        }
+                     ],
+                     function() {
+                        var distanceDiff = results.mostRecent.distanceKm - results.nearest.distanceKm;
+                        var distanceDiffKm = distanceDiff.toFixed(2);
+                        var distanceDiffMi = (distanceDiff * 0.621371).toFixed(2);
+                        var timeDiff = ((results.mostRecent.maxTimeSecs - results.nearest.maxTimeSecs) / 3600).toFixed(1);
+                        timeDiff = (Math.round(timeDiff) == timeDiff) ? Math.round(timeDiff) : timeDiff;
+
+                        template = Handlebars.templates['public_data_geocode_found_two'];
+                        templateOptions = {
+                           nearest : results.nearest.feed,
+                           nearestDataSample : nearestDataSample,
+                           mostRecent : results.mostRecent.feed,
+                           mostRecentDataSample : mostRecentDataSample,
+                           distanceDiffKm : distanceDiffKm,
+                           distanceDiffMi : distanceDiffMi,
+                           timeDiff : timeDiff,
+                           hourPlurality : (timeDiff <= 1 ? '' : 's')
+                        };
+                        $("#results").empty().append($(template(templateOptions)));
+
+                     }
+               );
             }
          }
          else {

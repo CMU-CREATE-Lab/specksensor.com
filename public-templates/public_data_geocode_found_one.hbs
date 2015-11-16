@@ -1,4 +1,7 @@
 <div class="alert alert-success">
    The closest government station with recent PM<sub>2.5</sub> data is <a href="javascript:setFeedSelected({{nearest.id}});">{{nearest.name}}</a>.
+   {{#if dataSample}}
+      It recorded a PM<sub>2.5</sub> value of {{dataSample.value}} &mu;g/m<sup>3</sup> at {{dataSample.timeStr}}.
+   {{/if}}
    A plot of its historical data is shown below.
 </div>
