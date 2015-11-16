@@ -27,11 +27,49 @@ config.defaults(
             "vendor" : 'CMU CREATE Lab',
             "description" : 'The Speck particle sensor.',
             "defaultChannelSpecs" : {
-               "temperature" : { "prettyName" : "Temperature", "units" : "C" },
-               "humidity" : { "prettyName" : "Humidity", "units" : "%" },
-               "raw_particles" : { "prettyName" : "Raw Particles", "units" : "particles" },
-               "particle_count" : { "prettyName" : "Particles Per Liter", "units" : "particles/L" },
-               "particle_concentration" : { "prettyName" : "Particle Concentration", "units" : "&mu;g/m<sup>3</sup>" }
+               "version" : 1,
+               "channels" : {
+                  "temperature" : {
+                     "prettyName" : "Temperature",
+                     "units" : "C",
+                     "range" : {
+                        "min" : -273.15,
+                        "max" : null
+                     }
+                  },
+                  "humidity" : {
+                     "prettyName" : "Humidity",
+                     "units" : "%",
+                     "range" : {
+                        "min" : 0,
+                        "max" : 100
+                     }
+                  },
+                  "raw_particles" : {
+                     "prettyName" : "Raw Signal",
+                     "units" : null,
+                     "range" : {
+                        "min" : 0,
+                        "max" : null
+                     }
+                  },
+                  "particle_count" : {
+                     "prettyName" : "Particles Per Liter",
+                     "units" : "particles/L",
+                     "range" : {
+                        "min" : 0,
+                        "max" : null
+                     }
+                  },
+                  "particle_concentration" : {
+                     "prettyName" : "Particle Concentration",
+                     "units" : "ug/m^3",
+                     "range" : {
+                        "min" : 0,
+                        "max" : null
+                     }
+                  }
+               }
             }
          },
          "cookie" : {
@@ -66,7 +104,7 @@ config.defaults(
             },
             "analytics" : {
                "enabled" : false,
-               "propertyId": "UA-60606644-1"
+               "propertyId" : "UA-60606644-1"
             }
          },
          "maps" : {
