@@ -101,6 +101,17 @@
          </li>
          <li>
             <div class="question_teaser">
+               <a href="#q29">What's the difference between Raw Signal, Particle Count, and Particle Concentration?</a>
+            </div>
+         </li>
+         <li>
+            <div class="question_teaser">
+               <a href="#q30"> What is the meaning of the small letter <i>c</i> or
+                  <i>w</i> next to the value on the Speck's screen?</a>
+            </div>
+         </li>
+         <li>
+            <div class="question_teaser">
                <a href="#q11">Does the Speck reveal mold spores in the indoor air?</a>
             </div>
          </li>
@@ -137,6 +148,11 @@
          <li>
             <div class="question_teaser">
                <a href="#q18">Is it possible to download data directly from the Speck to my computer?</a>
+            </div>
+         </li>
+         <li>
+            <div class="question_teaser">
+               <a href="#q31">How do I interpret the timestamp value in the CSV I downloaded from the Speck or specksensor.com?</a>
             </div>
          </li>
       </ul>
@@ -312,7 +328,8 @@
             Do you offer discounts or honor tax-exempt purchases?
          </div>
          <div class="answer">
-            Where appropriate, yes. Please see our <a href="/support/contact-us#discounts">discounts policies</a> and contact us to discuss.
+            Where appropriate, yes. Please see our
+            <a href="/support/contact-us#discounts">discounts policies</a> and contact us to discuss.
          </div>
       </div>
       <div class="question_and_answer">
@@ -417,16 +434,82 @@
          </div>
          <div class="answer">
             <p>
-               The Speck reports out temperature and fine particulate levels only. Particulates can be measured
-               inexpensively and reliably, and as you know they are also a very important part of indoor air issues,
+               The Speck records temperature and fine particulate levels only. Particulates can be measured
+               inexpensively and reliably, and, as you know, they are also a very important part of indoor air issues,
                since they are connected to such a large array of diseases; so, we start here.
             </p>
             <p>
-               There are devices that measure CO<sub>2</sub> or CO, but do not offer a full picture of air quality; CO is a deadly
-               gas; and CO<sub>2</sub> gives you a sense of how stale the air is. VOCs, on the other hand, are important to monitor
-               to gauge air quality, because they are important factors for long-term cancer risk. However, there are no
-               available inexpensive VOC sensors that are reliable long-term. We are still looking, and when we find one
-               we'll certainly make it available.
+               There are devices that measure CO or CO<sub>2</sub>, but do not offer a full picture of air quality; CO
+               is a deadly gas; and CO<sub>2</sub> gives you a sense of how stale the air is. VOCs, on the other hand,
+               are important to monitor to gauge air quality, because they are important factors for long-term cancer
+               risk. However, there are no available inexpensive VOC sensors that are reliable long-term. We are still
+               looking, and when we find one we'll certainly make it available.
+            </p>
+         </div>
+      </div>
+      <div class="question_and_answer">
+         <a name="q29" class="anchor"></a>
+         <div class="question">
+            What's the difference between Raw Signal, Particle Count, and Particle Concentration?
+         </div>
+         <div class="answer">
+            <p>
+               If you view the Speck's data on the web site, or by downloading/exporting as a CSV, you'll see three
+               values all related to particle measurement:
+            </p>
+            <ul>
+               <li><i>Raw Signal</i> or <code>raw_particles</code></li>
+               <li><i>Particles Per Liter</i> or <code>particle_count</code></li>
+               <li><i>Particle Concentration</i> or <code>particle_concentration</code></li>
+            </ul>
+            <p>
+               To begin with, the actual value coming from the Speck's dust sensor is the <i>Raw Signal</i> value, which
+               is named <code>raw_particles</code> in the CSV. And that <code>raw_particles</code> name is a little
+               misleading. It's not actually reporting a number of particles, but rather the average time the sensor's
+               detection pin is pulled low in ten-thousandths of a second (per second, averaged over the sampling
+               interval) by particles with a size of roughly 2 microns. This raw value is the input for the algorithm
+               we use to produce the <i>Particles Per Liter</i> value.
+            </p>
+            <p>
+               The <i>Particles Per Liter</i> value is a count-based concentration--the number of particles per liter of
+               air (ppl). We compute this value from the raw signal value using an algorithm which was tuned to produce
+               results close to what we get from a professional-grade sensor which outputs values in ppl (the one to
+               which we calibrate all Specks). This <i>Particles Per Liter</i> value is named
+               <code>particle_count</code> in the CSV. This value is visible on the Speck's screen when the Speck is
+               in "counts mode" &mdash; you'll see a small "c" next to the value when the Speck is in counts mode.
+            </p>
+            <p>
+               Finally, the Speck also reports a <i>Particle Concentration</i>, which is based on an estimate of
+               particle weight (or, more strictly, mass) where the units are micrograms per cubic meter of air
+               (&mu;g/m<sup>3</sup>). This value is a bit of a guess. It's a simple linear scalar applied to the
+               count-based concentration (<i>Particles Per Liter</i>) to try to get the Speck to report similar
+               PM<sub>2.5</sub> numbers to one of the professional monitors against which we're calibrating. So, like
+               <i>Particles Per Liter</i>, it's also a concentration, but mass-based, not count-based. The important
+               takeaway is that <i>Particle Concentration</i> is a best guess, and won't (can't!) be perfect since the
+               Speck is measuring particles moving across its light sensor which can only give us approximate size but
+               tells us nothing about the mass of the particles. This value is visible on the Speck's screen when the
+               Speck is in "weight mode" &mdash; you'll see a small "w" next to the value when the Speck is in weight
+               mode.
+            </p>
+         </div>
+      </div>
+      <div class="question_and_answer">
+         <a name="q30" class="anchor"></a>
+         <div class="question">
+            What is the meaning of the small letter <i>c</i> or <i>w</i> next to the value on the Speck's screen?
+         </div>
+         <div class="answer">
+            <p>
+               This letter indicates whether the Speck is currently displaying its particle measurement as
+               <i>count</i>-based concentration or a <i>weight</i>-based concentration. The <i>Particles Per Liter</i>
+               value is the <i>count</i>-based concentration, and so the Speck displays a <i>c</i> next to the value.
+               The <i>Particle Concentration</i> value is the <i>weight</i>-based concentration (or, more strictly,
+               mass), and so the Speck displays a <i>w</i> next to the value. You can toggle between the two units by
+               tapping the value on the Speck's screen.
+            </p>
+            <p>
+               For more information, please see the <a href="#q29">question about the difference between Raw Signal,
+               Particle Count, and Particle Concentration</a>.
             </p>
          </div>
       </div>
@@ -462,12 +545,12 @@
             The reason we chose to concentrate on fine particulates first is because of the very strong epidemiological
             correlation between particulates and numerous health outcomes, from asthma to cardiovascular disease.
             Equally importantly, we were able to find, incorporate and calibrate low-cost particle sensors that can stay
-            in calibration and provide important information about air quality in the home.  VOC's are very important
+            in calibration and provide important information about air quality in the home. VOC's are very important
             sources of exposure also; however, the inexpensive metal-oxide sensors on the market perform very poorly.
             They drift, and their calibration expires rapidly. As a result, VOC sensors that are inexpensive can provide
             unwarranted anxiety through false positives, and also a false sense of security through false negatives. We
             are working hard to find and develop new technologies for VOC sensing that will perform acceptably; however
-            this is not yet available.  Carbon dioxide gives you an indication of the staleness of indoor air and is
+            this is not yet available. Carbon dioxide gives you an indication of the staleness of indoor air and is
             useful; we are evaluating some CO<sub>2</sub> sensors now; however the parts cost is tens of dollars, and so
             this could add significantly to the price of a low-cost air quality system.
          </div>
@@ -509,7 +592,7 @@
             </p>
             <p>
                Even if you choose not to register your Speck to upload its data to specksensor.com, you should still
-               connect it to a Wi-Fi network, if possible.  The Speck uses its Wi-Fi connection to correct its internal
+               connect it to a Wi-Fi network, if possible. The Speck uses its Wi-Fi connection to correct its internal
                clock and download firmware updates.
             </p>
          </div>
@@ -538,14 +621,49 @@
                <a href="https://github.com/CMU-CREATE-Lab/speck-chrome-app">Chrome app is open source</a>, so users with
                programming knowledge are free to write their own tools to download the data if they wish.
             </p>
-{{!--
+            {{!--
+                        <p>
+                           A little further on, we will also add a "power user" mode in the Chrome app where users can
+                           change the Speck's upload destination. This is useful for users who would rather their Speck upload to a
+                           server under their direct control&mdash;either a custom made server, or simply a local instance of our
+                           <a href="https://github.com/CMU-CREATE-Lab/esdr">open source data repository</a>.
+                        </p>
+            --}}
+         </div>
+      </div>
+      <div class="question_and_answer">
+         <a name="q31" class="anchor"></a>
+         <div class="question">
+            How do I interpret the timestamp value in the CSV I downloaded from the Speck or specksensor.com?
+         </div>
+         <div class="answer">
             <p>
-               A little further on, we will also add a "power user" mode in the Chrome app where users can
-               change the Speck's upload destination. This is useful for users who would rather their Speck upload to a
-               server under their direct control&mdash;either a custom made server, or simply a local instance of our
-               <a href="https://github.com/CMU-CREATE-Lab/esdr">open source data repository</a>.
+               Regardless of whether you download data directly from the Speck using our Speck Chrome app, or export the
+               data from the specksensor.com web site, the data will be saved as a CSV file. The first field in the CSV
+               file is the timestamp for when each data sample was recorded. It will either be named
+               <code>sample_timestamp_utc_secs</code> or <code>EpochTime</code>, but in both cases simply represents the
+               number of seconds that have elapsed since 00:00:00 Coordinated Universal Time (UTC) on Thursday, 1
+               January 1970, not counting leap seconds. This system for representing time is also commonly known as
+               Unix Time, POSIX Time, or Epoch Time. For the Speck data files, the timestamp value will typically be an
+               integer, but, in general, it can have a decimal component to represent fractional seconds (thus, when
+               using it in code, you should treat it as a double, not an integer).
             </p>
---}}
+            <p>
+               We use Unix Time for the timestamp because it's a convenient way to store time, easy to convert, and
+               widely supported by programming languages. For example, in JavaScript, you can convert a Unix Time
+               timestamp of 1442470597 to a Date object like this (you multiply by 1000 since the Date constructor
+               expects milliseconds):
+            </p>
+            <blockquote><code>var date = new Date(1000 * 1442470597)</code></blockquote>
+            <p>
+               And then, printing it out with <code>date.toString()</code> would return:
+            </p>
+            <blockquote><code>Thu Sep 17 2015 02:16:37 GMT-0400 (EDT)</code></blockquote>
+            <p>
+               For users using Excel, it takes slightly manual conversion, but it's still easy. For example, if there's
+               a Unix Time value in cell A2, then this formula will convert to an Excel date:
+            </p>
+            <blockquote><code>=A2/(60*60*24)+"1/1/1970"</code></blockquote>
          </div>
       </div>
 
@@ -567,7 +685,8 @@
             Will I be able to register the Speck and connect to Wi-Fi in a location outside the U.S.?
          </div>
          <div class="answer">
-            Yes, you shouldn't have any issues with using our <a href="/support/software">software</a> outside the U.S. As long
+            Yes, you shouldn't have any issues with using our
+            <a href="/support/software">software</a> outside the U.S. As long
             as you have Internet access, you should be able to set up a specksensor.com account, register your Speck,
             and connect it to Wi-Fi so that you can view your data from anywhere.
          </div>
