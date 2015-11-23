@@ -62,7 +62,7 @@
   </component>
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{specksensor.com node_modules}" />
-    <file url="PROJECT" libraries="{Handlebars Runtime 2.0.0, Nimble.js, Superagent, googlemaps-DefinitelyTyped, jQuery 1.11.2, mocha-DefinitelyTyped, nconf-DefinitelyTyped, should-DefinitelyTyped, specksensor.com node_modules}" />
+    <file url="PROJECT" libraries="{Generated files, Handlebars Runtime 2.0.0, Nimble.js, Superagent, jQuery 1.11.2, specksensor.com node_modules}" />
     <includedPredefinedLibrary name="Node.js Core" />
   </component>
   <component name="ProjectCodeStyleSettingsManager">
@@ -468,11 +468,6 @@
       <SOURCES />
     </library>
     <library name="Handlebars Runtime 2.0.0" type="javaScript">
-      <properties>
-        <sourceFilesUrls>
-          <item url="file://$PROJECT_DIR$/public/lib/handlebars/handlebars.runtime-v2.0.0.js" />
-        </sourceFilesUrls>
-      </properties>
       <CLASSES>
         <root url="file://$PROJECT_DIR$/public/lib/handlebars/handlebars.runtime-v2.0.0.js" />
       </CLASSES>
