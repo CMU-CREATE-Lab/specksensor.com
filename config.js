@@ -107,6 +107,9 @@ config.defaults(
                "propertyId" : "UA-60606644-1"
             }
          },
+         "crazyEggAnalytics" : {
+            "enabled" : false
+         },
          "maps" : {
             "apiKey" : "AIzaSyDRg-ANz3nWQqLNFG9pQjZLXw45k84Eseo"
          },
