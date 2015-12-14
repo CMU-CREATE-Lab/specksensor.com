@@ -131,6 +131,17 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "How to Measure Indoor Air Pollution",
+            author : "Jessica Cohen",
+            source : "Utne",
+            date : new Date("2015-12-11 00:00:00"),
+            file : {
+               name : "20151211_Utne.pdf",
+               type : "pdf"
+            },
+            url : "http://www.utne.com/environment/indoor-air-pollution-ze0z1512zbay.aspx"
+         },
+         {
             title : "SpeckSensor app lets users monitor region's air pollution on the go",
             author : "Mia Bencivenga",
             source : "Next Pittsburgh",
