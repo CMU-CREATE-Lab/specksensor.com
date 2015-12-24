@@ -719,6 +719,21 @@ a.anchor {
     font-size: 22px;
     margin-top: 20px; }
 
+#performance_page {
+  margin-top: 40px;
+  font-size: 16px;
+  line-height: 1.8; }
+  #performance_page .figure_label {
+    text-align: center;
+    font-weight: bold;
+    font-size: smaller; }
+  #performance_page .table_title {
+    padding-bottom: 20px;
+    text-align: center;
+    font-weight: bold; }
+  #performance_page table .header {
+    font-weight: bold; }
+
 #getting_started_page .main_feature .main_feature_text_container .main_feature_title {
   font-size: 25px;
   margin-bottom: 20px; }

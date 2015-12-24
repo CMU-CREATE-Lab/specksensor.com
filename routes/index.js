@@ -48,6 +48,14 @@ router.get('/learn/empowerment', function(req, res) {
    });
 });
 
+router.get('/learn/performance', function(req, res) {
+   res.render('learn/performance', {
+      title : "Learn: Indoor Performance Testing",
+      parent_section : "learn",
+      section : "performance"
+   });
+});
+
 //======================================================================================================================
 // SETUP & SUPPORT
 //----------------------------------------------------------------------------------------------------------------------

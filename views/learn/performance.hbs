@@ -1,0 +1,242 @@
+<script src="/lib/ekko-lightbox/ekko-lightbox.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+   $(document).ready(function() {
+      $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+         event.preventDefault();
+         $(this).ekkoLightbox();
+      });
+   });
+</script>
+<div id="performance_page">
+   <h2>Indoor Performance Testing Results</h2>
+   <div class="row">
+      <div class="col-sm-12">
+         <p>
+            To demonstrate the performance of the Speck air quality monitor in a typical home environment, we installed
+            a Grimm EDM 180 federal equivalence monitor (FEM) in a home kitchen along with three Speck units. Excluding
+            a few hours where the monitor was switched off while guests were in the home, the test represents
+            approximately 55 hours of co-located data collection.
+         </p>
+         <p>
+            The Grimm EDM 180 is an optical FEM that measures PM<sub>1</sub>, PM<sub>2.5</sub>, PM<sub>10</sub>, and
+            particle counts within 31 bins representing particle sizes from 0.25 to 32 microns. Our EDM 180 is capable
+            of sampling once every 6 seconds, while the Speck is configured in this experiment to measure every second.
+            In order to compare coefficient of determination values, we generate 6-second averages of the Speck readings
+            at each of the EDM 180 timestamps.
+         </p>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-6">
+         <div class="panel panel-default">
+            <div class="panel-body">
+               <a href="/images/indoor_performance_testing/figure01@2x.jpg" data-toggle="lightbox" data-title="Figure 1: Indoor Co-Location Test, Nov 2015"><img src="/images/indoor_performance_testing/figure01.jpg" class="img-responsive"></a>
+               <div class="figure_label">Figure 1</div>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-6">
+         <div class="panel panel-default">
+            <div class="panel-body">
+               <a href="/images/indoor_performance_testing/figure02@2x.jpg" data-toggle="lightbox" data-title="Figure 2: Indoor Co-Location Test, Nov 2015 (Zoomed)"><img src="/images/indoor_performance_testing/figure02.jpg" class="img-responsive"></a>
+               <div class="figure_label">Figure 2</div>
+            </div>
+         </div>
+
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         Figures 1 and 2 show the estimated PM<sub>2.5</sub> values for each Speck as well as PM<sub>2.5</sub> measured
+         by the Grimm EDM 180 FEM. In this test, each of the three Specks slightly overestimates PM<sub>2.5</sub> as
+         reported by the EDM 180, but the general shape of the air quality events remains preserved. Speck 3 is unusual
+         in that it settles at a much higher minimum value, which may indicate that this unit is in need of cleaning.
+      </div>
+   </div>
+   <p></p>
+   <div class="row">
+      <div class="col-sm-6 col-sm-push-6">
+         <div class="panel panel-default">
+            <div class="panel-body">
+               <a href="/images/indoor_performance_testing/figure03@2x.jpg" data-toggle="lightbox" data-title="Figure 3: Size Correlation, Indoor Co-Location Test, Nov 2015"><img src="/images/indoor_performance_testing/figure03.jpg" class="img-responsive"></a>
+               <div class="figure_label">Figure 3</div>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-6 col-sm-pull-6">
+         <p>
+            Figure 3 shows the correlation coefficient (r<sup>2</sup>) for each Speck with respect to each of 30 Grimm
+            EDM 180 bins, plot according to size. The 32 micron bin, representing the largest measured particles, is
+            excluded because no particles this large were recorded by the EDM 180 during this experiment.
+         </p>
+         <p>
+            From this plot, we see that the Speck's correlation coefficient is greater than 0.8 for particles from 0.7
+            to 4 microns. These values may vary somewhat by location because of different particle size distributions.
+         </p>
+      </div>
+   </div>
+   <p></p>
+   <div class="row">
+      <div class="col-sm-6 col-sm-push-6">
+         <div class="panel panel-default">
+            <div class="panel-body">
+               <a href="/images/indoor_performance_testing/figure04@2x.jpg" data-toggle="lightbox" data-title="Figure 4: Contour Plot of Pairwise Correlation Between Different Particle Sizes"><img src="/images/indoor_performance_testing/figure04.jpg" class="img-responsive"></a>
+               <div class="figure_label">Figure 4</div>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-6 col-sm-pull-6">
+         <p>
+            Figure 4 shows the r<sup>2</sup> values between different size channels of the EDM 180. These values are
+            predictably similar for similar sizes. This figure shows that similarly sized particles tend to appear and
+            dissipate at the same time.
+         </p>
+         <p>
+            The Grimm EDM 180 also reports mass fractions for PM<sub>1</sub>, PM<sub>2.5</sub>, and PM<sub>10</sub>.
+            These values represent total mass values for all particles below 1, 2.5, and 10 microns respectively. The
+            r<sup>2</sup> coefficients for the three Specks versus these three values are given in Table 1 below. The
+            Speck exhibits a higher correlation with larger mass size fractions, despite having a highest correlation
+            value with individual particle size bins between 0.7 and 4 microns in this experiment.
+         </p>
+      </div>
+   </div>
+   <p></p>
+   <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+         <div class="panel panel-default">
+            <div class="panel-body">
+               <div class="table_title">Speck vs Mass Fraction r<sup>2</sup> Coefficients</div>
+               <table class="table table-bordered">
+                  <tr>
+                     <td></td>
+                     <td class="header">Speck 1</td>
+                     <td class="header">Speck 2</td>
+                     <td class="header">Speck 3</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>1</sub></td>
+                     <td>0.20</td>
+                     <td>0.19</td>
+                     <td>0.17</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>2.5</sub></td>
+                     <td>0.46</td>
+                     <td>0.44</td>
+                     <td>0.42</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>10</sub></td>
+                     <td>0.83</td>
+                     <td>0.83</td>
+                     <td>0.81</td>
+                  </tr>
+               </table>
+               <div class="figure_label">Table 1</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         Table 2 shows r<sup>2</sup> values for each Speck versus mass values from particles smaller than 1 micron,
+         between 1 up to and including 2.5 microns, and 2.5 microns up to and including 10 microns respectively. Here
+         we see that the correlation coefficients are similar for the latter two ranges.
+      </div>
+   </div>
+   <p></p>
+   <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+         <div class="panel panel-default">
+            <div class="panel-body">
+               <div class="table_title">Speck vs Ranged Mass r<sup>2</sup> Coefficients</div>
+               <table class="table table-bordered">
+                  <tr>
+                     <td></td>
+                     <td class="header">Speck 1</td>
+                     <td class="header">Speck 2</td>
+                     <td class="header">Speck 3</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>1</sub></td>
+                     <td>0.20</td>
+                     <td>0.19</td>
+                     <td>0.17</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>2.5</sub> - PM<sub>1</sub></td>
+                     <td>0.82</td>
+                     <td>0.82</td>
+                     <td>0.83</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>10</sub> - PM<sub>2.5</sub></td>
+                     <td>0.83</td>
+                     <td>0.84</td>
+                     <td>0.81</td>
+                  </tr>
+               </table>
+               <div class="figure_label">Table 2</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         Table 3 shows r<sup>2</sup> values between each pair of PM<sub>1</sub>, PM<sub>2.5</sub>, and PM<sub>10</sub>
+         values from the Grimm EDM 180. As with individual particle bins, there is a non-zero correlation between each
+         of these three mass fractions, indicating a relationship between the rise and fall of large and small
+         particles. Independent control of smaller particle size ranges will require controlled chamber testing with
+         aerosol size standards.
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+         <div class="panel panel-default">
+            <div class="panel-body">
+               <div class="table_title">Mass vs Mass r<sup>2</sup> Coefficients</div>
+               <table class="table table-bordered">
+                  <tr>
+                     <td></td>
+                     <td class="header">PM<sub>1</sub></td>
+                     <td class="header">PM<sub>2.5</sub></td>
+                     <td class="header">PM<sub>10</sub></td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>1</sub></td>
+                     <td>1.00</td>
+                     <td>0.90</td>
+                     <td>0.40</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>2.5</sub></td>
+                     <td>0.90</td>
+                     <td>1.00</td>
+                     <td>0.66</td>
+                  </tr>
+                  <tr>
+                     <td class="header">PM<sub>10</sub></td>
+                     <td>0.40</td>
+                     <td>0.66</td>
+                     <td>1.00</td>
+                  </tr>
+               </table>
+               <div class="figure_label">Table 3</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-12">
+         <p>
+            These results show that the Speck correlates strongly to fine particulates especially in the range of 0.7 to
+            4 microns, and exhibits decreasing sensitivity to larger particles. While the correlation is stronger
+            between the Speck reading and PM<sub>10</sub> with r<sup>2</sup> = 0.83, there is also a nontrivial
+            correlation of r<sup>2</sup> = 0.44 between the Speck and PM<sub>2.5</sub>.
+         </p>
+         <p style="padding-top:40px">
+            These test results are also available for <a href="/docs/learn/speck_indoor_performance_testing.pdf" target="_blank">download as a PDF document</a>.
+         </p>
+      </div>
+   </div>
+</div>
