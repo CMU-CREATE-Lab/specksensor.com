@@ -139,6 +139,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "CMU Creates Device, App to Monitor Home Air Pollution",
+            author : "David Templeton",
+            source : "Pittsburgh Post Gazette",
+            date : new Date("2016-01-10 00:00:00"),
+            url : "http://www.post-gazette.com/news/health/2016/01/10/CMU-creates-device-app-Speck-to-monitor-home-air-pollution/stories/201601050002"
+         },
+         {
             title : "Air Measures",
             author : "Megha Satyanarayana",
             source : "h Magazine - The Magazine of the Heinz Endowments",
