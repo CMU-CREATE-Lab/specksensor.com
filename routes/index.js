@@ -153,6 +153,13 @@ router.get('/press', function(req, res) {
             url : "http://www.heinz.org/UserFiles/Library/2015_Issue3_complete.pdf"
          },
          {
+            title : "Air Pollution in the Mon Valley and the New Speck Sensor",
+            author : "Jason Togyer",
+            source : "Tube City Online Podcast",
+            date : new Date("2015-12-11 00:00:00"),
+            url : "https://itun.es/i6Y96Gs"
+         },
+         {
             title : "How to Measure Indoor Air Pollution",
             author : "Jessica Cohen",
             source : "Utne",
