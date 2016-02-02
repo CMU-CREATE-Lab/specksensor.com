@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var config = require('../config');
 var superagent = require('superagent');
+var OutdoorAirQualityCache = require('../lib/OutdoorAirQualityCache');
+var outdoorAirQualityCache = new OutdoorAirQualityCache();
+
 var log = require('log4js').getLogger('specksensor:routes:index');
 
 //======================================================================================================================
@@ -510,7 +513,15 @@ router.get('/get_outdoor_aqi/', function(req, res) {
 });
 
 router.get('/get_message/', function(req, res) {
-   res.set('Content-Type', 'text/plain').send("get_message=" + config.get("firmware:message") + "\r\n");
+   var TEST_SPECK_SERIAL_NUMBER = '899c96b14ac4e4b1ab92d9cd9985595a';
+
+   if (req.headers && req.headers['serialnumber'] == TEST_SPECK_SERIAL_NUMBER) {
+      log.info("/get_message headers: " + JSON.stringify(req.headers, null, 3));
+      var data = outdoorAirQualityCache.getData();
+      res.set('Content-Type', 'text/plain').send("get_message=[" + data.length + "] records\r\n");
+   } else {
+      res.set('Content-Type', 'text/plain').send("get_message=" + config.get("firmware:message") + "\r\n");
+   }
 });
 
 router.get('/get_scalar/', function(req, res) {

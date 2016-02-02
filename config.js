@@ -14,6 +14,7 @@ config.defaults(
             "url" : "http://localhost:8888",
             "port" : 8888
          },
+         "dataGenDirectory" : path.join(__dirname, './data-gen'),
          "httpAccessLogDirectory" : path.join(__dirname, './logs/access.log'),
          "esdr" : {
             "rootUrl" : "http://localhost:3000",

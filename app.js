@@ -37,6 +37,7 @@ var httpStatus = require('http-status');
 var esdr = require('./lib/esdr');
 var RemoteError = require('./lib/errors').RemoteError;
 var flow = require('nimble');
+var OutdoorAirQualityCache = require('./lib/OutdoorAirQualityCache');
 
 // decorate express.response with JSend methods
 require('jsend-utils').decorateExpressResponse(require('express').response);
@@ -123,6 +124,12 @@ flow.series([
                   }
                   else {
                      log.info("Database initialized, starting app server...");
+
+                     // Initialize the outdoor air quality cache.  This is used by the /get_message API method, which uses the
+                     // cache to compute the closest govt sensor (if any) to the requesting Speck feed and return the current
+                     // outdoor air quality, so that the Speck can display it on the screen.
+                     var outdoorAirQualityCache = new OutdoorAirQualityCache();
+                     outdoorAirQualityCache.initialize();
 
                      // configure the app
                      try {
@@ -232,7 +239,7 @@ flow.series([
                         // CUSTOM MIDDLEWARE ------------------------------------------------------------------------------------------
 
                         if (RunMode.isStaging() || RunMode.isProduction()) {
-                           app.set('trust proxy', 1) // trust first proxy
+                           app.set('trust proxy', 1); // trust first proxy
                         }
 
                         // define the various middleware required for routes which need session support

@@ -3,6 +3,7 @@
 node_modules
 out
 logs/*.log
+data-gen/outdoor_pm25.json
 todo.txt
 
 newrelic.js
