@@ -553,7 +553,7 @@ router.get('/contact', function(req, res) {
 });
 
 router.get('/buy', function(req, res) {
-   res.redirect('http://store.specksensor.com/products/speck');
+   res.redirect('http://store.specksensor.com/');
 });
 
 router.get('/software', function(req, res) {
