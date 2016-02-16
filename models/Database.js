@@ -3,6 +3,8 @@ var flow = require('nimble');
 
 var DatabaseHelper = require("./DatabaseHelper");
 var Users = require('./Users.js');
+var ActiveSpecks = require('./ActiveSpecks.js');
+var PM25Stations = require('./PM25Stations.js');
 
 var config = require('../config');
 var log = require('log4js').getLogger('specksensor:models:database');
@@ -18,7 +20,9 @@ module.exports = {
 
       var databaseHelper = null;
       var db = {
-         users : null
+         users : null,
+         activeSpecks : null,
+         pm25Stations : null
       };
 
       // do the database initialization in serial order, since some tables have foreign keys to other tables
@@ -90,6 +94,48 @@ module.exports = {
                         }
                         else {
                            db.users = users;
+                        }
+
+                        done();
+                     });
+                  }
+                  else {
+                     done();
+                  }
+               },
+
+               // create the ActiveSpecks table, if necessary
+               function(done) {
+                  if (!hasErrors()) {
+                     log.info("4) Ensuring the ActiveSpecks table exists.");
+                     var activeSpecks = new ActiveSpecks(databaseHelper);
+                     activeSpecks.initialize(function(err) {
+                        if (err) {
+                           errors.push(err)
+                        }
+                        else {
+                           db.activeSpecks = activeSpecks;
+                        }
+
+                        done();
+                     });
+                  }
+                  else {
+                     done();
+                  }
+               },
+
+               // create the PM25Stations table, if necessary
+               function(done) {
+                  if (!hasErrors()) {
+                     log.info("5) Ensuring the PM25Stations table exists.");
+                     var pm25Stations = new PM25Stations(databaseHelper);
+                     pm25Stations.initialize(function(err) {
+                        if (err) {
+                           errors.push(err)
+                        }
+                        else {
+                           db.pm25Stations = pm25Stations;
                         }
 
                         done();

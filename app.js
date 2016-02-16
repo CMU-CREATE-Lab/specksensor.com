@@ -37,7 +37,6 @@ var httpStatus = require('http-status');
 var esdr = require('./lib/esdr');
 var RemoteError = require('./lib/errors').RemoteError;
 var flow = require('nimble');
-var OutdoorAirQualityCache = require('./lib/OutdoorAirQualityCache');
 
 // decorate express.response with JSend methods
 require('jsend-utils').decorateExpressResponse(require('express').response);
@@ -124,12 +123,6 @@ flow.series([
                   }
                   else {
                      log.info("Database initialized, starting app server...");
-
-                     // Initialize the outdoor air quality cache.  This is used by the /get_message API method, which uses the
-                     // cache to compute the closest govt sensor (if any) to the requesting Speck feed and return the current
-                     // outdoor air quality, so that the Speck can display it on the screen.
-                     var outdoorAirQualityCache = new OutdoorAirQualityCache();
-                     outdoorAirQualityCache.initialize();
 
                      // configure the app
                      try {
@@ -320,6 +313,13 @@ flow.series([
                         app.use('/api/v1/*', noSessionSupport, corsSupport);
                         app.use('/api/v1/users', require('./routes/api/users')(db.users));
                         app.use('/api/v1/user-verification', require('./routes/api/user-verification'));
+
+                        // speck API
+                        app.use('/get_time', noSessionSupport, corsSupport, require('./routes/speck-api/get-time'));
+                        app.use('/get_scalar', noSessionSupport, corsSupport, require('./routes/speck-api/get-scalar'));
+                        app.use('/get_version', noSessionSupport, corsSupport, require('./routes/speck-api/get-version'));
+                        app.use('/get_outdoor_aqi', noSessionSupport, corsSupport, require('./routes/speck-api/get-outdoor-aqi')(db.activeSpecks, db.pm25Stations));
+                        app.use('/get_message', noSessionSupport, corsSupport, require('./routes/speck-api/get-message')(db.activeSpecks, db.pm25Stations));
 
                         app.use('/login', sessionSupport, require('./routes/login'));
                         app.use('/logout', sessionSupport, require('./routes/logout')(db.users));
