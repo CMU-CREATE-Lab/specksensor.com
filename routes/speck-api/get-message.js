@@ -62,22 +62,27 @@ module.exports = function(ActiveSpeckModel, PM25StationsModel) {
    // * http://airnow.gov/index.cfm?action=aqibasics.aqi
    // * http://airnow.gov/index.cfm?action=resources.aqi_conc_calc
    var getMessageForPM25Value = function(value) {
-      var description = null;
+      var message = null;
       if (value <= 12) {
-         description = "Good";
-      } else if (value <= 35.4) {
-         description = "Moderate";
-      } else if (value <= 55.4) {
-         description = "Unhealthy for Sensitive Groups";
-      } else if (value <= 150.4) {
-         description = "Unhealthy";
-      } else if (value <= 250.4) {
-         description = "Very Unhealthy";
-      } else {
-         description = "Hazardous";
+         message = "    Outdoor: Good    ";
+      }
+      else if (value <= 35.4) {
+         message = "  Outdoor: Moderate  ";
+      }
+      else if (value <= 55.4) {
+         message = "Outdoor: Unhealthy for Sen Grps";
+      }
+      else if (value <= 150.4) {
+         message = "  Outdoor: Unhealthy  ";
+      }
+      else if (value <= 250.4) {
+         message = "Outdoor: Very Unhealthy";
+      }
+      else {
+         message = "Outdoor: Hazardous";
       }
 
-      return "Outdoor AQ: " + description;
+      return message;
    };
 
    var sendResponse = function(res, message) {
