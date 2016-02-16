@@ -15,7 +15,7 @@ module.exports = function(ActiveSpeckModel, PM25StationsModel) {
       if (req.headers && req.headers['serialnumber']) {
          var serialNumber = req.headers['serialnumber'];
          if (SERIAL_NUMBER_WHITELIST.indexOf(serialNumber) >= 0) {
-            return ActiveSpeckModel.findMostRecentBySerialNumber(serialNumber, function(err, speck) {
+            return ActiveSpeckModel.findBySerialNumber(serialNumber, function(err, speck) {
                if (err) {
                   log.error("Failed to find speck by serial number: " + err);
                   sendResponse(res);

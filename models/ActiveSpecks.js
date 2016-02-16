@@ -17,7 +17,7 @@ var CREATE_TABLE_QUERY = " CREATE TABLE IF NOT EXISTS `ActiveSpecks` ( " +
                          "`created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
                          "`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
                          "PRIMARY KEY (`id`), " +
-                         "UNIQUE KEY `unique_serialNumber_feedApiKey_pair` (`serialNumber`,`feedApiKey`), " +
+                         "UNIQUE KEY `unique_serialNumber` (`serialNumber`), " +
                          "KEY `esdrUserId` (`esdrUserId`), " +
                          "KEY `geolocationVerifiedUtcSecs` (`geolocationVerifiedUtcSecs`), " +
                          "KEY `created` (`created`), " +
@@ -105,6 +105,7 @@ module.exports = function(databaseHelper) {
          // must be valid, so try to insert
          databaseHelper.execute("INSERT INTO ActiveSpecks SET ? " +
                                 "ON DUPLICATE KEY UPDATE " +
+                                "   feedApiKey=VALUES(feedApiKey), " +
                                 "   latitude=VALUES(latitude), " +
                                 "   longitude=VALUES(longitude), " +
                                 "   geolocationVerifiedUtcSecs=VALUES(geolocationVerifiedUtcSecs), " +
@@ -137,15 +138,15 @@ module.exports = function(databaseHelper) {
    };
 
    /**
-    * Tries to find the most recent record with the given <code>serialNumber</code> and returns it to the given
+    * Tries to find the record with the given <code>serialNumber</code> and returns it to the given
     * <code>callback</code>. If successful, the active speck is returned as the 2nd argument to the
     * <code>callback</code> function.  If unsuccessful, <code>null</code> is returned to the callback.
     *
     * @param {string} serialNumber serial number of the active speck record to find.
     * @param {function} callback function with signature <code>callback(err, activeSpeck)</code>
     */
-   this.findMostRecentBySerialNumber = function(serialNumber, callback) {
-      findOne("SELECT * FROM ActiveSpecks WHERE serialNumber=? ORDER BY modified DESC LIMIT 1", [serialNumber], callback);
+   this.findBySerialNumber = function(serialNumber, callback) {
+      findOne("SELECT * FROM ActiveSpecks WHERE serialNumber=?", [serialNumber], callback);
    };
 
    /**
