@@ -79,7 +79,7 @@ var NUM_TILES_TO_REQUEST = Math.ceil(FOUR_HOURS_IN_SECONDS / TILE_DURATION);
 var FEED_PREFIX = 'feed_';
 var FEED_PREFIX_LENGTH = FEED_PREFIX.length;
 
-var SEARCH_RADIUS_IN_KM = 50;
+var SEARCH_RADIUS_IN_KM = 40;
 var ONE_DEGREE_OF_LATITUDE_IN_KM = 111.045;
 
 module.exports = function(databaseHelper) {
