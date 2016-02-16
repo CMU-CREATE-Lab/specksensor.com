@@ -7,7 +7,9 @@ module.exports = function(ActiveSpeckModel, PM25StationsModel) {
    var DEFAULT_MESSAGE = config.get("firmware:message");
 
    var SERIAL_NUMBER_WHITELIST = [
-      '899c96b14ac4e4b1ab92d9cd9985595a'
+      '899c96b14ac4e4b1ab92d9cd9985595a',
+      '85529778ef2ae539ba241d00b75e7930',
+      'a94d69053d5aad86f86d125870cdec9b'
    ];
 
    router.get('/', function(req, res) {
