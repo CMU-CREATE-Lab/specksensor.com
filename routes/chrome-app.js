@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var httpStatus = require('http-status');
 var config = require('../config');
 
 router.get('/', function(req, res) {
