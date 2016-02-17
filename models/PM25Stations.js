@@ -117,55 +117,62 @@ module.exports = function(databaseHelper) {
 
    /**
     * Tries to find the nearest station with data within <code>SEARCH_RADIUS_IN_KM</code> kilometers of the given
-    * <code>latitude</code> and <code>longitude</code>.
+    * <code>latitude</code> and <code>longitude</code>.  Returns <code>null</code> if the given <code>latitude</code> or
+    * <code>longitude</code> is <code>null</code>.
     *
-    * @param {Number} latitude The latitude of the location, assumed to be non-<code>null</code>
-    * @param {Number} longitude The longitude of the location, assumed to be non-<code>null</code>
+    * @param {Number} latitude The latitude of the location. If <code>null</code>, a <code>null</code> location is returned.
+    * @param {Number} longitude The longitude of the location. If <code>null</code>, a <code>null</code> location is returned.
     * @param {function} callback
     */
    this.findNearest = function(latitude, longitude, callback) {
-      // this SQL badassery is from http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/
-      findOne(
-            "SELECT id, feedId, latitude, longitude, recentValue, recentValueTimeUtcSecs, distance FROM ( " +
-            "   SELECT " +
-            "      s.id, " +
-            "      s.feedId, " +
-            "      s.latitude, " +
-            "      s.longitude, " +
-            "      s.recentValue, " +
-            "      s.recentValueTimeUtcSecs, " +
-            "      p.radius, " +
-            "      p.distanceUnit * DEGREES(ACOS(COS(RADIANS(p.latitude)) " +
-            "                 * COS(RADIANS(s.latitude)) " +
-            "                 * COS(RADIANS(p.longitude - s.longitude)) " +
-            "                 + SIN(RADIANS(p.latitude)) " +
-            "                 * SIN(RADIANS(s.latitude)))) AS distance " +
-            "   FROM PM25Stations AS s " +
-            "   JOIN ( " +
-            "         SELECT " +
-            "            ? AS latitude, " +
-            "            ? AS longitude, " +
-            "            ? AS radius, " +
-            "            ? AS distanceUnit " +
-            "         ) AS p ON 1=1 " +
-            "   WHERE " +
-            "      recentValue IS NOT NULL " +
-            "      AND " +
-            "      s.latitude " +
-            "         BETWEEN " +
-            "            p.latitude  - (p.radius / p.distanceUnit) AND " +
-            "            p.latitude  + (p.radius / p.distanceUnit) " +
-            "      AND " +
-            "      s.longitude " +
-            "         BETWEEN " +
-            "            p.longitude - (p.radius / (p.distanceUnit * COS(RADIANS(p.latitude)))) AND " +
-            "            p.longitude + (p.radius / (p.distanceUnit * COS(RADIANS(p.latitude)))) " +
-            ") AS d " +
-            "WHERE distance <= radius " +
-            "ORDER BY distance " +
-            "LIMIT 1; ",
-            [latitude, longitude, SEARCH_RADIUS_IN_KM, ONE_DEGREE_OF_LATITUDE_IN_KM],
-            callback);
+      if (latitude == null || longitude == null) {
+         setImmediate(function() {
+            callback(null, null);
+         });
+      } else {
+         // this SQL badassery is from http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/
+         findOne(
+               "SELECT id, feedId, latitude, longitude, recentValue, recentValueTimeUtcSecs, distance FROM ( " +
+               "   SELECT " +
+               "      s.id, " +
+               "      s.feedId, " +
+               "      s.latitude, " +
+               "      s.longitude, " +
+               "      s.recentValue, " +
+               "      s.recentValueTimeUtcSecs, " +
+               "      p.radius, " +
+               "      p.distanceUnit * DEGREES(ACOS(COS(RADIANS(p.latitude)) " +
+               "                 * COS(RADIANS(s.latitude)) " +
+               "                 * COS(RADIANS(p.longitude - s.longitude)) " +
+               "                 + SIN(RADIANS(p.latitude)) " +
+               "                 * SIN(RADIANS(s.latitude)))) AS distance " +
+               "   FROM PM25Stations AS s " +
+               "   JOIN ( " +
+               "         SELECT " +
+               "            ? AS latitude, " +
+               "            ? AS longitude, " +
+               "            ? AS radius, " +
+               "            ? AS distanceUnit " +
+               "         ) AS p ON 1=1 " +
+               "   WHERE " +
+               "      recentValue IS NOT NULL " +
+               "      AND " +
+               "      s.latitude " +
+               "         BETWEEN " +
+               "            p.latitude  - (p.radius / p.distanceUnit) AND " +
+               "            p.latitude  + (p.radius / p.distanceUnit) " +
+               "      AND " +
+               "      s.longitude " +
+               "         BETWEEN " +
+               "            p.longitude - (p.radius / (p.distanceUnit * COS(RADIANS(p.latitude)))) AND " +
+               "            p.longitude + (p.radius / (p.distanceUnit * COS(RADIANS(p.latitude)))) " +
+               ") AS d " +
+               "WHERE distance <= radius " +
+               "ORDER BY distance " +
+               "LIMIT 1; ",
+               [latitude, longitude, SEARCH_RADIUS_IN_KM, ONE_DEGREE_OF_LATITUDE_IN_KM],
+               callback);
+      }
    };
 
    var refreshCache = function() {

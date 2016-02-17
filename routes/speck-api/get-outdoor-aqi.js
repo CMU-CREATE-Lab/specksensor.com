@@ -44,11 +44,11 @@ module.exports = function(ActiveSpeckModel, PM25StationsModel) {
          else {
             if (isGeolocationStale(foundSpeck)) {
                getFeedFromEsdr(feedApiKey, function(err, feed) {
-                  if (err || feed == null) {
-                     log.error("Failed to get feed from ESDR, or feed is not geolocated: " + err);
+                  if (err) {
+                     log.error("Failed to get feed from ESDR: " + err);
                   }
                   else {
-                     // We found the feed, and it's geolocated, so now do the following:
+                     // We found the feed, which may or may not be geolocated, so now try to do the following:
                      // * find the closest station (if any)
                      // * insert/update this feed in the ActiveSpecks table (both the geolocation and the nearest station)
                      //
@@ -85,13 +85,7 @@ module.exports = function(ActiveSpeckModel, PM25StationsModel) {
          else {
             // make sure it's a Speck feed
             if (feed.data.productId == SPECK_PRODUCT_ID) {
-               // don't bother with feeds which aren't geolocated
-               if (feed.data.latitude && feed.data.longitude) {
-                  callback(null, feed.data);
-               }
-               else {
-                  callback(null, null);
-               }
+               callback(null, feed.data);
             }
             else {
                callback(new Error("Ignoring request for a feed that isn't a Speck (product ID " + feed.data.productId + ")"));

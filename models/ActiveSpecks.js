@@ -65,7 +65,7 @@ var JSON_SCHEMA = {
          "minLength" : MIN_PREFERENCES_STRING_LENGTH
       }
    },
-   "required" : ["serialNumber", "feedApiKey", "latitude", "longitude", "esdrUserId", "preferences"]
+   "required" : ["serialNumber", "feedApiKey", "esdrUserId", "preferences"]
 };
 
 module.exports = function(databaseHelper) {
@@ -108,6 +108,7 @@ module.exports = function(databaseHelper) {
                                 "   feedApiKey=VALUES(feedApiKey), " +
                                 "   latitude=VALUES(latitude), " +
                                 "   longitude=VALUES(longitude), " +
+                                "   esdrUserId=VALUES(esdrUserId), " +
                                 "   geolocationVerifiedUtcSecs=VALUES(geolocationVerifiedUtcSecs), " +
                                 "   preferences=VALUES(preferences) ",
                                 speck,
