@@ -119,9 +119,9 @@ module.exports = function(databaseHelper) {
     * Tries to find the nearest station with data within <code>SEARCH_RADIUS_IN_KM</code> kilometers of the given
     * <code>latitude</code> and <code>longitude</code>.
     *
-    * @param latitude
-    * @param longitude
-    * @param callback
+    * @param {Number} latitude The latitude of the location, assumed to be non-<code>null</code>
+    * @param {Number} longitude The longitude of the location, assumed to be non-<code>null</code>
+    * @param {function} callback
     */
    this.findNearest = function(latitude, longitude, callback) {
       // this SQL badassery is from http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/
