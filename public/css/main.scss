@@ -1054,6 +1054,43 @@ a.anchor {
 }
 
 // =====================================================================================================================
+// Learn: Curricula
+// =====================================================================================================================
+
+#curricula_page {
+   .curricula-panels {
+      margin-top: 20px;
+
+      .curriculum-panel {
+
+         .curriculum-image {
+            margin-bottom:10px;
+         }
+
+         .curriculum-label {
+            font-weight: bolder;
+         }
+
+         .panel-footer {
+            font-size: smaller;
+         }
+      }
+   }
+}
+
+.curricula_page {
+   margin-top: 40px;
+
+   font-size: 16px;
+   line-height: 1.8;
+
+   .section_header {
+      font-size: 22px;
+      margin-top: 20px;
+   }
+}
+
+// =====================================================================================================================
 // Learn: Indoor Performance Testing
 // =====================================================================================================================
 

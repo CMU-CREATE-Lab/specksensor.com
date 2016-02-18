@@ -1,0 +1,55 @@
+<script type="text/javascript">
+   function recordCurriculumDownload(anchorElement) {
+      {{!-- google analytics is not enabled in all environments, so check whether it's defined --}}
+      {{#if googleAnalytics.enabled}}
+         var filename = anchorElement.href.substr(anchorElement.href.lastIndexOf('/') + 1);
+         ga('send', 'event', 'document', 'download', 'curriculum', filename);
+      {{else}}
+         // noop since analytics is disabled in this environment
+      {{/if}}
+
+      return true;
+   }
+</script>
+<div id="curricula_page" class="curricula_page">
+   <h2>Curricula</h2>
+   <div class="row">
+      <div class="col-sm-12">
+         <p>
+            If you have already completed a classroom-tested Speck project, please consider sharing it. We recognize the
+            work required to document and share a project, and so we are offering $150 in Speck store credit to anyone
+            that shares a well-documented project. Well-documented projects include video and images of student
+            creations, lesson plans, materials lists, and assessment strategy/rubric. Contact us for more information at
+            {{> mailto email="outreach@specksensor.com" subject="Speck%20curricula"}}.
+         </p>
+      </div>
+   </div>
+   <div class="curricula-panels">
+      <div class="row">
+         <div class="col-lg-4 col-sm-6">
+            <div class="panel panel-default curriculum-panel">
+               <div class="panel-heading">
+                  <h3 class="panel-title">Air Quality Lesson</h3>
+               </div>
+               <div class="panel-body">
+                  <div class="curriculum-image">
+                     <img class="img-responsive" src="/images/curricula/whats_the_weather.jpg">
+                  </div>
+                  <span class="curriculum-label">Grades</span>: Elementary<br>
+                  <span class="curriculum-label">Subjects</span>: Environmental Science, Technology<br>
+                  <span class="curriculum-label">Author</span>: Women for a Healthy Environment
+               </div>
+               {{!-- TODO: add google analytics tracking! --}}
+               <div class="panel-footer"><a href="./healthy-schools-pa-air-quality-lesson.pdf" onclick="return recordCurriculumDownload(this)" target="_blank">Download PDF <i class="fa fa-file-pdf-o"></i></a></div>
+            </div>
+         </div>
+         <div class="col-lg-4 col-sm-6">
+            <div class="panel panel-default" style="min-height:200px">
+               <div class="panel-body text-center">
+                  More curricula coming soon!
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

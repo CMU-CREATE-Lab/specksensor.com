@@ -333,15 +333,15 @@ flow.series([
                         app.use('/devices', sessionSupport, ensureAuthenticated, require('./routes/devices'));
                         app.use('/account', sessionSupport, ensureAuthenticated, require('./routes/account'));
 
-                        app.use('/',
-                                sessionSupport,
-                                function(req, res, next) {
-                                   // if serving a page which doesn't require authentication, then
-                                   // forget the remembered redirectToAfterLogin page
-                                   delete req.session.redirectToAfterLogin;
-                                   next();
-                                },
-                                require('./routes/index'));
+                        var forgetRememberedRedirectToAfterLoginPage = function(req, res, next) {
+                           // if serving a page which doesn't require authentication, then
+                           // forget the remembered redirectToAfterLogin page
+                           delete req.session.redirectToAfterLogin;
+                           next();
+                        };
+
+                        app.use('/learn', sessionSupport, forgetRememberedRedirectToAfterLoginPage, require('./routes/learn'));
+                        app.use('/', sessionSupport, forgetRememberedRedirectToAfterLoginPage, require('./routes/index'));
 
                         // ERROR HANDLERS ---------------------------------------------------------------------------------------------
 
