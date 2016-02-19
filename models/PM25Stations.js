@@ -13,7 +13,7 @@ var CREATE_TABLE_QUERY = " CREATE TABLE IF NOT EXISTS `PM25Stations` ( " +
                          "`latitude` double NOT NULL, " +
                          "`longitude` double NOT NULL, " +
                          "`recentValue` double DEFAULT NULL, " +
-                         "`recentValueTimeUtcSecs` double DEFAULT NULL, " +
+                         "`recentValueUnixTimeSecs` double DEFAULT NULL, " +
                          "`channelName` varchar(255) DEFAULT NULL, " +
                          "`created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
                          "`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
@@ -22,7 +22,7 @@ var CREATE_TABLE_QUERY = " CREATE TABLE IF NOT EXISTS `PM25Stations` ( " +
                          "KEY `latitude` (`latitude`), " +
                          "KEY `longitude` (`longitude`), " +
                          "KEY `recentValue` (`recentValue`), " +
-                         "KEY `recentValueTimeUtcSecs` (`recentValueTimeUtcSecs`), " +
+                         "KEY `recentValueUnixTimeSecs` (`recentValueUnixTimeSecs`), " +
                          "KEY `channelName` (`channelName`), " +
                          "KEY `created` (`created`), " +
                          "KEY `modified` (`modified`) " +
@@ -51,7 +51,7 @@ var JSON_SCHEMA = {
       "recentValue" : {
          "type" : "number"
       },
-      "recentValueTimeUtcSecs" : {
+      "recentValueUnixTimeSecs" : {
          "type" : "number"
       },
       "channelName" : {
@@ -132,14 +132,14 @@ module.exports = function(databaseHelper) {
       } else {
          // this SQL badassery is from http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/
          findOne(
-               "SELECT id, feedId, latitude, longitude, recentValue, recentValueTimeUtcSecs, distance FROM ( " +
+               "SELECT id, feedId, latitude, longitude, recentValue, recentValueUnixTimeSecs, distance FROM ( " +
                "   SELECT " +
                "      s.id, " +
                "      s.feedId, " +
                "      s.latitude, " +
                "      s.longitude, " +
                "      s.recentValue, " +
-               "      s.recentValueTimeUtcSecs, " +
+               "      s.recentValueUnixTimeSecs, " +
                "      p.radius, " +
                "      p.distanceUnit * DEGREES(ACOS(COS(RADIANS(p.latitude)) " +
                "                 * COS(RADIANS(s.latitude)) " +
@@ -249,7 +249,7 @@ module.exports = function(databaseHelper) {
          };
          if (typeof timestampedValue.value !== 'undefined' && timestampedValue.value != null) {
             station.recentValue = timestampedValue.value;
-            station.recentValueTimeUtcSecs = timestampedValue.timeUtcSecs;
+            station.recentValueUnixTimeSecs = timestampedValue.unixTimeSecs;
             station.channelName = timestampedValue.channelName;
          }
 
@@ -265,7 +265,7 @@ module.exports = function(databaseHelper) {
                                    "latitude=VALUES(latitude), " +
                                    "longitude=VALUES(longitude), " +
                                    "recentValue=VALUES(recentValue), " +
-                                   "recentValueTimeUtcSecs=VALUES(recentValueTimeUtcSecs), " +
+                                   "recentValueUnixTimeSecs=VALUES(recentValueUnixTimeSecs), " +
                                    "channelName=VALUES(channelName) ",
                                    station,
                                    function(err, result) {
@@ -389,13 +389,13 @@ module.exports = function(databaseHelper) {
                                 // array, quitting early if we find a non-null value
                                 for (var i = data.length - 1; i >= 0; i--) {
                                    // need to add 1 to the index to account for the timestamp in position 0
-                                   var timeUtcSecs = data[i][0];
+                                   var unixTimeSecs = data[i][0];
                                    var value = data[i][index + 1];
                                    if (value != null) {
                                       recentDataByFeedId[feedId] = {
                                          value : value,
                                          channelName : channelName,
-                                         timeUtcSecs : timeUtcSecs
+                                         unixTimeSecs : unixTimeSecs
                                       };
                                       break;
                                    }

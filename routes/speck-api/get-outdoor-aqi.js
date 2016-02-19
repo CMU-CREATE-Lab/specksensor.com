@@ -66,8 +66,8 @@ module.exports = function(ActiveSpeckModel, PM25StationsModel) {
    };
 
    var isGeolocationStale = function(activeSpeck){
-      if (activeSpeck && typeof activeSpeck.geolocationVerifiedUtcSecs !== 'undefined') {
-         var secsSinceLastRequest = Date.now() / 1000 - activeSpeck.geolocationVerifiedUtcSecs;
+      if (activeSpeck && typeof activeSpeck.geolocationVerifiedUnixTimeSecs !== 'undefined') {
+         var secsSinceLastRequest = Date.now() / 1000 - activeSpeck.geolocationVerifiedUnixTimeSecs;
          return secsSinceLastRequest > GEOLOCATION_CACHE_DURATION_SECONDS;
       }
 

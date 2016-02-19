@@ -12,14 +12,14 @@ var CREATE_TABLE_QUERY = " CREATE TABLE IF NOT EXISTS `ActiveSpecks` ( " +
                          "`latitude` double DEFAULT NULL, " +
                          "`longitude` double DEFAULT NULL, " +
                          "`esdrUserId` bigint(20) NOT NULL, " +
-                         "`geolocationVerifiedUtcSecs` double NOT NULL, " +
+                         "`geolocationVerifiedUnixTimeSecs` double NOT NULL, " +
                          "`preferences` text NOT NULL, " +
                          "`created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
                          "`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
                          "PRIMARY KEY (`id`), " +
                          "UNIQUE KEY `unique_serialNumber` (`serialNumber`), " +
                          "KEY `esdrUserId` (`esdrUserId`), " +
-                         "KEY `geolocationVerifiedUtcSecs` (`geolocationVerifiedUtcSecs`), " +
+                         "KEY `geolocationVerifiedUnixTimeSecs` (`geolocationVerifiedUnixTimeSecs`), " +
                          "KEY `created` (`created`), " +
                          "KEY `modified` (`modified`) " +
                          ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8";
@@ -84,7 +84,7 @@ module.exports = function(databaseHelper) {
    this.insertOrUpdate = function(speckDetails, callback) {
       // first build a copy and trim some fields
       var speck = {
-         geolocationVerifiedUtcSecs : Date.now() / 1000
+         geolocationVerifiedUnixTimeSecs : Date.now() / 1000
       };
       trimAndCopyPropertyIfNonEmpty(speckDetails, speck, 'serialNumber');
       trimAndCopyPropertyIfNonEmpty(speckDetails, speck, 'feedApiKey');
@@ -109,7 +109,7 @@ module.exports = function(databaseHelper) {
                                 "   latitude=VALUES(latitude), " +
                                 "   longitude=VALUES(longitude), " +
                                 "   esdrUserId=VALUES(esdrUserId), " +
-                                "   geolocationVerifiedUtcSecs=VALUES(geolocationVerifiedUtcSecs), " +
+                                "   geolocationVerifiedUnixTimeSecs=VALUES(geolocationVerifiedUnixTimeSecs), " +
                                 "   preferences=VALUES(preferences) ",
                                 speck,
                                 function(err, result) {
