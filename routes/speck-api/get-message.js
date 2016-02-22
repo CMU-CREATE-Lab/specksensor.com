@@ -6,55 +6,48 @@ var log = require('log4js').getLogger('specksensor:routes:speckapi:getmessage');
 module.exports = function(ActiveSpeckModel, PM25StationsModel) {
    var DEFAULT_MESSAGE = config.get("firmware:message");
 
-   var SERIAL_NUMBER_WHITELIST = [
-      '899c96b14ac4e4b1ab92d9cd9985595a',
-      '85529778ef2ae539ba241d00b75e7930',
-      'a94d69053d5aad86f86d125870cdec9b'
-   ];
-
    router.get('/', function(req, res) {
 
       if (req.headers && req.headers['serialnumber']) {
          var serialNumber = req.headers['serialnumber'];
-         if (SERIAL_NUMBER_WHITELIST.indexOf(serialNumber) >= 0) {
-            return ActiveSpeckModel.findBySerialNumber(serialNumber, function(err, speck) {
-               if (err) {
-                  log.error("Failed to find speck by serial number: " + err);
-                  sendResponse(res);
-               }
-               else {
-                  if (speck && speck.preferences) {
-                     try {
-                        var preferences = JSON.parse(speck.preferences);
-                        if (preferences.nearestPm25Station && typeof preferences.nearestPm25Station.feedId !== 'undefined') {
-                           var stationFeedId = preferences.nearestPm25Station.feedId;
 
-                           // now find the corresponding PM25Station
-                           return PM25StationsModel.findByFeedId(stationFeedId, function(err, station) {
-                              if (err) {
-                                 log.error("Failed to find the PM25Station with feedId [" + stationFeedId + "]");
-                                 sendResponse(res);
+         return ActiveSpeckModel.findBySerialNumber(serialNumber, function(err, speck) {
+            if (err) {
+               log.error("Failed to find speck by serial number: " + err);
+               sendResponse(res);
+            }
+            else {
+               if (speck && speck.preferences) {
+                  try {
+                     var preferences = JSON.parse(speck.preferences);
+                     if (preferences.nearestPm25Station && typeof preferences.nearestPm25Station.feedId !== 'undefined') {
+                        var stationFeedId = preferences.nearestPm25Station.feedId;
+
+                        // now find the corresponding PM25Station
+                        return PM25StationsModel.findByFeedId(stationFeedId, function(err, station) {
+                           if (err) {
+                              log.error("Failed to find the PM25Station with feedId [" + stationFeedId + "]");
+                              sendResponse(res);
+                           }
+                           else {
+                              if (station && station.recentValue != null) {
+                                 sendResponse(res, getMessageForPM25Value(station.recentValue));
                               }
                               else {
-                                 if (station && station.recentValue != null) {
-                                    sendResponse(res, getMessageForPM25Value(station.recentValue));
-                                 }
-                                 else {
-                                    sendResponse(res);
-                                 }
+                                 sendResponse(res);
                               }
-                           });
-                        }
-                     }
-                     catch (e) {
-                        log.error("Failed to parse preferences as JSON for Speck with serial number [" + serialNumber + "]");
+                           }
+                        });
                      }
                   }
-
-                  sendResponse(res);
+                  catch (e) {
+                     log.error("Failed to parse preferences as JSON for Speck with serial number [" + serialNumber + "]");
+                  }
                }
-            });
-         }
+
+               sendResponse(res);
+            }
+         });
       }
 
       sendResponse(res);
