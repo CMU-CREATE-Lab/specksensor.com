@@ -13,5 +13,8 @@
       "pool" : {
          "connectionLimit" : 10
       }
+   },
+   "pm25Stations" : {
+      "refreshIntervalMillis" : 21600000
    }
 }

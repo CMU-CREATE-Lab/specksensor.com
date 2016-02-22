@@ -67,7 +67,7 @@ var JSON_SCHEMA = {
 var ESDR_MULTIFEED_ROOT_URL = "http://esdr.cmucreatelab.org/api/v1/multifeeds/pm_25";
 var ESDR_QUERY_ITEM_LIMIT = 1000;
 
-var TIMER_INTERVAL_IN_MILLIS = 20 * 60 * 1000;     // 20 minutes
+var REFRESH_INTERVAL_MILLIS = config.get("pm25Stations:refreshIntervalMillis");
 var FOUR_HOURS_IN_SECONDS = 4 * 60 * 60;           // 4 hours
 
 // stuff for tile fetching
@@ -93,7 +93,8 @@ module.exports = function(databaseHelper) {
 
          setImmediate(function() {
             // Set up a timer to refresh the cache of government air quality stations
-            setInterval(refreshCache, TIMER_INTERVAL_IN_MILLIS);
+            log.info("Will refresh cache every [" + (REFRESH_INTERVAL_MILLIS / (1000 * 60)) + "] minutes");
+            setInterval(refreshCache, REFRESH_INTERVAL_MILLIS);
 
             // go ahead and refresh the data now, too, so we have it ready to go on server startup
             refreshCache();
@@ -129,7 +130,8 @@ module.exports = function(databaseHelper) {
          setImmediate(function() {
             callback(null, null);
          });
-      } else {
+      }
+      else {
          // this SQL badassery is from http://www.plumislandmedia.net/mysql/haversine-mysql-nearest-loc/
          findOne(
                "SELECT id, feedId, latitude, longitude, recentValue, recentValueUnixTimeSecs, distance FROM ( " +
@@ -335,7 +337,7 @@ module.exports = function(databaseHelper) {
                      }
                      else {
                         // got the data
-                        if (res.statusCode == httpStatus.OK                    &&
+                        if (                                                   res.statusCode == httpStatus.OK &&
                             typeof res.body.data !== 'undefined'               &&
                             res.body.data != null                              &&
                             typeof res.body.full_channel_names !== 'undefined' &&

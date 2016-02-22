@@ -134,6 +134,9 @@ config.defaults(
          },
          "affiliateMarketing" : {
             "enabled" : false
+         },
+         "pm25Stations" : {
+            "refreshIntervalMillis" : 20 * 60 * 1000    // default to refreshing PM 2.5 Station cache every 20 minutes
          }
       });
 
