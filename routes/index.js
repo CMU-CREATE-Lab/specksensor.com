@@ -68,6 +68,18 @@ router.get('/support/contact-us', function(req, res) {
    });
 });
 
+router.get('/support/feedback', function(req, res) {
+   res.redirect('https://docs.google.com/forms/d/1YWloMINortsAr2p-E8w2YGHKLlo-_Y06D8O7JSsC8u8/viewform');
+});
+
+//======================================================================================================================
+// LIBRARIES
+//----------------------------------------------------------------------------------------------------------------------
+
+router.get('/libraries/apply', function(req, res) {
+   res.redirect('https://docs.google.com/forms/d/1UIvc81SwFCQZQzRK3XxwMOWujFogTeChj68ssNnNbIM/viewform');
+});
+
 //======================================================================================================================
 // HEADER LINKS
 //----------------------------------------------------------------------------------------------------------------------
