@@ -40,34 +40,56 @@ templates['dashboard_device_and_feeds_sidebar_menu_item'] = template({"1":functi
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.feeds : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "   </div>\n</div>";
 },"useData":true});
+templates['delete_device_confirmation_dialog'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "<div class=\"dynamic_dialog modal fade\" tabindex=\"-1\" role=\"dialog\">\n   <div class=\"modal-dialog\">\n      <div class=\"modal-content\">\n         <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n               <span aria-hidden=\"true\">&times;</span>\n            </button>\n            <h4 class=\"modal-title\">Delete Confirmation</h4>\n         </div>\n         <div class=\"modal-body\">\n            <div class=\"alert alert-warning\" role=\"alert\">\n               Warning: Are you sure you want to delete this Speck device?\n            </div>\n            <p>\n               If you choose to delete, the <b>"
+    + container.escapeExpression(((helper = (helper = helpers.deviceName || (depth0 != null ? depth0.deviceName : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"deviceName","hash":{},"data":data}) : helper)))
+    + "</b> device will be removed from your account immediately.\n            </p>\n         </div>\n         <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Cancel</button>\n            <button id=\"delete_device_button\" type=\"button\" class=\"btn btn-danger\">Delete</button>\n         </div>\n      </div>\n   </div>\n</div>\n";
+},"useData":true});
+templates['delete_feed_confirmation_dialog'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div class=\"dynamic_dialog modal fade\" tabindex=\"-1\" role=\"dialog\">\n   <div class=\"modal-dialog\">\n      <div class=\"modal-content\">\n         <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n               <span aria-hidden=\"true\">&times;</span>\n            </button>\n            <h4 class=\"modal-title\">Delete Confirmation</h4>\n         </div>\n         <div class=\"modal-body\">\n            <div class=\"alert alert-warning\" role=\"alert\">\n               Warning: Are you <b>ABSOLUTELY</b> sure you want to delete this installation location?\n            </div>\n            <p>\n               This <b>cannot</b> be undone. This will immediately and permanently delete the\n               <b>"
+    + alias4(((helper = (helper = helpers.feedName || (depth0 != null ? depth0.feedName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"feedName","hash":{},"data":data}) : helper)))
+    + "</b> installation location and all of its data.\n            </p>\n            <p>\n               Please type the installation location name ("
+    + alias4(((helper = (helper = helpers.feedName || (depth0 != null ? depth0.feedName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"feedName","hash":{},"data":data}) : helper)))
+    + ") below to confirm.\n            </p>\n            <form onsubmit=\"return false;\">\n               <div class=\"form-group\">\n                  <input type=\"text\" id=\"deletion_confirmation_feed_name\" class=\"form-control\" style=\"width:100%\" placeholder=\""
+    + alias4(((helper = (helper = helpers.feedName || (depth0 != null ? depth0.feedName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"feedName","hash":{},"data":data}) : helper)))
+    + "\">\n               </div>\n            </form>\n         </div>\n         <div class=\"modal-footer\">\n            <button id=\"delete_feed_button\" type=\"button\" class=\"btn btn-danger\" disabled=\"disabled\">Delete</button>\n         </div>\n      </div>\n   </div>\n</div>\n";
+},"useData":true});
 templates['device_and_feeds'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "      <div class=\"feeds_container\">\n"
+  return "         <div class=\"feeds_container\">\n"
     + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.feeds : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "      </div>\n";
+    + "         </div>\n";
 },"2":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "            <div class=\"panel panel-default\">\n               <div class=\"panel-heading\"><h3 class=\"panel-title\">"
-    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</h3></div>\n               <div class=\"panel-body\">\n                  <div class=\"feed_table\">\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Visibility:\n                        </div>\n                        <div class=\"table_cell_value capitalize\">\n                           "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPublic : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(5, data, 0),"data":data})) != null ? stack1 : "")
-    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Exposure:\n                        </div>\n                        <div class=\"table_cell_value capitalize\">\n                           "
-    + alias4(((helper = (helper = helpers.exposure || (depth0 != null ? depth0.exposure : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"exposure","hash":{},"data":data}) : helper)))
-    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Time Range:\n                        </div>\n                        <div class=\"table_cell_value\">\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasData : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(9, data, 0),"data":data})) != null ? stack1 : "")
-    + "                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Last Upload:\n                        </div>\n                        <div class=\"table_cell_value\">\n                           "
-    + alias4(((helper = (helper = helpers.lastUploadFormatted || (depth0 != null ? depth0.lastUploadFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"lastUploadFormatted","hash":{},"data":data}) : helper)))
-    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           Created:\n                        </div>\n                        <div class=\"table_cell_value\">\n                           "
-    + alias4(((helper = (helper = helpers.createdFormatted || (depth0 != null ? depth0.createdFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"createdFormatted","hash":{},"data":data}) : helper)))
-    + "\n                        </div>\n                     </div>\n                  </div>\n\n               </div>\n               <div class=\"panel-footer feed_api_info\">\n                  <div class=\"feed_table\" style=\"font-size: smaller\">\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           ID:\n                        </div>\n                        <div class=\"table_cell_value api_key\">\n                           "
+  return "               <div id=\"feed_panel_"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           API Key (read-only):\n                        </div>\n                        <div class=\"table_cell_value api_key\">\n                           "
+    + "\" class=\"panel panel-default\">\n                  <div class=\"panel-heading\">\n                     <div class=\"pull-right feed_controls\">\n                        <div class=\"control_button\" onclick=\"confirmDeleteFeed("
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + ");\"><i class=\"fa fa-trash-o\"></i>\n                        </div>\n                     </div>\n                     <h3 class=\"panel-title\">"
+    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
+    + "</h3>\n                  </div>\n                  <div class=\"panel-body\">\n                     <div class=\"feed_table\">\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              Visibility:\n                           </div>\n                           <div class=\"table_cell_value capitalize\">\n                              "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPublic : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.program(5, data, 0),"data":data})) != null ? stack1 : "")
+    + "\n                           </div>\n                        </div>\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              Exposure:\n                           </div>\n                           <div class=\"table_cell_value capitalize\">\n                              "
+    + alias4(((helper = (helper = helpers.exposure || (depth0 != null ? depth0.exposure : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"exposure","hash":{},"data":data}) : helper)))
+    + "\n                           </div>\n                        </div>\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              Time Range:\n                           </div>\n                           <div class=\"table_cell_value\">\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasData : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(9, data, 0),"data":data})) != null ? stack1 : "")
+    + "                           </div>\n                        </div>\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              Last Upload:\n                           </div>\n                           <div class=\"table_cell_value\">\n                              "
+    + alias4(((helper = (helper = helpers.lastUploadFormatted || (depth0 != null ? depth0.lastUploadFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"lastUploadFormatted","hash":{},"data":data}) : helper)))
+    + "\n                           </div>\n                        </div>\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              Created:\n                           </div>\n                           <div class=\"table_cell_value\">\n                              "
+    + alias4(((helper = (helper = helpers.createdFormatted || (depth0 != null ? depth0.createdFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"createdFormatted","hash":{},"data":data}) : helper)))
+    + "\n                           </div>\n                        </div>\n                     </div>\n\n                  </div>\n                  <div class=\"panel-footer feed_api_info\">\n                     <div class=\"feed_table\" style=\"font-size: smaller\">\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              ID:\n                           </div>\n                           <div class=\"table_cell_value api_key\">\n                              "
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\n                           </div>\n                        </div>\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              API Key (read-only):\n                           </div>\n                           <div class=\"table_cell_value api_key\">\n                              "
     + alias4(((helper = (helper = helpers.apiKeyReadOnly || (depth0 != null ? depth0.apiKeyReadOnly : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"apiKeyReadOnly","hash":{},"data":data}) : helper)))
-    + "\n                        </div>\n                     </div>\n                     <div class=\"table_row\">\n                        <div class=\"table_cell_label\">\n                           API Key (read-write):\n                        </div>\n                        <div class=\"table_cell_value api_key\">\n                           "
+    + "\n                           </div>\n                        </div>\n                        <div class=\"table_row\">\n                           <div class=\"table_cell_label\">\n                              API Key (read-write):\n                           </div>\n                           <div class=\"table_cell_value api_key\">\n                              "
     + alias4(((helper = (helper = helpers.apiKey || (depth0 != null ? depth0.apiKey : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"apiKey","hash":{},"data":data}) : helper)))
-    + "\n                        </div>\n                     </div>\n                  </div>\n\n               </div>\n            </div>\n";
+    + "\n                           </div>\n                        </div>\n                     </div>\n                  </div>\n               </div>\n";
 },"3":function(container,depth0,helpers,partials,data) {
     return "public";
 },"5":function(container,depth0,helpers,partials,data) {
@@ -75,27 +97,29 @@ templates['device_and_feeds'] = template({"1":function(container,depth0,helpers,
 },"7":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "                              "
+  return "                                 "
     + alias4(((helper = (helper = helpers.minTimeSecsFormatted || (depth0 != null ? depth0.minTimeSecsFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"minTimeSecsFormatted","hash":{},"data":data}) : helper)))
     + " - "
     + alias4(((helper = (helper = helpers.maxTimeSecsFormatted || (depth0 != null ? depth0.maxTimeSecsFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"maxTimeSecsFormatted","hash":{},"data":data}) : helper)))
     + "\n";
 },"9":function(container,depth0,helpers,partials,data) {
-    return "                              n/a\n";
-},"11":function(container,depth0,helpers,partials,data) {
-    return "      <div class=\"panel-body feeds_container\">\n         You have not yet defined an installation location for this Speck. Please use\n         the <a href=\"/support/software\">Speck app</a> to finish the upload configuration\n         process and specify where you have installed this Speck.\n      </div>\n";
+    return "                                 n/a\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "<div id=\"device_list_item_"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" class=\"panel panel-primary device_list_item\">\n   <div class=\"panel-heading\">\n      <div class=\"pull-right serial_number\">"
+    + "\" class=\"panel panel-primary device_list_item\">\n   <div class=\"panel-heading\">\n      <div class=\"pull-right device_controls\">\n         <div class=\"control_button\" onclick=\"confirmDeleteDevice("
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + ");\"><i class=\"fa fa-trash-o\"></i></div>\n      </div>\n      <div class=\"pull-right\">\n         <div class=\"serial_number serial_number_header\">"
     + alias4(((helper = (helper = helpers.serialNumberFormatted || (depth0 != null ? depth0.serialNumberFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"serialNumberFormatted","hash":{},"data":data}) : helper)))
-    + "</div>\n      <h3 class=\"panel-title\">"
+    + "</div>\n      </div>\n      <div>\n         <h3 class=\"panel-title\">"
     + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</h3>\n   </div>\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.feeds : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
-    + "</div>";
+    + "</h3>\n         <div class=\"serial_number serial_number_header_alt\">"
+    + alias4(((helper = (helper = helpers.serialNumberFormatted || (depth0 != null ? depth0.serialNumberFormatted : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"serialNumberFormatted","hash":{},"data":data}) : helper)))
+    + "</div>\n      </div>\n   </div>\n   <div class=\"feeds_outer_container\">\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.feeds : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "   </div>\n</div>\n\n";
 },"useData":true});
 templates['feed_list_item'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -149,6 +173,9 @@ templates['grapher_value_range_color_box'] = template({"compiler":[7,">= 4.0.0"]
     + "; z-index:"
     + alias4(((helper = (helper = helpers.zIndex || (depth0 != null ? depth0.zIndex : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"zIndex","hash":{},"data":data}) : helper)))
     + ";\"></div>";
+},"useData":true});
+templates['no_feeds_for_device'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div class=\"panel-body\">\n   There are no installation locations defined for this Speck. Please use\n   the <a href=\"/support/software\">Speck app</a> to and use the Upload Configuration\n   tab to specify where you have installed this Speck. If you need help, please\n   see our <a href=\"/support/software#upload-configuration\">Upload Configuration video tutorial</a>.\n</div>\n";
 },"useData":true});
 templates['public_data_geocode_failed'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div class=\"alert alert-danger\">Sorry, that doesn't appear to be a valid location or address.</div>\n";

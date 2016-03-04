@@ -1064,7 +1064,7 @@ a.anchor {
       .curriculum-panel {
 
          .curriculum-image {
-            margin-bottom:10px;
+            margin-bottom: 10px;
          }
 
          .curriculum-label {
@@ -1655,14 +1655,52 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
 
    .device_list {
 
+      .device_controls div, .feed_controls div {
+         display: inline-block;
+         cursor: pointer;
+         margin-left: 20px;
+      }
+
+      .control_button .fa {
+         font-size: 18px;
+         line-height: 18px;
+      }
+
+      .device_controls {
+         .control_button:hover {
+            color: #000000;
+         }
+      }
+
+      .feed_controls {
+         .control_button:hover {
+            color: #337ab7;
+         }
+      }
+
       .device_list_item {
+         margin-bottom: 30px;
 
          .serial_number {
             font-family: "Courier New", Courier, monospace;
             font-size: smaller;
+            line-height: 18px;
+            margin-top: 1px;
+         }
 
+         .serial_number_header {
             @media (max-width: $EXTRA_SMALL_WIDTH) {
                display: none;
+            }
+         }
+         .serial_number_header_alt {
+            display: none;
+            margin-top: 10px;
+
+            @media (max-width: $EXTRA_SMALL_WIDTH) {
+               display: block;
+               font-size: 9px;
+               line-height: 9px;
             }
          }
 

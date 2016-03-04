@@ -1044,38 +1044,64 @@ a.anchor {
           bottom: 0;
           margin-bottom: 0; } }
 
-#devices_page .device_list .device_list_item .serial_number {
-  font-family: "Courier New", Courier, monospace;
-  font-size: smaller; }
-  @media (max-width: 629px) {
-    #devices_page .device_list .device_list_item .serial_number {
-      display: none; } }
+#devices_page .device_list .device_controls div, #devices_page .device_list .feed_controls div {
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 20px; }
 
-#devices_page .device_list .device_list_item .feeds_container {
-  margin: 10px 10px 0 10px; }
-  #devices_page .device_list .device_list_item .feeds_container .panel {
-    margin-bottom: 20px; }
-  #devices_page .device_list .device_list_item .feeds_container .panel:last-of-type {
-    margin-bottom: 10px; }
-  #devices_page .device_list .device_list_item .feeds_container .feed_table {
-    display: table; }
-    #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row {
-      display: table-row; }
-      #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row .table_cell_label {
-        display: table-cell;
-        font-weight: bold;
-        white-space: nowrap; }
-      #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row .table_cell_value {
-        display: table-cell;
-        padding-left: 10px; }
-      #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row .capitalize {
-        text-transform: capitalize; }
-  #devices_page .device_list .device_list_item .feeds_container .feed_api_info {
-    display: none; }
-    #devices_page .device_list .device_list_item .feeds_container .feed_api_info .api_key {
-      font-family: "Courier New", Courier, monospace;
-      word-wrap: break-word;
-      word-break: break-all; }
+#devices_page .device_list .control_button .fa {
+  font-size: 18px;
+  line-height: 18px; }
+
+#devices_page .device_list .device_controls .control_button:hover {
+  color: #000000; }
+
+#devices_page .device_list .feed_controls .control_button:hover {
+  color: #337ab7; }
+
+#devices_page .device_list .device_list_item {
+  margin-bottom: 30px; }
+  #devices_page .device_list .device_list_item .serial_number {
+    font-family: "Courier New", Courier, monospace;
+    font-size: smaller;
+    line-height: 18px;
+    margin-top: 1px; }
+  @media (max-width: 629px) {
+    #devices_page .device_list .device_list_item .serial_number_header {
+      display: none; } }
+  #devices_page .device_list .device_list_item .serial_number_header_alt {
+    display: none;
+    margin-top: 10px; }
+    @media (max-width: 629px) {
+      #devices_page .device_list .device_list_item .serial_number_header_alt {
+        display: block;
+        font-size: 9px;
+        line-height: 9px; } }
+  #devices_page .device_list .device_list_item .feeds_container {
+    margin: 10px 10px 0 10px; }
+    #devices_page .device_list .device_list_item .feeds_container .panel {
+      margin-bottom: 20px; }
+    #devices_page .device_list .device_list_item .feeds_container .panel:last-of-type {
+      margin-bottom: 10px; }
+    #devices_page .device_list .device_list_item .feeds_container .feed_table {
+      display: table; }
+      #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row {
+        display: table-row; }
+        #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row .table_cell_label {
+          display: table-cell;
+          font-weight: bold;
+          white-space: nowrap; }
+        #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row .table_cell_value {
+          display: table-cell;
+          padding-left: 10px; }
+        #devices_page .device_list .device_list_item .feeds_container .feed_table .table_row .capitalize {
+          text-transform: capitalize; }
+    #devices_page .device_list .device_list_item .feeds_container .feed_api_info {
+      display: none; }
+      #devices_page .device_list .device_list_item .feeds_container .feed_api_info .api_key {
+        font-family: "Courier New", Courier, monospace;
+        word-wrap: break-word;
+        word-break: break-all; }
 
 @media (max-width: 767px) {
   #devices_page #page_title {

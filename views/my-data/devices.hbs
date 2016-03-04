@@ -4,7 +4,12 @@
 
    var devices = [];
    var devicesById = {};
+   var feedsById = {};
    var hasAtLeastOneFeed = false;
+   var genericDialog;
+   var deleteDeviceConfirmationDialogTemplate;
+   var deleteFeedConfirmationDialogTemplate;
+   var noFeedsForDeviceTemplate;
 
    $(document).ready(function() {
       // enable popovers
@@ -15,6 +20,11 @@
          esdr = new org.cmucreatelab.esdr.ESDR(token);
          fetchDevices();
       });
+
+      genericDialog = $('#generic_dialog');
+      deleteDeviceConfirmationDialogTemplate = Handlebars.templates['delete_device_confirmation_dialog'];
+      deleteFeedConfirmationDialogTemplate = Handlebars.templates['delete_feed_confirmation_dialog'];
+      noFeedsForDeviceTemplate = Handlebars.templates['no_feeds_for_device'];
    });
 
    function fetchDevices() {
@@ -31,57 +41,52 @@
                   devicesById[device.id] = device;
                });
 
-               // now load all the feeds and associate each with its device (TODO: trim down the list of requested fields)
+               // now load all the feeds and associate each with its device
                esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + "&orderBy=-lastUpload&fields=id,name,deviceId,apiKey,apiKeyReadOnly,isPublic,exposure,created,lastUpload,minTimeSecs,maxTimeSecs&cache-bust=" + Date.now(),
-                     {
-                        success : function(foundFeeds) {
-                           if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
+                               {
+                                  success : function(foundFeeds) {
+                                     if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
 
-                              hasAtLeastOneFeed = true;
+                                        hasAtLeastOneFeed = true;
 
-                              // associate each feed with its device
-                              foundFeeds.rows.forEach(function(feed) {
-                                 var hasData = feed.minTimeSecs != null && feed.maxTimeSecs != null;
-                                 feed.hasData = hasData;
-                                 feed.minTimeSecsFormatted = hasData ? createDateTimeString(new Date(feed.minTimeSecs * 1000)) : null;
-                                 feed.maxTimeSecsFormatted = hasData ? createDateTimeString(new Date(feed.maxTimeSecs * 1000)) : null;
-                                 feed.lastUploadFormatted = hasData ? createDateTimeString(new Date(feed.lastUpload)) : "never";
-                                 feed.createdFormatted = createDateTimeString(new Date(feed.created));
-                                 devicesById[feed.deviceId].feeds.push(feed);
-                              });
-                           }
+                                        // associate each feed with its device
+                                        foundFeeds.rows.forEach(function(feed) {
+                                           var hasData = feed.minTimeSecs != null && feed.maxTimeSecs != null;
+                                           feed.hasData = hasData;
+                                           feed.minTimeSecsFormatted = hasData ? createDateTimeString(new Date(feed.minTimeSecs * 1000)) : null;
+                                           feed.maxTimeSecsFormatted = hasData ? createDateTimeString(new Date(feed.maxTimeSecs * 1000)) : null;
+                                           feed.lastUploadFormatted = hasData ? createDateTimeString(new Date(feed.lastUpload)) : "never";
+                                           feed.createdFormatted = createDateTimeString(new Date(feed.created));
+                                           devicesById[feed.deviceId].feeds.push(feed);
+                                           feedsById[feed.id] = feed;
+                                        });
+                                     }
 
-                           renderDevices();
-                        },
-                        unauthorized : function() {
-                           // TODO:
-                           console.log("Unauthorized");
-                        },
-                        validationError : function(errors) {
-                           // TODO
-                           console.log("Validation error while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(errors, null, 3));
-                        },
-                        error : function(responseBody, httpStatusCode) {
-                           // TODO: some other error
-                           console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + JSON.stringify(responseBody, null, 3));
-                        },
-                        failure : function(err, httpStatusCode) {
-                           // TODO: some other error
-                           console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") while trying to load feeds for device ID [" + deviceId + "]: " + err);
-                        }
-                     });
+                                     renderDevices();
+                                  },
+                                  unauthorized : function() {
+                                     showDialog("Unauthorized", "Failed to load feeds due to an authorization error.  Please reload the page and try again.");
+                                  },
+                                  validationError : function(errors) {
+                                     showDialog("Validation Error", "Failed to load feeds due to a validation error.  Please reload the page and try again.");
+                                  },
+                                  error : function(responseBody, httpStatusCode) {
+                                     showDialog("Unexpected Error", "Failed to load feeds due to an unexpected error (HTTP " + httpStatusCode + ").  Please reload the page and try again, or contact support@specksensor.com for help.");
+                                  },
+                                  failure : function(err, httpStatusCode) {
+                                     showDialog("Unexpected Failure", "Failed to load feeds due to an unexpected failure (HTTP " + httpStatusCode + ").  Please reload the page and try again, or contact support@specksensor.com for help.");
+                                  }
+                               });
             }
             else {
                renderDevices();
             }
          },
          unauthorized : function() {
-            // TODO:
-            console.log("Unauthorized error trying to get the device list from ESDR.");
+            showDialog("Unauthorized", "Failed to load devices due to an authorization error.  Please reload the page and try again.");
          },
-         error : function(responseBody) {
-            // TODO:
-            console.log("Unexpected error trying to get the device list from ESDR.");
+         error : function(responseBody, httpStatusCode) {
+            showDialog("Unexpected Error", "Failed to load devices due to an unexpected error (HTTP " + httpStatusCode + ").  Please reload the page and try again, or contact support@specksensor.com for help.");
          }
       });
    }
@@ -91,8 +96,14 @@
 
          var deviceAndFeedsTemplate = Handlebars.templates['device_and_feeds'];
          devices.forEach(function(device) {
+            console.log("Device [" + device.name + "]: " + device.feeds.length);
             var deviceElement = $(deviceAndFeedsTemplate(device));
             $("#device_list").append(deviceElement).show();
+
+            if (device.feeds && device.feeds.length <= 0) {
+               deviceElement.find(".feeds_outer_container").append($(noFeedsForDeviceTemplate()));
+            }
+
             $("#device_list_container").show();
          });
 
@@ -117,6 +128,179 @@
    function createDateTimeString(date) {
       return date.toLocaleDateString() + " " + date.toLocaleTimeString()
    }
+
+   function confirmDeleteDevice(deviceId) {
+      console.log("Request to delete device [" + deviceId + "]");
+      if (devicesById && devicesById[deviceId]) {
+         if (typeof devicesById[deviceId].feeds === 'undefined' ||
+             devicesById[deviceId].feeds == null ||
+             devicesById[deviceId].feeds.length <= 0) {
+
+            // remove any old dynamic dialogs
+            $(".dynamic_dialog").remove();
+
+            var deviceName = devicesById[deviceId].name;
+            var dialogElement = $(deleteDeviceConfirmationDialogTemplate({ deviceName : deviceName }));
+
+            // add it to the DOM
+            $("#dialogs_container").append(dialogElement);
+
+            // attach event handlers
+            var deleteButton = $("#delete_device_button");
+            deleteButton.click(function() {
+               deleteButton.prop("disabled", true);
+               deleteDevice(deviceId, dialogElement);
+            });
+
+            // display the dialog
+            dialogElement.modal('show');
+         }
+         else {
+            showDialog("Cannot Delete Device",
+                       "Sorry, to prevent accidental deletion of valuable data, " +
+                       "we do not allow you to delete a Speck device which has existing " +
+                       "installation locations.<br><br>Please delete all of its installation " +
+                       "locations first, and then delete the Speck.");
+         }
+      }
+      else {
+         showDialog("Unknown Device", "Sorry, that doesn't appear to be a valid device.");
+      }
+   }
+
+   function deleteDevice(deviceId, dialogElement) {
+      esdr.devices.deleteDevice(deviceId, {
+         complete : function() {
+            if (dialogElement) {
+               dialogElement.modal('hide');
+            }
+         },
+         success : function() {
+            // fade out the device, then remove it from the DOM
+            $("#device_list_item_" + deviceId).fadeOut(1000, function() {
+               $(this).remove();
+
+               // update our collections
+               delete devicesById[deviceId];
+               devices = devices.filter(function(device) {
+                  return device.id != deviceId;
+               });
+
+               // if we have no devices now, then show the has_no_devices_panel
+               if (devices.length <= 0) {
+                  $("#device_list_container").hide();
+                  $("#has_no_devices_panel").show();
+               }
+            });
+         },
+         conflict : function(data) {
+            showDialog("Conflict", "The device could not be deleted because it has existing feeds.");
+         },
+         unauthorized : function() {
+            showDialog("Unauthorized", "Failed to delete the device due to an authorization error.  Please reload the page and try again.");
+         },
+         forbidden : function() {
+            showDialog("Forbidden", "You do not have permission to delete that device.");
+         },
+         notFound : function() {
+            showDialog("Not Found", "The device could not be deleted because it could not be found.");
+         },
+         error : function(responseBody, httpStatusCode) {
+            showDialog("Unexpected Error", "The device could not be deleted due to an unexpected error (HTTP " + httpStatusCode + ").");
+         },
+         failure : function(err, httpStatusCode) {
+            showDialog("Unexpected Failure", "The device could not be deleted due to an unexpected failure (HTTP " + httpStatusCode + ").");
+         },
+      });
+   }
+   function confirmDeleteFeed(feedId) {
+      console.log("Request to delete feed [" + feedId + "]");
+      if (feedsById && feedsById[feedId]) {
+         // remove any old dynamic dialogs
+         $(".dynamic_dialog").remove();
+
+         var feedName = feedsById[feedId].name;
+         var dialogElement = $(deleteFeedConfirmationDialogTemplate({ feedName : feedName }));
+
+         // add it to the DOM
+         $("#dialogs_container").append(dialogElement);
+
+         // attach event handlers
+         var deleteButton = $("#delete_feed_button");
+         $("#deletion_confirmation_feed_name").keyup(function() {
+            deleteButton.prop("disabled", feedName != $("#deletion_confirmation_feed_name").val());
+         });
+         deleteButton.click(function() {
+            deleteButton.prop("disabled", true);
+            deleteFeed(feedId, dialogElement);
+         });
+
+         // display the dialog
+         dialogElement.modal('show');
+      }
+      else {
+         showDialog("Unknown Installation Location",
+                    "Sorry, that doesn't appear to be a valid installation location.");
+      }
+   }
+
+   function deleteFeed(feedId, dialogElement) {
+      esdr.feeds.deleteFeed(feedId, {
+         complete : function() {
+            if (dialogElement) {
+               dialogElement.modal('hide');
+            }
+         },
+         success : function() {
+            // fade out the feed, then remove it from the DOM
+            $("#feed_panel_" + feedId).fadeOut(1000, function() {
+               $(this).remove();
+
+               // update the collections
+               var feed = feedsById[feedId];
+               var device = devicesById[feed.deviceId];
+               device.feeds = device.feeds.filter(function(feed) {
+                  return feed.id != feedId;
+               });
+               delete feedsById[feedId];
+
+               // now, if this device has no more feeds, show the message saying so
+               if (device.feeds.length <= 0) {
+                  var deviceElement = $("#device_list_item_" + device.id);
+                  deviceElement.find(".feeds_outer_container").empty().append($(noFeedsForDeviceTemplate()));
+               }
+
+               // if there are no more feeds for ANY device, then hide the checkbox for showing extra details for API devs
+               if (Object.keys(feedsById).length <= 0) {
+                  $("#developer_info_toggle").hide();
+               }
+            });
+         },
+         unauthorized : function() {
+            showDialog("Unauthorized", "Failed to delete the feed due to an authorization error.  Please reload the page and try again.");
+         },
+         forbidden : function() {
+            showDialog("Forbidden", "You do not have permission to delete that feed.");
+         },
+         notFound : function() {
+            showDialog("Not Found", "The feed could not be deleted because it could not be found.");
+         },
+         error : function(responseBody, httpStatusCode) {
+            showDialog("Unexpected Error", "The feed could not be deleted due to an unexpected error (HTTP " + httpStatusCode + ").");
+         },
+         failure : function(err, httpStatusCode) {
+            showDialog("Unexpected Failure", "The feed could not be deleted due to an unexpected failure (HTTP " + httpStatusCode + ").");
+         },
+      });
+   }
+
+   function showDialog(title, content, buttonLabel) {
+      genericDialog.find(".modal-title").html(title);
+      genericDialog.find(".dialog_content").html(content);
+      genericDialog.find(".dialog_button").text(buttonLabel || "OK");
+      genericDialog.modal('show');
+   }
+
 </script>
 <div id="devices_page">
    <div id="device_list_container" style="display:none">
@@ -138,8 +322,27 @@
    <div id="has_no_devices_panel" style="display:none">
       <h2>My Specks</h2>
       <p>
-         You have not yet registered any Specks. Please download and install our
+         You do not have any registered Specks. Please download and install our
          <a href="/support/software">Speck app</a> to register your Speck and configure it for uploads.
       </p>
+   </div>
+   <div id="dialogs_container">
+      <div id="generic_dialog" class="modal fade" tabindex="-1" role="dialog">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title"></h4>
+               </div>
+               <div class="modal-body">
+                  <p class="dialog_content"></p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-primary dialog_button" data-dismiss="modal"></button>
+               </div>
+            </div>
+         </div>
+      </div>
    </div>
 </div>
