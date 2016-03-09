@@ -1,8 +1,9 @@
 <script type="text/javascript">
-   function recordCurriculumDownload(anchorElement) {
+   function recordCurriculumDownload(anchorElement, filename) {
       {{!-- google analytics is not enabled in all environments, so check whether it's defined --}}
       {{#if googleAnalytics.enabled}}
-         var filename = anchorElement.href.substr(anchorElement.href.lastIndexOf('/') + 1);
+         filename = filename || anchorElement.href.substr(anchorElement.href.lastIndexOf('/') + 1);
+         console.log("filename=[" + filename + "]");
          ga('send', 'event', 'document', 'download', 'curriculum', filename);
       {{else}}
          // noop since analytics is disabled in this environment
@@ -39,8 +40,9 @@
                   <span class="curriculum-label">Subjects</span>: Environmental Science, Technology<br>
                   <span class="curriculum-label">Author</span>: Women for a Healthy Environment
                </div>
-               {{!-- TODO: add google analytics tracking! --}}
-               <div class="panel-footer"><a href="/docs/learn/curricula/healthy-schools-pa-air-quality-lesson.pdf" onclick="return recordCurriculumDownload(this)" target="_blank">Download PDF <i class="fa fa-file-pdf-o"></i></a></div>
+               <div class="panel-footer">
+                  <a href="/docs/learn/curricula/healthy-schools-pa-air-quality-lesson.pdf" onclick="return recordCurriculumDownload(this)" target="_blank">Download PDF
+                     <i class="fa fa-file-pdf-o"></i></a></div>
             </div>
          </div>
          <div class="col-lg-4 col-sm-6">
@@ -56,8 +58,9 @@
                   <span class="curriculum-label">Subjects</span>: Environmental Science/Technology, Art<br>
                   <span class="curriculum-label">Author</span>: Franklin Regional Senior High School
                </div>
-               {{!-- TODO: add google analytics tracking! --}}
-               <div class="panel-footer"><a href="/docs/learn/curricula/inspeck-it-out.pdf" onclick="return recordCurriculumDownload(this)" target="_blank">Download PDF <i class="fa fa-file-pdf-o"></i></a></div>
+               <div class="panel-footer">
+                  <a href="/docs/learn/curricula/inspeck-it-out.pdf" onclick="return recordCurriculumDownload(this)" target="_blank">Download PDF
+                     <i class="fa fa-file-pdf-o"></i></a></div>
             </div>
          </div>
          <div class="col-lg-4 col-sm-6">
@@ -73,8 +76,29 @@
                   <span class="curriculum-label">Subjects</span>: Environmental Science/Technology, Mathematics/Statistics, Art<br>
                   <span class="curriculum-label">Author</span>: Franklin Regional Senior High School
                </div>
-               {{!-- TODO: add google analytics tracking! --}}
-               <div class="panel-footer"><a href="/docs/learn/curricula/air-quality-in-the-community.pdf" onclick="return recordCurriculumDownload(this)" target="_blank">Download PDF <i class="fa fa-file-pdf-o"></i></a></div>
+               <div class="panel-footer">
+                  <a href="/docs/learn/curricula/air-quality-in-the-community.pdf" onclick="return recordCurriculumDownload(this)" target="_blank">Download PDF
+                     <i class="fa fa-file-pdf-o"></i></a></div>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-lg-4 col-sm-6">
+            <div class="panel panel-default curriculum-panel">
+               <div class="panel-heading">
+                  <h3 class="panel-title">Moms Clean Air Force</h3>
+               </div>
+               <div class="panel-body">
+                  <div class="curriculum-image">
+                     <img class="img-responsive" src="/images/curricula/moms_clean_air_force.jpg">
+                  </div>
+                  <span class="curriculum-label">Grades</span>: 4-8<br>
+                  <span class="curriculum-label">Subjects</span>: Math, Science, Art, Social Studies, Music, Language Arts<br>
+                  <span class="curriculum-label">Author</span>: Moms Clean Air Force
+               </div>
+               <div class="panel-footer">
+                  <a href="http://www.momscleanairforce.org/every-breath-we-take/#sr-sectionsix" onclick="return recordCurriculumDownload(this, 'moms_clean_air_force')" target="_blank">View Lesson Plans</a>
+               </div>
             </div>
          </div>
       </div>
