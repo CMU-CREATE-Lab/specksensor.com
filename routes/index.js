@@ -119,6 +119,17 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Carnegie Mellon, Airviz Will Make Air Quality Monitors Available at Public Libraries Nationwide",
+            author : "Byron Spice (Carnegie Mellon), Suzanne Thinnes (Carnegie Library of Pittsburgh)",
+            source : "CMU and Carnegie Library of Pittsburgh",
+            date : new Date("2015-03-15 00:00:00"),
+            file : {
+               name : "20160315_CMU_Carnegie_Library.pdf",
+               type : "pdf"
+            },
+            url : "http://www.cs.cmu.edu/news/carnegie-mellon-airviz-will-make-air-quality-monitors-available-public-libraries-nationwide"
+         },
+         {
             title : "CMU Creates Device, App to Monitor Home Air Pollution",
             author : "David Templeton",
             source : "Pittsburgh Post Gazette",
