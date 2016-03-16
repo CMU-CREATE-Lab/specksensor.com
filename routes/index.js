@@ -119,6 +119,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "This Device Lets You Test The Air Pollution In Your House",
+            author : "Casey Williams",
+            source : "The Huffington Post",
+            date : new Date("2015-03-15 00:00:00"),
+            url : "http://www.huffingtonpost.com/entry/libraries-lending-air-pollution-sensors_us_56e8173ee4b0b25c9183384a"
+         },
+         {
             title : "Carnegie Mellon, Airviz Will Make Air Quality Monitors Available at Public Libraries Nationwide",
             author : "Byron Spice (Carnegie Mellon), Suzanne Thinnes (Carnegie Library of Pittsburgh)",
             source : "CMU and Carnegie Library of Pittsburgh",
