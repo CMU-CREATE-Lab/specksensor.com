@@ -321,6 +321,53 @@ a.anchor {
       -o-transition: all 0.2s ease;
       transition: all 0.2s ease; }
 
+.site_banner {
+  padding-left: 10px;
+  padding-right: 10px; }
+  .site_banner table {
+    height: 60px;
+    margin-left: auto;
+    margin-right: auto; }
+    .site_banner table td {
+      padding-right: 10px; }
+    .site_banner table td:last-of-type {
+      padding-right: 0; }
+
+#library_campaign_banner {
+  display: none;
+  height: 60px;
+  max-height: 60px;
+  background-color: #337ab7;
+  color: white;
+  font-size: 2vw; }
+  #library_campaign_banner .btn {
+    font-size: 9pt; }
+  #library_campaign_banner .btn {
+    background-color: #337ab7;
+    color: white;
+    border-color: #2e6da4; }
+  #library_campaign_banner .btn:hover {
+    background-color: #286090;
+    border-color: #204d74; }
+  @media (min-width: 629px) {
+    #library_campaign_banner {
+      font-size: 1.5vw; } }
+  @media (min-width: 767px) {
+    #library_campaign_banner {
+      font-size: 1.5vw; }
+      #library_campaign_banner .btn {
+        font-size: 10pt; } }
+  @media (min-width: 991px) {
+    #library_campaign_banner {
+      font-size: 1.5vw; }
+      #library_campaign_banner .btn {
+        font-size: 11pt; } }
+  @media (min-width: 1199px) {
+    #library_campaign_banner {
+      font-size: 12pt; }
+      #library_campaign_banner .btn {
+        font-size: 12pt; } }
+
 #hero_image {
   height: 450px; }
   #hero_image .fill {
@@ -718,6 +765,19 @@ a.anchor {
   #empowerment_page .section_header {
     font-size: 22px;
     margin-top: 20px; }
+
+#libraries_and_advocates_page {
+  margin-top: 40px;
+  font-size: 16px;
+  line-height: 1.8; }
+  #libraries_and_advocates_page #extra_padding {
+    display: none; }
+  @media (min-width: 767px) {
+    #libraries_and_advocates_page #extra_padding {
+      display: block; } }
+  @media (min-width: 1199px) {
+    #libraries_and_advocates_page #extra_padding {
+      display: none; } }
 
 #curricula_page .curricula-panels {
   margin-top: 20px; }

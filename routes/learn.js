@@ -28,6 +28,15 @@ router.get('/empowerment', function(req, res) {
    });
 });
 
+router.get('/libraries-and-advocates', function(req, res) {
+   res.render('learn/libraries-and-advocates', {
+      title : "Learn: Libraries and Advocates",
+      parent_section : "learn",
+      section : "libraries-and-advocates",
+      hero_image : { filename : "library_hero.jpg", css_class : "anchor_center" }
+   });
+});
+
 router.get('/curricula', function(req, res) {
    res.render('learn/curricula', {
       title : "Learn: Curricula",

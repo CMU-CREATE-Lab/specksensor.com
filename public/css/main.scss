@@ -450,6 +450,81 @@ a.anchor {
 }
 
 // =====================================================================================================================
+// Banners
+// =====================================================================================================================
+$BANNER_HEIGHT: 60px;
+
+.site_banner {
+
+   padding-left:10px;
+   padding-right:10px;
+
+   table {
+      height: $BANNER_HEIGHT;
+      margin-left: auto;
+      margin-right: auto;
+
+      td {
+         padding-right: 10px;
+      }
+      
+      td:last-of-type {
+         padding-right: 0;
+      }
+   }
+}
+
+#library_campaign_banner {
+   display: none;
+   height: $BANNER_HEIGHT;
+   max-height: $BANNER_HEIGHT;
+   background-color: $LINK_COLOR;
+   color: white;
+
+   font-size: 2vw;
+
+   .btn {
+      font-size: 9pt;
+   }
+
+   .btn {
+      background-color: $LINK_COLOR;
+      color: white;
+      border-color: #2e6da4;
+   }
+
+   .btn:hover {
+      background-color: #286090;
+      border-color: #204d74;
+   }
+
+   @media (min-width: $EXTRA_SMALL_WIDTH) {
+      font-size: 1.5vw;
+   }
+
+   @media (min-width: $SMALL_WIDTH) {
+      font-size: 1.5vw;
+      .btn {
+         font-size: 10pt;
+      }
+   }
+
+   @media (min-width: $MEDIUM_WIDTH) {
+      font-size: 1.5vw;
+      .btn {
+         font-size: 11pt;
+      }
+   }
+
+   @media (min-width: $LARGE_WIDTH) {
+      font-size: 12pt;
+      .btn {
+         font-size: 12pt;
+      }
+   }
+}
+
+// =====================================================================================================================
 // Hero Image and Text
 // =====================================================================================================================
 
@@ -1050,6 +1125,32 @@ a.anchor {
    .section_header {
       font-size: 22px;
       margin-top: 20px;
+   }
+}
+
+// =====================================================================================================================
+// Learn: Libraries and Advocates
+// =====================================================================================================================
+
+#libraries_and_advocates_page {
+   margin-top: 40px;
+
+   font-size: 16px;
+   line-height: 1.8;
+
+   #extra_padding {
+      display: none;
+   }
+
+   @media (min-width: $SMALL_WIDTH) {
+      #extra_padding {
+         display: block;
+      }
+   }
+   @media (min-width: $LARGE_WIDTH) {
+      #extra_padding {
+         display: none;
+      }
    }
 }
 

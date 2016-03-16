@@ -174,6 +174,9 @@ templates['grapher_value_range_color_box'] = template({"compiler":[7,">= 4.0.0"]
     + alias4(((helper = (helper = helpers.zIndex || (depth0 != null ? depth0.zIndex : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"zIndex","hash":{},"data":data}) : helper)))
     + ";\"></div>";
 },"useData":true});
+templates['library_campaign_banner'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div id=\"library_campaign_banner\" class=\"site_banner\">\n   <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n      <tr valign=\"middle\">\n         <td><img src=\"/images/banners/stack_of_books.png\" style=\"max-height:40px\"></td>\n         <td>\n            In partnership with CMU's CREATE Lab, we launched a National Library Program, offering 3 free Specks and training to\n            public libraries that make Specks available to their patrons.\n         </td>\n         <td>\n            <a href=\"/learn/libraries-and-advocates\" class=\"btn btn-default\">Learn More</a>\n         </td>\n      </tr>\n   </table>\n</div>\n";
+},"useData":true});
 templates['no_feeds_for_device'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div class=\"panel-body\">\n   There are no installation locations defined for this Speck. Please use\n   the <a href=\"/support/software\">Speck app</a> to and use the Upload Configuration\n   tab to specify where you have installed this Speck. If you need help, please\n   see our <a href=\"/support/software#upload-configuration\">Upload Configuration video tutorial</a>.\n</div>\n";
 },"useData":true});
