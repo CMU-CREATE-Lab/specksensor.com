@@ -119,6 +119,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "You Can Use This New Device to Test the Air Quality in Your Home For Free",
+            author : "Jessica Mattern",
+            source : "Women's Day",
+            date : new Date("2015-03-17 00:00:00"),
+            url : "http://www.womansday.com/health-fitness/a54150/test-air-quality-for-free/"
+         },
+         {
             title : "This Device Lets You Test The Air Pollution In Your House",
             author : "Casey Williams",
             source : "The Huffington Post",
