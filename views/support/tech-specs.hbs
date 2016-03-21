@@ -114,60 +114,7 @@
          </div>
       </div>
       <div style="margin-top: 30px">
-         <div class="row">
-            <div class="col-lg-8 col-md-7 col-sm-6">
-               <a name="speck_measurement_scales" class="anchor"></a>
-               <p><b>Speck Measurement Scales</b></p>
-               <p>
-                  The Speck can display its measurement of the current concentration of fine particles in the air in two
-                  different scales. The default scale is a count-based
-                  concentration&mdash;the number of particles per liter of air (ppL). Alternatively, the Speck can report the
-                  fine particle concentration based on an estimate of particle weight (or, more strictly, mass) where the
-                  units are micrograms per cubic meter of air (&mu;g/m<sup>3</sup>). To toggle between the two scales, simply
-                  tap the center of the Speck's screen. The chart here details the measurement scale ranges and correlation between
-                  value and color.  The Speck can also display colors in a blue-red palette for colorblind users.
-               </p>
-            </div>
-            <div class="col-lg-4 col-md-5 col-sm-6">
-               <table id="measurement_scales" border="0" cellpadding="0" cellspacing="0" align="center">
-                  <tr class="header" valign="top">
-                     <th>Particle&nbsp;Counts<br><span class="heading_explanation">(ppL)</span></th>
-                     <th>Estimated&nbsp;Mass<br><span class="heading_explanation">(&mu;g/m<sup>3</sup>)</span></th>
-                     <th>Rating</th>
-                  </tr>
-                  <tr class="level level_6">
-                     <td>8001 - 16000</td>
-                     <td>321 - 640</td>
-                     <td>Very High</td>
-                  </tr>
-                  <tr class="level level_5">
-                     <td>4001 - 8000</td>
-                     <td>161 - 320</td>
-                     <td>High</td>
-                  </tr>
-                  <tr class="level level_4">
-                     <td>2001 - 4000</td>
-                     <td>81 - 160</td>
-                     <td>Elevated</td>
-                  </tr>
-                  <tr class="level level_3">
-                     <td>1001 - 2000</td>
-                     <td>41 - 80</td>
-                     <td>Slightly Elevated</td>
-                  </tr>
-                  <tr class="level level_2">
-                     <td>501 - 1000</td>
-                     <td>21 - 40</td>
-                     <td>Moderate</td>
-                  </tr>
-                  <tr class="level level_1">
-                     <td>0 - 500</td>
-                     <td>0 - 20</td>
-                     <td>Good</td>
-                  </tr>
-               </table>
-            </div>
-         </div>
+         {{> measurement-scales}}
       </div>
       <div style="margin-top: 30px">
          <p><b>Calibration</b></p>
