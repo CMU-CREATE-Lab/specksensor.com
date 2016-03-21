@@ -119,6 +119,27 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Libraries Offer Air Quality Monitors Through CMU Program",
+            author : "Mora Mclaughlin",
+            source : "WESA",
+            date : new Date("2015-03-21 00:00:00"),
+            url : "http://wesa.fm/post/libraries-offer-air-quality-monitors-through-cmu-program"
+         },
+         {
+            title : "CMU Speck Pollution Monitors Now Available at Carnegie Libraries",
+            author : "David Templeton",
+            source : "Pittsburgh Post-Gazette",
+            date : new Date("2015-03-21 00:00:00"),
+            url : "http://www.post-gazette.com/news/health/2016/03/21/CMU-Speck-pollution-monitors-now-available-at-Carnegie-Libraries/stories/201603210015"
+         },
+         {
+            title : "This Free Gadget Could Save Your Life",
+            author : "Kevin Downey",
+            source : "The Kim Komando Show",
+            date : new Date("2015-03-19 00:00:00"),
+            url : "http://www.komando.com/happening-now/351333/this-free-gadget-could-save-your-life"
+         },
+         {
             title : "You Can Use This New Device to Test the Air Quality in Your Home For Free",
             author : "Jessica Mattern",
             source : "Women's Day",
