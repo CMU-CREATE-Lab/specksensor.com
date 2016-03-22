@@ -119,6 +119,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Speck of Proof: To Check Your Home Air Quality, Go to the Library",
+            author : "Editorial Board",
+            source : "Pittsburgh Post-Gazette",
+            date : new Date("2015-03-22 00:00:00"),
+            url : "http://www.post-gazette.com/opinion/2016/03/22/Speck-of-proof-To-check-your-home-air-quality-go-to-the-library/stories/201603220044"
+         },
+         {
             title : "Libraries Offer Air Quality Monitors Through CMU Program",
             author : "Mora Mclaughlin",
             source : "WESA",
