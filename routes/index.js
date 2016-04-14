@@ -119,6 +119,20 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Into Thin Air: A look into why the air surrounding us is so important",
+            author : "Danielle Levsky",
+            source : "Venture Outdoors",
+            date : new Date("2015-04-05 00:00:00"),
+            url : "http://www.ventureoutdoors.org/into-thin-air-a-look-into-why-the-air-surrounding-us-is-so-important/"
+         },
+         {
+            title : "Pollution Atmosph&eacute;rique: Trois Gadgets &Agrave; L'&eacute;preuve",
+            author : "Nicolas B&eacute;rub&eacute;",
+            source : "La Presse",
+            date : new Date("2015-04-03 00:00:00"),
+            url : "http://plus.lapresse.ca/screens/fde69aec-94a0-490b-9b3d-f0d6c65802dc%7CQV47p5Bvgo1E.html"
+         },
+         {
             title : "Speck of Proof: To Check Your Home Air Quality, Go to the Library",
             author : "Editorial Board",
             source : "Pittsburgh Post-Gazette",

@@ -14,7 +14,7 @@
                {{/if}}
             </div>
             <div class="author_and_source">
-               {{#if author}}{{author}}, {{/if}}{{source}} &mdash; {{#dateToString date}}{{/dateToString}}
+               {{#if author}}{{{author}}}, {{/if}}{{source}} &mdash; {{#dateToString date}}{{/dateToString}}
                {{#if file}}
                   <a href="/docs/press/{{file.name}}" target="_blank"><i class="fa fa-file-{{file.type}}-o"></i></a>
                {{/if}}
