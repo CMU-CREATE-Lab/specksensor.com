@@ -333,39 +333,39 @@ a.anchor {
     .site_banner table td:last-of-type {
       padding-right: 0; }
 
-#library_campaign_banner {
+#home_page_banner {
   display: none;
   height: 60px;
   max-height: 60px;
   background-color: #337ab7;
   color: white;
   font-size: 2vw; }
-  #library_campaign_banner .btn {
+  #home_page_banner .btn {
     font-size: 9pt; }
-  #library_campaign_banner .btn {
+  #home_page_banner .btn {
     background-color: #337ab7;
     color: white;
     border-color: #2e6da4; }
-  #library_campaign_banner .btn:hover {
+  #home_page_banner .btn:hover {
     background-color: #286090;
     border-color: #204d74; }
   @media (min-width: 629px) {
-    #library_campaign_banner {
+    #home_page_banner {
       font-size: 1.5vw; } }
   @media (min-width: 767px) {
-    #library_campaign_banner {
+    #home_page_banner {
       font-size: 1.5vw; }
-      #library_campaign_banner .btn {
+      #home_page_banner .btn {
         font-size: 10pt; } }
   @media (min-width: 991px) {
-    #library_campaign_banner {
+    #home_page_banner {
       font-size: 1.5vw; }
-      #library_campaign_banner .btn {
+      #home_page_banner .btn {
         font-size: 11pt; } }
   @media (min-width: 1199px) {
-    #library_campaign_banner {
+    #home_page_banner {
       font-size: 12pt; }
-      #library_campaign_banner .btn {
+      #home_page_banner .btn {
         font-size: 12pt; } }
 
 #hero_image {
