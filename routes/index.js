@@ -77,7 +77,7 @@ router.get('/support/feedback', function(req, res) {
 //----------------------------------------------------------------------------------------------------------------------
 
 router.get('/libraries/apply', function(req, res) {
-   res.redirect('https://docs.google.com/forms/d/1UIvc81SwFCQZQzRK3XxwMOWujFogTeChj68ssNnNbIM/viewform');
+   res.redirect('https://docs.google.com/forms/d/1PtmkGS9urz8MnkXB048fDHbOpITXgj8Ua2fhP0BR7H4/viewform');
 });
 
 //======================================================================================================================
@@ -85,7 +85,7 @@ router.get('/libraries/apply', function(req, res) {
 //----------------------------------------------------------------------------------------------------------------------
 
 router.get('/advocates/apply', function(req, res) {
-   res.redirect('https://docs.google.com/forms/d/1G046svCGJFSQr2QZxjdm6YIVqaZeTvmmcWWvjMdmfO8/viewform');
+   res.redirect('https://docs.google.com/forms/d/1lGvTBowkbvkoxcZYj_IydAaIIbnECw67oexHRlC7T1U/viewform');
 });
 
 //======================================================================================================================
