@@ -4,12 +4,13 @@
          interval : 6000 // changes the speed (millis)
       });
 
-      var bannerTemplate = Handlebars.templates['home_page_banner'];
-      var bannerElement = $(bannerTemplate());
-      $("#hero_image").before(bannerElement);
-      window.setTimeout(function() {
-         bannerElement.slideDown();
-      }, 300);
+      // Banner which slides down to alert the user of some important news
+      // var bannerTemplate = Handlebars.templates['home_page_banner'];
+      // var bannerElement = $(bannerTemplate());
+      // $("#hero_image").before(bannerElement);
+      // window.setTimeout(function() {
+      //    bannerElement.slideDown();
+      // }, 300);
    });
 </script>
 <div id="home_page">
