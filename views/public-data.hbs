@@ -516,7 +516,7 @@
                max++;
             }
 
-            plotManager.getDateAxis().constrainRangeTo(channelMinTimeSecs, now);
+            plotManager.getDateAxis().constrainRangeTo(feed.channelBounds.minTimeSecs, now);
             plotManager.getDateAxis().setRange(min, max);
          }
 
