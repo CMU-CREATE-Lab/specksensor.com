@@ -221,7 +221,7 @@
       var offset = ESDR_QUERY_ITEM_LIMIT * page;
 
       superagent
-            .get(ESDR_API_ROOT_URL + "/multifeeds/pm_25/feeds?fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,channelBounds,channelSpecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .get(ESDR_API_ROOT_URL + "/multifeeds/pm_2_5/feeds?fields=id,name,latitude,longitude,minTimeSecs,maxTimeSecs,channelBounds,channelSpecs&orderBy=id&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
             .end(function(err, res) {
                if (err) {
                   done(err);
