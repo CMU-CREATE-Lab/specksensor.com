@@ -721,35 +721,77 @@ a.anchor {
     height: 30px;
     line-height: 30px; }
 
-#public_data_page #daily_stats_container {
+#public_data_page .pm_2_5_scale .pm_2_5_scale_color {
+  width: 20px;
+  height: 20px; }
+
+#public_data_page .pm_2_5_scale .level0 {
+  background-color: #00e400; }
+
+#public_data_page .pm_2_5_scale .level1 {
+  background-color: yellow; }
+
+#public_data_page .pm_2_5_scale .level2 {
+  background-color: #ff7e00; }
+
+#public_data_page .pm_2_5_scale .level3 {
+  background-color: red; }
+
+#public_data_page .pm_2_5_scale .level4 {
+  background-color: #99004c; }
+
+#public_data_page .pm_2_5_scale .level5 {
+  background-color: #7e0023; }
+
+#public_data_page .pm_2_5_scale_table {
+  margin-top: 20px;
+  font-size: smaller; }
+  #public_data_page .pm_2_5_scale_table .pm_2_5_scale_row .pm_2_5_scale_cell {
+    text-align: right;
+    padding: 2px 5px;
+    vertical-align: middle; }
+  #public_data_page .pm_2_5_scale_table .pm_2_5_scale_row .align_left {
+    text-align: left; }
+  #public_data_page .pm_2_5_scale_table .pm_2_5_scale_header_row .pm_2_5_scale_cell {
+    text-align: center;
+    font-weight: bold; }
+
+#public_data_page #daily_stats_calendar_and_table_container {
   display: none; }
-  #public_data_page #daily_stats_container .daily_stats_title {
-    font-size: 18px;
-    text-align: center; }
-  #public_data_page #daily_stats_container .daily_stats_subtitle {
-    font-size: 12px;
-    text-align: center; }
-  #public_data_page #daily_stats_container .daily_stats_calendar_container {
-    margin: 20px 20px 0 20px; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .ch-tooltip {
+  #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table {
+    margin: 20px 40px 0 0; }
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_title {
+      font-size: 18px;
+      text-align: left; }
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_subtitle {
+      font-size: 12px;
+      text-align: left; }
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .ch-tooltip {
       font-size: 9pt; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .qi {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .qi {
       fill: black; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q1 {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q1 {
       fill: #00e400; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q2 {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q2 {
       fill: yellow; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q3 {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q3 {
       fill: #ff7e00; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q4 {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q4 {
       fill: red; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q5 {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q5 {
       fill: #99004c; }
-    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q6 {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q6 {
       fill: #7e0023; }
-  #public_data_page #daily_stats_container .daily_stats_calendar_container:first-of-type {
-    margin-left: 0; }
-  #public_data_page #daily_stats_container .daily_stats_calendar_container:last-of-type {
+    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_table {
+      margin-left: 40px; }
+      #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_table .value_cell {
+        text-align: right;
+        padding: 2px 5px; }
+      #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_table .header_cell {
+        text-align: center;
+        padding: 2px 5px;
+        font-weight: bold; }
+  #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_container:last-of-type {
     margin-right: 0; }
 
 #air_quality_page {

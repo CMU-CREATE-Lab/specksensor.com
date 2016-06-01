@@ -1038,21 +1038,79 @@ $BANNER_HEIGHT: 60px;
       }
    }
 
-   #daily_stats_container {
+   .pm_2_5_scale {
+      .pm_2_5_scale_color {
+         width: 20px;
+         height: 20px;
+      }
+
+      .level0 {
+         background-color: rgb(0, 228, 0);
+      }
+
+      .level1 {
+         background-color: rgb(255, 255, 0);
+      }
+
+      .level2 {
+         background-color: rgb(255, 126, 0);
+      }
+
+      .level3 {
+         background-color: rgb(255, 0, 0);
+      }
+
+      .level4 {
+         background-color: rgb(153, 0, 76);
+      }
+
+      .level5 {
+         background-color: rgb(126, 0, 35);
+      }
+
+   }
+
+   .pm_2_5_scale_table {
+      margin-top: 20px;
+      font-size: smaller;
+
+      .pm_2_5_scale_row {
+
+         .pm_2_5_scale_cell {
+            text-align: right;
+            padding: 2px 5px;
+            vertical-align: middle;
+         }
+
+         .align_left {
+            text-align: left;
+         }
+      }
+
+      .pm_2_5_scale_header_row {
+
+         .pm_2_5_scale_cell {
+            text-align: center;
+            font-weight: bold;
+         }
+      }
+   }
+
+   #daily_stats_calendar_and_table_container {
       display: none;
 
-      .daily_stats_title {
-         font-size: 18px;
-         text-align: center;
-      }
+      .daily_stats_calendar_and_table {
+         margin: 20px 40px 0 0;
 
-      .daily_stats_subtitle {
-         font-size: 12px;
-         text-align: center;
-      }
+         .daily_stats_title {
+            font-size: 18px;
+            text-align: left;
+         }
 
-      .daily_stats_calendar_container {
-         margin: 20px 20px 0 20px;
+         .daily_stats_subtitle {
+            font-size: 12px;
+            text-align: left;
+         }
 
          .daily_stats_calendar {
             .ch-tooltip {
@@ -1087,14 +1145,25 @@ $BANNER_HEIGHT: 60px;
                fill: rgb(126, 0, 35);
             }
          }
-      }
 
-      .daily_stats_calendar_container:first-of-type {
-         margin-left:0;
+         .daily_stats_table {
+            margin-left: 40px;
+
+            .value_cell {
+               text-align: right;
+               padding: 2px 5px;
+            }
+
+            .header_cell {
+               text-align: center;
+               padding: 2px 5px;
+               font-weight: bold;
+            }
+         }
       }
 
       .daily_stats_calendar_container:last-of-type {
-         margin-right:0;
+         margin-right: 0;
       }
    }
 }

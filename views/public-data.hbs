@@ -72,7 +72,10 @@
    var selectedChannelName = DEFAULT_CHANNEL_NAMES[0];
    var cal = null;
 
-   var dailyStatsCalendarContainerTemplate = Handlebars.templates['daily_stats_calendar_container'];
+   var dailyStatsCalendarAndTableTemplate = Handlebars.templates['daily_stats_calendar_and_table'];
+   var pm25ScaleTableTemplate = Handlebars.templates['pm_2_5_scale_table'];
+
+   var statsDataByChannel = {};
 
    function getHashParam(paramName) {
       var hash = window.location.hash.substr(1);
@@ -387,7 +390,8 @@
          // remove the current feed from the grapher (if any)
          removeFeedFromGrapher(selectedFeed);
 
-         $("#daily_stats_container").hide();
+         $("#daily_stats_calendar_and_table_container").hide();
+         $("#pm_2_5_scale_container").empty().hide();
 
          $(".grapher_item").hide();
 
@@ -669,13 +673,15 @@
    // determine whether we should even show the daily stats calendar.  We only show it for govt feeds and only if
    // the selected channel is a PM2.5 feed with associated daily stats channels.
    function renderDailyStats(feed) {
-      console.log("RENDERING DAILY STATS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      var dailyStatsContainer = $("#daily_stats_container");
-      dailyStatsContainer.hide().empty();
+      var dailyStatsCalendarAndTableContainer = $("#daily_stats_calendar_and_table_container");
+      dailyStatsCalendarAndTableContainer.hide().empty();
 
       if (feed.id in govtFeedsById) {
 
          var pm25Channels = [];
+
+         // keep track of the channel which has the earliest starting time, so, for feeds which have multiple PM2.5
+         // channels, all the calendars will be the same size
          var minTimeSecs = Number.MAX_VALUE;
          for (var i = 0; i < GOVT_PM_2_5_CHANNEL_NAMES.length; i++) {
             var channelName = GOVT_PM_2_5_CHANNEL_NAMES[i];
@@ -686,26 +692,149 @@
          }
 
          if (pm25Channels.length > 0) {
-            console.log("pm25Channels=[" + pm25Channels + "]");
+            var minYear = new Date(minTimeSecs * 1000).getFullYear();
 
-            var startDate = new Date(minTimeSecs * 1000);
-            var willShowChannelName = pm25Channels.length > 1;
+            var createStatsFetcher = function(feedId, pm25ChannelName, pm25StatsChannelName) {
+               return function(done) {
+                  superagent
+                        .get(ESDR_API_ROOT_URL + "/feeds/" + feedId + "/channels/" + pm25StatsChannelName + "/export?format=json")
+                        .end(function(err, res) {
+                           if (err) {
+                              console.log("Failed to get export of channel [" + pm25StatsChannelName + "] for feed [" + feedId + "]");
+                           }
+                           else {
+                              if (res.body && res.body.data) {
+                                 var statsByYear = {
+                                    all : {
+                                       numDays : 0,
+                                       level0 : 0,
+                                       level1 : 0,
+                                       level2 : 0,
+                                       level3 : 0,
+                                       level4 : 0,
+                                       level5 : 0
+                                    }
+                                 };
+                                 statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years = [];
+                                 statsDataByChannel[pm25ChannelName][pm25StatsChannelName].statsByYear = statsByYear;
+                                 for (var theYear = minYear; theYear <= new Date().getFullYear(); theYear++) {
+                                    statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years.push(theYear);
+                                    statsByYear[theYear] = {
+                                       numDays : 0,
+                                       level0 : 0,
+                                       level1 : 0,
+                                       level2 : 0,
+                                       level3 : 0,
+                                       level4 : 0,
+                                       level5 : 0
+                                    };
+                                 }
+
+                                 // compute yearly stats
+                                 var newData = {};
+                                 for (var i = 0; i < res.body.data.length; i++) {
+                                    var unixTimeSecs = res.body.data[i][0];
+                                    var value = res.body.data[i][1];
+                                    var year = new Date(1000 * unixTimeSecs).getFullYear();
+                                    statsByYear[year].numDays++;
+                                    statsByYear['all'].numDays++;
+                                    if (value <= 12) {
+                                       statsByYear[year].level0++;
+                                       statsByYear['all'].level0++;
+                                    }
+                                    else if (value <= 35.4) {
+                                       statsByYear[year].level1++;
+                                       statsByYear['all'].level1++;
+                                    }
+                                    else if (value <= 55.4) {
+                                       statsByYear[year].level2++;
+                                       statsByYear['all'].level2++;
+                                    }
+                                    else if (value <= 150.4) {
+                                       statsByYear[year].level3++;
+                                       statsByYear['all'].level3++;
+                                    }
+                                    else if (value <= 250.4) {
+                                       statsByYear[year].level4++;
+                                       statsByYear['all'].level4++;
+                                    }
+                                    else {
+                                       statsByYear[year].level5++;
+                                       statsByYear['all'].level5++;
+                                    }
+
+                                    newData[unixTimeSecs] = value;
+                                 }
+
+                                 // now compute percentages
+                                 var computePercentages = function(group) {
+                                    for (var level = 0; level <= 5; level++) {
+                                       group['level' + level + 'Perc'] = Math.round((group.numDays > 0) ? group['level' + level] / group.numDays * 100 : 0);
+                                    }
+                                 };
+                                 statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years.forEach(function(year) {
+                                    computePercentages(statsByYear[year]);
+                                 });
+                                 computePercentages(statsByYear['all']);
+
+                                 // save the data for use by the calendar heatmap library
+                                 statsDataByChannel[pm25ChannelName][pm25StatsChannelName].data = newData;
+                              }
+                           }
+                           done();
+                        });
+               };
+            };
+
+            // build the commands to fetch all the stats channel export data
+            var commands = [];
+            statsDataByChannel = {};
             pm25Channels.forEach(function(pm25ChannelName) {
-               var calendarElementId = "daily_stats_calendar_" + feed.id + "_" + pm25ChannelName;
-               dailyStatsContainer.append($(dailyStatsCalendarContainerTemplate({
-                                                                                   calendarElementId : calendarElementId,
-                                                                                   channelName : pm25ChannelName,
-                                                                                   willShowChannelName : willShowChannelName
-                                                                                })));
-               cal = new CalHeatMap();
-               cal.init(createDailyStatsCalendarOptions(feed, calendarElementId, pm25ChannelName + "_daily_mean", startDate));
+               statsDataByChannel[pm25ChannelName] = {};
+               // TODO: change to DAILY_STATS_CHANNEL_NAME_SUFFIXES once we support toggling max/mean/median
+               ["_daily_max"].forEach(function(suffix) {
+                  var pm25StatsChannelName = pm25ChannelName + suffix;
+                  statsDataByChannel[pm25ChannelName][pm25StatsChannelName] = {};
+                  commands.push(createStatsFetcher(feed.id, pm25ChannelName, pm25StatsChannelName));
+               });
             });
-            dailyStatsContainer.show();
+
+            // fetch the export data
+            _.parallel(commands,
+                       function() {
+
+                          var startDate = new Date(minTimeSecs * 1000);
+                          var hasMultipleChannels = pm25Channels.length > 1;
+                          pm25Channels.forEach(function(pm25ChannelName) {
+                             var pm25StatsChannelName = pm25ChannelName + "_daily_max";
+                             var calendarElementId = "daily_stats_calendar_" + feed.id + "_" + pm25ChannelName;
+                             dailyStatsCalendarAndTableContainer.append($(dailyStatsCalendarAndTableTemplate({
+                                                                                                                calendarElementId : calendarElementId,
+                                                                                                                channelName : pm25ChannelName,
+                                                                                                                hasMultipleChannels : hasMultipleChannels,
+                                                                                                                statsByYear : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].statsByYear,
+                                                                                                                years : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years,
+                                                                                                                willShowPm25ScaleTable : !hasMultipleChannels,
+                                                                                                                pm_2_5_scale_table : pm25ScaleTableTemplate()
+                                                                                                             })));
+                             cal = new CalHeatMap();
+                             cal.init(createDailyStatsCalendarOptions(calendarElementId, statsDataByChannel[pm25ChannelName][pm25StatsChannelName].data, startDate));
+                          });
+                          dailyStatsCalendarAndTableContainer.show();
+                          if (hasMultipleChannels) {
+                             $("#pm_2_5_scale_container").empty().append($(pm25ScaleTableTemplate())).show();
+                          }
+                          else {
+                             $("#pm_2_5_scale_container").empty().hide();
+                          }
+                       });
          }
+      } else {
+         $("#pm_2_5_scale_container").empty().hide();
       }
    }
 
-   function createDailyStatsCalendarOptions(feed, containerElementId, channelName, startingDate) {
+   function createDailyStatsCalendarOptions(containerElementId, data, startingDate) {
       //var startingDate = new Date(feed.channelBounds.channels[channelName].minTimeSecs * 1000);
       var numYears = new Date().getFullYear() - startingDate.getFullYear() + 1;
 
@@ -725,22 +854,12 @@
 
          subDomain : "x_day",
          start : startingDate,
-         data : "https://esdr.cmucreatelab.org/api/v1/feeds/" + feed.id + "/channels/" + channelName + "/export?format=json",
-         afterLoadData : function(json) {
-            var newData = {};
-            json.data.forEach(function(record) {
-               newData[record[0]] = record[1];
-            });
-
-            return newData;
-         },
+         data : data,
          onClick : function(date, value) {
-            var min = date.getTime() / 1000;
-            var max = Date.UTC(date.getUTCFullYear(),
-                               date.getUTCMonth(),
-                               date.getUTCDate() + 1) / 1000;
+            var min = date.getTime() / 1000;    // date is midnight
+            var max = min + 86400;              // add number of seconds in 1 day to get the next midnight
             plotManager.getDateAxis().setRange(min, max);
-            console.log("Value was [" + value + "] on [" + date + "] --> [" + min + "," + max + "]");
+            //console.log("Value was [" + value + "] on [" + date + "] --> [" + min + "," + max + "]");
          },
          cellSize : 7,
          cellPadding : 1,
@@ -1117,6 +1236,10 @@
             </div>
          </div>
       </div>
+      <div id="daily_stats_calendar_and_table_container" class="noselect col-sm-12">
+      </div>
+      <div id="pm_2_5_scale_container" class="noselect col-sm-12" style="display:none;margin-bottom:20px">
+      </div>
       <div id="grapher_container" class="noselect col-sm-12">
          <div id="selected_feed_name_label">
             <div class="feed_name_label grapher_item"></div>
@@ -1169,8 +1292,6 @@
                </td>
             </tr>
          </table>
-      </div>
-      <div id="daily_stats_container" class="noselect col-sm-12">
       </div>
    </div>
 </div>

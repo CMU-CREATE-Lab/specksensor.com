@@ -1,20 +1,140 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
-templates['daily_stats_calendar_container'] = template({"1":function(container,depth0,helpers,partials,data) {
+templates['daily_stats_calendar_and_table'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper;
 
-  return "      <div class=\"daily_stats_subtitle\">"
+  return "               <div class=\"daily_stats_subtitle\">"
     + container.escapeExpression(((helper = (helper = helpers.channelName || (depth0 != null ? depth0.channelName : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"channelName","hash":{},"data":data}) : helper)))
     + "</div>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+},"3":function(container,depth0,helpers,partials,data) {
+    var helper;
 
-  return "<div class=\"daily_stats_calendar_container\" style=\"display: inline-block\">\n   <div class=\"daily_stats_title\">PM 2.5 Daily Average</div>\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.willShowChannelName : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "   <div id=\""
-    + container.escapeExpression(((helper = (helper = helpers.calendarElementId || (depth0 != null ? depth0.calendarElementId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"calendarElementId","hash":{},"data":data}) : helper)))
-    + "\" class=\"daily_stats_calendar\"></div>\n</div>\n";
-},"useData":true});
+  return "                  <div class=\"daily_stats_subtitle\">"
+    + container.escapeExpression(((helper = (helper = helpers.channelName || (depth0 != null ? depth0.channelName : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"channelName","hash":{},"data":data}) : helper)))
+    + "</div>\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "                        <td class=\"header_cell\">"
+    + container.escapeExpression(container.lambda(depth0, depth0))
+    + "</td>\n";
+},"7":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : {};
+
+  return "                        <td class=\"value_cell\">\n"
+    + ((stack1 = helpers["with"].call(alias1,helpers.lookup.call(alias1,(depths[1] != null ? depths[1].statsByYear : depths[1]),blockParams[0][0],{"name":"lookup","hash":{},"data":data,"blockParams":blockParams}),{"name":"with","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                        </td>\n";
+},"8":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "                              "
+    + container.escapeExpression(((helper = (helper = helpers.level0Perc || (depth0 != null ? depth0.level0Perc : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"level0Perc","hash":{},"data":data}) : helper)))
+    + "\n";
+},"10":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : {};
+
+  return "                        <td class=\"value_cell\">\n"
+    + ((stack1 = helpers["with"].call(alias1,helpers.lookup.call(alias1,(depths[1] != null ? depths[1].statsByYear : depths[1]),blockParams[0][0],{"name":"lookup","hash":{},"data":data,"blockParams":blockParams}),{"name":"with","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                        </td>\n";
+},"11":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "                              "
+    + container.escapeExpression(((helper = (helper = helpers.level1Perc || (depth0 != null ? depth0.level1Perc : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"level1Perc","hash":{},"data":data}) : helper)))
+    + "\n";
+},"13":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : {};
+
+  return "                        <td class=\"value_cell\">\n"
+    + ((stack1 = helpers["with"].call(alias1,helpers.lookup.call(alias1,(depths[1] != null ? depths[1].statsByYear : depths[1]),blockParams[0][0],{"name":"lookup","hash":{},"data":data,"blockParams":blockParams}),{"name":"with","hash":{},"fn":container.program(14, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                        </td>\n";
+},"14":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "                              "
+    + container.escapeExpression(((helper = (helper = helpers.level2Perc || (depth0 != null ? depth0.level2Perc : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"level2Perc","hash":{},"data":data}) : helper)))
+    + "\n";
+},"16":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : {};
+
+  return "                        <td class=\"value_cell\">\n"
+    + ((stack1 = helpers["with"].call(alias1,helpers.lookup.call(alias1,(depths[1] != null ? depths[1].statsByYear : depths[1]),blockParams[0][0],{"name":"lookup","hash":{},"data":data,"blockParams":blockParams}),{"name":"with","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                        </td>\n";
+},"17":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "                              "
+    + container.escapeExpression(((helper = (helper = helpers.level3Perc || (depth0 != null ? depth0.level3Perc : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"level3Perc","hash":{},"data":data}) : helper)))
+    + "\n";
+},"19":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : {};
+
+  return "                        <td class=\"value_cell\">\n"
+    + ((stack1 = helpers["with"].call(alias1,helpers.lookup.call(alias1,(depths[1] != null ? depths[1].statsByYear : depths[1]),blockParams[0][0],{"name":"lookup","hash":{},"data":data,"blockParams":blockParams}),{"name":"with","hash":{},"fn":container.program(20, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                        </td>\n";
+},"20":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "                              "
+    + container.escapeExpression(((helper = (helper = helpers.level4Perc || (depth0 != null ? depth0.level4Perc : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"level4Perc","hash":{},"data":data}) : helper)))
+    + "\n";
+},"22":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : {};
+
+  return "                        <td class=\"value_cell\">\n"
+    + ((stack1 = helpers["with"].call(alias1,helpers.lookup.call(alias1,(depths[1] != null ? depths[1].statsByYear : depths[1]),blockParams[0][0],{"name":"lookup","hash":{},"data":data,"blockParams":blockParams}),{"name":"with","hash":{},"fn":container.program(23, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                        </td>\n";
+},"23":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "                              "
+    + container.escapeExpression(((helper = (helper = helpers.level5Perc || (depth0 != null ? depth0.level5Perc : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"level5Perc","hash":{},"data":data}) : helper)))
+    + "\n";
+},"25":function(container,depth0,helpers,partials,data) {
+    var stack1, helper;
+
+  return "                  "
+    + ((stack1 = ((helper = (helper = helpers.pm_2_5_scale_table || (depth0 != null ? depth0.pm_2_5_scale_table : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"pm_2_5_scale_table","hash":{},"data":data}) : helper))) != null ? stack1 : "")
+    + "\n";
+},"27":function(container,depth0,helpers,partials,data) {
+    return "                  &nbsp;\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=container.escapeExpression, alias3=container.lambda;
+
+  return "<div class=\"daily_stats_calendar_and_table\" style=\"display: inline-block\">\n   <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n      <tr valign=\"top\">\n         <td rowspan=\"2\">\n            <div class=\"daily_stats_title\">PM 2.5 Daily Maximums</div>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasMultipleChannels : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "            <div id=\""
+    + alias2(((helper = (helper = helpers.calendarElementId || (depth0 != null ? depth0.calendarElementId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"calendarElementId","hash":{},"data":data,"blockParams":blockParams}) : helper)))
+    + "\" class=\"daily_stats_calendar\"></div>\n         </td>\n         <td>\n            <div class=\"daily_stats_table pm_2_5_scale\">\n               <div class=\"daily_stats_title\">Dirty Day Percentages</div>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasMultipleChannels : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n                  <tr>\n                     <td>&nbsp;</td>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.years : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                     <td class=\"header_cell\">All</td>\n                  </tr>\n                  <tr>\n                     <td><div class=\"pm_2_5_scale_color level0\"></div></td>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.years : depth0),{"name":"each","hash":{},"fn":container.program(7, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                     <td class=\"value_cell\">"
+    + alias2(alias3(((stack1 = ((stack1 = (depth0 != null ? depth0.statsByYear : depth0)) != null ? stack1.all : stack1)) != null ? stack1.level0Perc : stack1), depth0))
+    + "</td>\n                  </tr>\n                  <tr>\n                     <td><div class=\"pm_2_5_scale_color level1\"></div></td>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.years : depth0),{"name":"each","hash":{},"fn":container.program(10, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                     <td class=\"value_cell\">"
+    + alias2(alias3(((stack1 = ((stack1 = (depth0 != null ? depth0.statsByYear : depth0)) != null ? stack1.all : stack1)) != null ? stack1.level1Perc : stack1), depth0))
+    + "</td>\n                  </tr>\n                  <tr>\n                     <td><div class=\"pm_2_5_scale_color level2\"></div></td>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.years : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                     <td class=\"value_cell\">"
+    + alias2(alias3(((stack1 = ((stack1 = (depth0 != null ? depth0.statsByYear : depth0)) != null ? stack1.all : stack1)) != null ? stack1.level2Perc : stack1), depth0))
+    + "</td>\n                  </tr>\n                  <tr>\n                     <td><div class=\"pm_2_5_scale_color level3\"></div></td>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.years : depth0),{"name":"each","hash":{},"fn":container.program(16, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                     <td class=\"value_cell\">"
+    + alias2(alias3(((stack1 = ((stack1 = (depth0 != null ? depth0.statsByYear : depth0)) != null ? stack1.all : stack1)) != null ? stack1.level3Perc : stack1), depth0))
+    + "</td>\n                  </tr>\n                  <tr>\n                     <td><div class=\"pm_2_5_scale_color level4\"></div></td>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.years : depth0),{"name":"each","hash":{},"fn":container.program(19, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                     <td class=\"value_cell\">"
+    + alias2(alias3(((stack1 = ((stack1 = (depth0 != null ? depth0.statsByYear : depth0)) != null ? stack1.all : stack1)) != null ? stack1.level4Perc : stack1), depth0))
+    + "</td>\n                  </tr>\n                  <tr>\n                     <td><div class=\"pm_2_5_scale_color level5\"></div></td>\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.years : depth0),{"name":"each","hash":{},"fn":container.program(22, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "                     <td class=\"value_cell\">"
+    + alias2(alias3(((stack1 = ((stack1 = (depth0 != null ? depth0.statsByYear : depth0)) != null ? stack1.all : stack1)) != null ? stack1.level5Perc : stack1), depth0))
+    + "</td>\n                  </tr>\n               </table>\n            </div>\n         </td>\n      </tr>\n      <tr valign=\"bottom\">\n         <td>\n            <div style=\"margin-left: 40px\">\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.willShowPm25ScaleTable : depth0),{"name":"if","hash":{},"fn":container.program(25, data, 0, blockParams, depths),"inverse":container.program(27, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "            </div>\n         </td>\n      </tr>\n   </table>\n</div>\n";
+},"useData":true,"useDepths":true,"useBlockParams":true});
 templates['dashboard_device_and_feeds_dropdown_menu_item'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
@@ -194,6 +314,9 @@ templates['home_page_banner'] = template({"compiler":[7,">= 4.0.0"],"main":funct
 },"useData":true});
 templates['no_feeds_for_device'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div class=\"panel-body\">\n   There are no installation locations defined for this Speck. Please use\n   the <a href=\"/support/software\">Speck app</a> to and use the Upload Configuration\n   tab to specify where you have installed this Speck. If you need help, please\n   see our <a href=\"/support/software#upload-configuration\">Upload Configuration video tutorial</a>.\n</div>\n";
+},"useData":true});
+templates['pm_2_5_scale_table'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<table class=\"pm_2_5_scale pm_2_5_scale_table\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n   <tr class=\"pm_2_5_scale_row pm_2_5_scale_header_row\">\n      <td style=\"padding: 2px 0;\"></td>\n      <td class=\"pm_2_5_scale_cell\">Category</td>\n      <td class=\"pm_2_5_scale_cell\">&mu;g/m<sup>3</sup></td>\n   </tr>\n   <tr class=\"pm_2_5_scale_row\">\n      <td style=\"padding: 2px 0;\"><div class=\"pm_2_5_scale_color level0\"></div></td>\n      <td class=\"pm_2_5_scale_cell align_left\">Good</td>\n      <td class=\"pm_2_5_scale_cell\">0.0 - 12.0</td>\n   </tr>\n   <tr class=\"pm_2_5_scale_row\">\n      <td style=\"padding: 2px 0;\"><div class=\"pm_2_5_scale_color level1\"></div></td>\n      <td class=\"pm_2_5_scale_cell align_left\">Moderate</td>\n      <td class=\"pm_2_5_scale_cell\">12.1 - 35.4</td>\n   </tr>\n   <tr class=\"pm_2_5_scale_row\">\n      <td style=\"padding: 2px 0;\"><div class=\"pm_2_5_scale_color level2\"></div></td>\n      <td class=\"pm_2_5_scale_cell align_left\">Unhealthy for Sensitive Groups</td>\n      <td class=\"pm_2_5_scale_cell\">35.5 - 55.4</td>\n   </tr>\n   <tr class=\"pm_2_5_scale_row\">\n      <td style=\"padding: 2px 0;\"><div class=\"pm_2_5_scale_color level3\"></div></td>\n      <td class=\"pm_2_5_scale_cell align_left\">Unhealthy</td>\n      <td class=\"pm_2_5_scale_cell\">55.5 - 150.4</td>\n   </tr>\n   <tr class=\"pm_2_5_scale_row\">\n      <td style=\"padding: 2px 0;\"><div class=\"pm_2_5_scale_color level4\"></div></td>\n      <td class=\"pm_2_5_scale_cell align_left\">Very Unhealthy</td>\n      <td class=\"pm_2_5_scale_cell\">150.5 - 250.4</td>\n   </tr>\n   <tr class=\"pm_2_5_scale_row\">\n      <td style=\"padding: 2px 0;\"><div class=\"pm_2_5_scale_color level5\"></div></td>\n      <td class=\"pm_2_5_scale_cell align_left\">Hazardous</td>\n      <td class=\"pm_2_5_scale_cell\">250.5 - 500</td>\n   </tr>\n</table>\n";
 },"useData":true});
 templates['public_data_geocode_failed'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div class=\"alert alert-danger\">Sorry, that doesn't appear to be a valid location or address.</div>\n";
