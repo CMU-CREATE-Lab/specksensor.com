@@ -119,6 +119,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "How Dirty Is Your Air?",
+            author : "Simson Garfinkel",
+            source : "MIT Technology Review",
+            date : new Date("2015-06-01 00:00:00"),
+            url : "https://www.technologyreview.com/s/601609/how-dirty-is-your-air/"
+         },
+         {
             title : "Into Thin Air: A look into why the air surrounding us is so important",
             author : "Danielle Levsky",
             source : "Venture Outdoors",
