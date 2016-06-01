@@ -456,8 +456,8 @@ $BANNER_HEIGHT: 60px;
 
 .site_banner {
 
-   padding-left:10px;
-   padding-right:10px;
+   padding-left: 10px;
+   padding-right: 10px;
 
    table {
       height: $BANNER_HEIGHT;
@@ -1036,9 +1036,67 @@ $BANNER_HEIGHT: 60px;
          height: 30px;
          line-height: 30px;
       }
-
    }
 
+   #daily_stats_container {
+      display: none;
+
+      .daily_stats_title {
+         font-size: 18px;
+         text-align: center;
+      }
+
+      .daily_stats_subtitle {
+         font-size: 12px;
+         text-align: center;
+      }
+
+      .daily_stats_calendar_container {
+         margin: 20px 20px 0 20px;
+
+         .daily_stats_calendar {
+            .ch-tooltip {
+               font-size: 9pt;
+            }
+
+            .qi {
+               fill: rgb(0, 0, 0);
+            }
+
+            .q1 {
+               fill: rgb(0, 228, 0);
+            }
+
+            .q2 {
+               fill: rgb(255, 255, 0);
+            }
+
+            .q3 {
+               fill: rgb(255, 126, 0);
+            }
+
+            .q4 {
+               fill: rgb(255, 0, 0);
+            }
+
+            .q5 {
+               fill: rgb(153, 0, 76);
+            }
+
+            .q6 {
+               fill: rgb(126, 0, 35);
+            }
+         }
+      }
+
+      .daily_stats_calendar_container:first-of-type {
+         margin-left:0;
+      }
+
+      .daily_stats_calendar_container:last-of-type {
+         margin-right:0;
+      }
+   }
 }
 
 // =====================================================================================================================

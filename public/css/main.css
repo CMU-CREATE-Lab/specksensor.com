@@ -721,6 +721,37 @@ a.anchor {
     height: 30px;
     line-height: 30px; }
 
+#public_data_page #daily_stats_container {
+  display: none; }
+  #public_data_page #daily_stats_container .daily_stats_title {
+    font-size: 18px;
+    text-align: center; }
+  #public_data_page #daily_stats_container .daily_stats_subtitle {
+    font-size: 12px;
+    text-align: center; }
+  #public_data_page #daily_stats_container .daily_stats_calendar_container {
+    margin: 20px 20px 0 20px; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .ch-tooltip {
+      font-size: 9pt; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .qi {
+      fill: black; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q1 {
+      fill: #00e400; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q2 {
+      fill: yellow; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q3 {
+      fill: #ff7e00; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q4 {
+      fill: red; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q5 {
+      fill: #99004c; }
+    #public_data_page #daily_stats_container .daily_stats_calendar_container .daily_stats_calendar .q6 {
+      fill: #7e0023; }
+  #public_data_page #daily_stats_container .daily_stats_calendar_container:first-of-type {
+    margin-left: 0; }
+  #public_data_page #daily_stats_container .daily_stats_calendar_container:last-of-type {
+    margin-right: 0; }
+
 #air_quality_page {
   margin-top: 40px;
   font-size: 16px;

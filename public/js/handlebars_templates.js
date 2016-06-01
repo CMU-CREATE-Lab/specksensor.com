@@ -1,5 +1,20 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
+templates['daily_stats_calendar_container'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "      <div class=\"daily_stats_subtitle\">"
+    + container.escapeExpression(((helper = (helper = helpers.channelName || (depth0 != null ? depth0.channelName : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"channelName","hash":{},"data":data}) : helper)))
+    + "</div>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+
+  return "<div class=\"daily_stats_calendar_container\" style=\"display: inline-block\">\n   <div class=\"daily_stats_title\">PM 2.5 Daily Average</div>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.willShowChannelName : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "   <div id=\""
+    + container.escapeExpression(((helper = (helper = helpers.calendarElementId || (depth0 != null ? depth0.calendarElementId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"calendarElementId","hash":{},"data":data}) : helper)))
+    + "\" class=\"daily_stats_calendar\"></div>\n</div>\n";
+},"useData":true});
 templates['dashboard_device_and_feeds_dropdown_menu_item'] = template({"1":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 

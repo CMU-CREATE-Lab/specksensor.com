@@ -1,4 +1,5 @@
 <link href="/css/grapher.css" rel="stylesheet" type="text/css"/>
+<link href="/lib/cal-heatmap/cal-heatmap.css" rel="stylesheet" type="text/css"/>
 <script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}&libraries=geometry" type="text/javascript"></script>
 <script src="/lib/canvas-layer/src/CanvasLayer.js" type="text/javascript"></script>
 <script src="/js/com/specksensor/geo/Map.js" type="text/javascript"></script>
@@ -6,6 +7,9 @@
 <script src="{{esdrUrl}}/lib/createlab-grapher/grapher.min.js" type="text/javascript"></script>
 <script src="{{esdrUrl}}/lib/plot-manager/org/bodytrack/grapher/PlotManager.js" type="text/javascript"></script>
 <script src="/lib/nimble/nimble.min.js" type="text/javascript"></script>
+<script src="/lib/d3/d3.min.js" type="text/javascript"></script>
+<script src="/lib/cal-heatmap/cal-heatmap.min.js" type="text/javascript"></script>
+
 <script language="JavaScript" type="text/javascript">
    // hardcode these to production since dev/test/stage don't have enough data to be interesting
    var ESDR_API_ROOT_URL = 'https://esdr.cmucreatelab.org/api/v1';
@@ -29,6 +33,12 @@
       "PM25_UG_M3"
    ];
 
+   var DAILY_STATS_CHANNEL_NAME_SUFFIXES = [
+      "_daily_mean",
+      "_daily_median",
+      "_daily_max"
+   ];
+
    var SEVEN_DAYS_IN_SECS = 604800;
 
    var EXTRA_SMALL_DEVICE_WIDTH_PIXELS = 629;
@@ -47,6 +57,7 @@
    // grapher stuff
    var plotManager;
    var currentDateAxisRange = { min : null, max : null };
+   var lastDateAxisChangeEventMillis = null;
 
    // map stuff
    var map = new com.specksensor.geo.Map("map_area");
@@ -59,6 +70,9 @@
    var feedsById = {};
    var selectedFeed = null;
    var selectedChannelName = DEFAULT_CHANNEL_NAMES[0];
+   var cal = null;
+
+   var dailyStatsCalendarContainerTemplate = Handlebars.templates['daily_stats_calendar_container'];
 
    function getHashParam(paramName) {
       var hash = window.location.hash.substr(1);
@@ -190,7 +204,7 @@
                }
                else {
                   // got the data
-                  if (res.body.code == 200                 &&
+                  if (res.body.code == 200 &&
                       typeof res.body.data !== 'undefined' &&
                       res.body.data != null) {
 
@@ -373,6 +387,8 @@
          // remove the current feed from the grapher (if any)
          removeFeedFromGrapher(selectedFeed);
 
+         $("#daily_stats_container").hide();
+
          $(".grapher_item").hide();
 
          selectedFeed = null;
@@ -405,6 +421,9 @@
 
             // update the grapher
             addFeedToGrapher(selectedFeed);
+
+            // show the daily stats, if appropriate
+            renderDailyStats(feed);
 
             // update markers
             map.renderMarkers();
@@ -633,6 +652,108 @@
       }
    }
 
+   function hasStatsChannels(feed, pm25ChannelName) {
+      for (var j = 0; j < DAILY_STATS_CHANNEL_NAME_SUFFIXES.length; j++) {
+         var suffix = DAILY_STATS_CHANNEL_NAME_SUFFIXES[j];
+         var statsChannelName = pm25ChannelName + suffix;
+         if (!(statsChannelName in feed.channelBounds.channels)) {
+
+            console.log("Feed [" + feed.id + "] channel [" + pm25ChannelName + "] does not have stats channel [" + statsChannelName + "]");
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   // determine whether we should even show the daily stats calendar.  We only show it for govt feeds and only if
+   // the selected channel is a PM2.5 feed with associated daily stats channels.
+   function renderDailyStats(feed) {
+      console.log("RENDERING DAILY STATS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      var dailyStatsContainer = $("#daily_stats_container");
+      dailyStatsContainer.hide().empty();
+
+      if (feed.id in govtFeedsById) {
+
+         var pm25Channels = [];
+         var minTimeSecs = Number.MAX_VALUE;
+         for (var i = 0; i < GOVT_PM_2_5_CHANNEL_NAMES.length; i++) {
+            var channelName = GOVT_PM_2_5_CHANNEL_NAMES[i];
+            if (channelName in feed.channelBounds.channels && hasStatsChannels(feed, channelName)) {
+               minTimeSecs = Math.min(minTimeSecs, feed.channelBounds.channels[channelName].minTimeSecs);
+               pm25Channels.push(channelName);
+            }
+         }
+
+         if (pm25Channels.length > 0) {
+            console.log("pm25Channels=[" + pm25Channels + "]");
+
+            var startDate = new Date(minTimeSecs * 1000);
+            var willShowChannelName = pm25Channels.length > 1;
+            pm25Channels.forEach(function(pm25ChannelName) {
+               var calendarElementId = "daily_stats_calendar_" + feed.id + "_" + pm25ChannelName;
+               dailyStatsContainer.append($(dailyStatsCalendarContainerTemplate({
+                                                                                   calendarElementId : calendarElementId,
+                                                                                   channelName : pm25ChannelName,
+                                                                                   willShowChannelName : willShowChannelName
+                                                                                })));
+               cal = new CalHeatMap();
+               cal.init(createDailyStatsCalendarOptions(feed, calendarElementId, pm25ChannelName + "_daily_mean", startDate));
+            });
+            dailyStatsContainer.show();
+         }
+      }
+   }
+
+   function createDailyStatsCalendarOptions(feed, containerElementId, channelName, startingDate) {
+      //var startingDate = new Date(feed.channelBounds.channels[channelName].minTimeSecs * 1000);
+      var numYears = new Date().getFullYear() - startingDate.getFullYear() + 1;
+
+      return {
+         itemSelector : '#' + containerElementId,
+         domain : "year",
+         label : {
+            position : "top"
+         },
+         verticalOrientation : false,
+         subDomainTitleFormat : {
+            empty : "{date}",
+            filled : "{count} {connector} {date}"
+         },
+         tooltip : false,
+         subDomainDateFormat : "%Y-%m-%d",
+
+         subDomain : "x_day",
+         start : startingDate,
+         data : "https://esdr.cmucreatelab.org/api/v1/feeds/" + feed.id + "/channels/" + channelName + "/export?format=json",
+         afterLoadData : function(json) {
+            var newData = {};
+            json.data.forEach(function(record) {
+               newData[record[0]] = record[1];
+            });
+
+            return newData;
+         },
+         onClick : function(date, value) {
+            var min = date.getTime() / 1000;
+            var max = Date.UTC(date.getUTCFullYear(),
+                               date.getUTCMonth(),
+                               date.getUTCDate() + 1) / 1000;
+            plotManager.getDateAxis().setRange(min, max);
+            console.log("Value was [" + value + "] on [" + date + "] --> [" + min + "," + max + "]");
+         },
+         cellSize : 7,
+         cellPadding : 1,
+         domainGutter : 10,
+         itemName : ["ug/m^3", "ug/m^3"],
+         range : numYears,
+         legend : [12, 35.4, 55.4, 150.4, 250.4],
+         displayLegend : false,
+         weekStartOnMonday : false
+
+      }
+   }
+
    function toggleYAxisAutoScaling() {
       var autoScaleToggleButton = $("#auto_scale_toggle_button");
       var isAutoScaleOn = !autoScaleToggleButton.hasClass("active");
@@ -711,6 +832,7 @@
    // one.  And THEN, we return that channel's maxTimeSecs field. Dude.
    function getMaxTimeSecsOfGovtFeedPM25Channel(feed) {
       if (feed && feed.channelBounds && feed.channelBounds.channels) {
+         // TODO: fix this for feeds such as #26 which have multiple PM2.5 channels
          for (var i = 0; i < GOVT_PM_2_5_CHANNEL_NAMES.length; i++) {
             var channelName = GOVT_PM_2_5_CHANNEL_NAMES[i];
             if (channelName in feed.channelBounds.channels) {
@@ -817,11 +939,11 @@
                }
                else {
                   // got the data
-                  if (res.body.code == 200                   &&
-                      typeof res.body.data !== 'undefined'   &&
-                      res.body.data != null                  &&
-                      res.body.data['channels']              &&
-                      res.body.data['channels']              &&
+                  if (res.body.code == 200 &&
+                      typeof res.body.data !== 'undefined' &&
+                      res.body.data != null &&
+                      res.body.data['channels'] &&
+                      res.body.data['channels'] &&
                       res.body.data['channels'][channelName] &&
                       res.body.data['channels'][channelName]['mostRecentDataSample']
                   ) {
@@ -1047,6 +1169,8 @@
                </td>
             </tr>
          </table>
+      </div>
+      <div id="daily_stats_container" class="noselect col-sm-12">
       </div>
    </div>
 </div>
