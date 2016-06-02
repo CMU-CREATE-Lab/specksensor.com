@@ -131,6 +131,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Your Office Air Is Killing You",
+            author : "Douglas Main",
+            source : "Newsweek",
+            date : new Date("2015-06-02 00:00:00"),
+            url : "http://www.newsweek.com/2016/06/10/indoor-air-pollution-revolution-465531.html"
+         },
+         {
             title : "How Dirty Is Your Air?",
             author : "Simson Garfinkel",
             source : "MIT Technology Review",
