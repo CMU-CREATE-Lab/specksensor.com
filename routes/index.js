@@ -11,7 +11,19 @@ router.get('/', function(req, res) {
       hero_image : { filename : "white_speck_hero.jpg", css_class : "anchor_right" },
       hero_text : {
          css_class : "home_hero_text",
-         text : '<span class="intro">Meet Speck.</span><br>The indoor air&nbsp;quality&nbsp;monitor<br>empowering you to breathe&nbsp;easier.'
+         text : '<span class="intro">Meet Speck.</span><br>' +
+                'The indoor air&nbsp;quality&nbsp;monitor<br>empowering you to breathe&nbsp;easier.<br>' +
+                '<a href="//player.vimeo.com/video/168992806"' +
+                '      data-type="vimeo"' +
+                '      data-toggle="lightbox"' +
+                '      data-always_show_close="false"' +
+                '      data-width="1000"' +
+                '      class="btn btn-lg btn-default"' +
+                '      style="border-radius: 25px;margin-top:20px">' +
+                '   <i class="fa fa-play" style="color: #666666" aria-hidden="true"></i>' +
+                '   <span style="font-weight:200">Watch the Video</span>' +
+                '</a>'
+
       }
    });
 });
