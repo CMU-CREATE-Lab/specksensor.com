@@ -64,7 +64,7 @@ var JSON_SCHEMA = {
 };
 
 // hardcode this to production because dev/test/stage don't have the multifeed or data we need
-var ESDR_MULTIFEED_ROOT_URL = "http://esdr.cmucreatelab.org/api/v1/multifeeds/pm_25";
+var ESDR_MULTIFEED_ROOT_URL = "http://esdr.cmucreatelab.org/api/v1/multifeeds/pm_2_5";
 var ESDR_QUERY_ITEM_LIMIT = 1000;
 
 var REFRESH_INTERVAL_MILLIS = config.get("pm25Stations:refreshIntervalMillis");
@@ -337,9 +337,9 @@ module.exports = function(databaseHelper) {
                      }
                      else {
                         // got the data
-                        if (                                                   res.statusCode == httpStatus.OK &&
-                            typeof res.body.data !== 'undefined'               &&
-                            res.body.data != null                              &&
+                        if (res.statusCode == httpStatus.OK &&
+                            typeof res.body.data !== 'undefined' &&
+                            res.body.data != null &&
                             typeof res.body.full_channel_names !== 'undefined' &&
                             res.body.full_channel_names != null) {
 
@@ -387,18 +387,27 @@ module.exports = function(databaseHelper) {
                                 var channelName = fullChannelNameParts[2];
                                 var feedId = parseInt(feedStr.slice(FEED_PREFIX_LENGTH));
 
+                                // set a flag for whether we already have recorded PM 2.5 data for this feed because it
+                                // happens to have multiple PM 2.5 channels (e.g. feeds 26 and 29)
+                                var alreadyHasPm25DataForFeed = (feedId in recentDataByFeedId);
+
                                 // now try to find the most recent data for this feed--search backwards through the data
                                 // array, quitting early if we find a non-null value
                                 for (var i = data.length - 1; i >= 0; i--) {
                                    // need to add 1 to the index to account for the timestamp in position 0
-                                   var unixTimeSecs = data[i][0];
                                    var value = data[i][index + 1];
                                    if (value != null) {
-                                      recentDataByFeedId[feedId] = {
-                                         value : value,
-                                         channelName : channelName,
-                                         unixTimeSecs : unixTimeSecs
-                                      };
+                                      var unixTimeSecs = data[i][0];
+
+                                      // only record this if we haven't already recorded data for this feed, OR it's
+                                      // newer than what we have
+                                      if (!alreadyHasPm25DataForFeed || unixTimeSecs > recentDataByFeedId[feedId].unixTimeSecs) {
+                                         recentDataByFeedId[feedId] = {
+                                            value : value,
+                                            channelName : channelName,
+                                            unixTimeSecs : unixTimeSecs
+                                         };
+                                      }
                                       break;
                                    }
                                 }
