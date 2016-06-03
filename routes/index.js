@@ -134,77 +134,77 @@ router.get('/press', function(req, res) {
             title : "Your Office Air Is Killing You",
             author : "Douglas Main",
             source : "Newsweek",
-            date : new Date("2015-06-02 00:00:00"),
+            date : new Date("2016-06-02 00:00:00"),
             url : "http://www.newsweek.com/2016/06/10/indoor-air-pollution-revolution-465531.html"
          },
          {
             title : "How Dirty Is Your Air?",
             author : "Simson Garfinkel",
             source : "MIT Technology Review",
-            date : new Date("2015-06-01 00:00:00"),
+            date : new Date("2016-06-01 00:00:00"),
             url : "https://www.technologyreview.com/s/601609/how-dirty-is-your-air/"
          },
          {
             title : "Into Thin Air: A look into why the air surrounding us is so important",
             author : "Danielle Levsky",
             source : "Venture Outdoors",
-            date : new Date("2015-04-05 00:00:00"),
+            date : new Date("2016-04-05 00:00:00"),
             url : "http://www.ventureoutdoors.org/into-thin-air-a-look-into-why-the-air-surrounding-us-is-so-important/"
          },
          {
             title : "Pollution Atmosph&eacute;rique: Trois Gadgets &Agrave; L'&eacute;preuve",
             author : "Nicolas B&eacute;rub&eacute;",
             source : "La Presse",
-            date : new Date("2015-04-03 00:00:00"),
+            date : new Date("2016-04-03 00:00:00"),
             url : "http://plus.lapresse.ca/screens/fde69aec-94a0-490b-9b3d-f0d6c65802dc%7CQV47p5Bvgo1E.html"
          },
          {
             title : "Speck of Proof: To Check Your Home Air Quality, Go to the Library",
             author : "Editorial Board",
             source : "Pittsburgh Post-Gazette",
-            date : new Date("2015-03-22 00:00:00"),
+            date : new Date("2016-03-22 00:00:00"),
             url : "http://www.post-gazette.com/opinion/2016/03/22/Speck-of-proof-To-check-your-home-air-quality-go-to-the-library/stories/201603220044"
          },
          {
             title : "Libraries Offer Air Quality Monitors Through CMU Program",
             author : "Mora Mclaughlin",
             source : "WESA",
-            date : new Date("2015-03-21 00:00:00"),
+            date : new Date("2016-03-21 00:00:00"),
             url : "http://wesa.fm/post/libraries-offer-air-quality-monitors-through-cmu-program"
          },
          {
             title : "CMU Speck Pollution Monitors Now Available at Carnegie Libraries",
             author : "David Templeton",
             source : "Pittsburgh Post-Gazette",
-            date : new Date("2015-03-21 00:00:00"),
+            date : new Date("2016-03-21 00:00:00"),
             url : "http://www.post-gazette.com/news/health/2016/03/21/CMU-Speck-pollution-monitors-now-available-at-Carnegie-Libraries/stories/201603210015"
          },
          {
             title : "This Free Gadget Could Save Your Life",
             author : "Kevin Downey",
             source : "The Kim Komando Show",
-            date : new Date("2015-03-19 00:00:00"),
+            date : new Date("2016-03-19 00:00:00"),
             url : "http://www.komando.com/happening-now/351333/this-free-gadget-could-save-your-life"
          },
          {
             title : "You Can Use This New Device to Test the Air Quality in Your Home For Free",
             author : "Jessica Mattern",
             source : "Women's Day",
-            date : new Date("2015-03-17 00:00:00"),
+            date : new Date("2016-03-17 00:00:00"),
             url : "http://www.womansday.com/health-fitness/a54150/test-air-quality-for-free/"
          },
          {
             title : "This Device Lets You Test The Air Pollution In Your House",
             author : "Casey Williams",
             source : "The Huffington Post",
-            date : new Date("2015-03-15 00:00:00"),
+            date : new Date("2016-03-15 00:00:00"),
             url : "http://www.huffingtonpost.com/entry/libraries-lending-air-pollution-sensors_us_56e8173ee4b0b25c9183384a"
          },
          {
             title : "Carnegie Mellon, Airviz Will Make Air Quality Monitors Available at Public Libraries Nationwide",
             author : "Byron Spice (Carnegie Mellon), Suzanne Thinnes (Carnegie Library of Pittsburgh)",
             source : "CMU and Carnegie Library of Pittsburgh",
-            date : new Date("2015-03-15 00:00:00"),
+            date : new Date("2016-03-15 00:00:00"),
             file : {
                name : "20160315_CMU_Carnegie_Library.pdf",
                type : "pdf"
