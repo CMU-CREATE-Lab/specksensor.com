@@ -4,6 +4,7 @@ var httpStatus = require('http-status');
 var JaySchema = require('jayschema');
 var jsonValidator = new JaySchema();
 var ValidationError = require('../lib/errors').ValidationError;
+var Query2Query = require('query2query');
 var config = require('../config');
 var log = require('log4js').getLogger('specksensor:models:pm25stations');
 
@@ -27,6 +28,18 @@ var CREATE_TABLE_QUERY = " CREATE TABLE IF NOT EXISTS `PM25Stations` ( " +
                          "KEY `created` (`created`), " +
                          "KEY `modified` (`modified`) " +
                          ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8";
+
+var MAX_FOUND_STATIONS = 1000;
+
+var query2query = new Query2Query();
+query2query.addField('feedId', true, true, false, Query2Query.types.INTEGER);
+query2query.addField('latitude', true, true, false, Query2Query.types.NUMBER);
+query2query.addField('longitude', true, true, false, Query2Query.types.NUMBER);
+query2query.addField('recentValue', true, true, true, Query2Query.types.NUMBER);
+query2query.addField('recentValueUnixTimeSecs', true, true, true, Query2Query.types.NUMBER);
+query2query.addField('channelName', true, true, true);
+query2query.addField('created', true, true, false, Query2Query.types.DATETIME);
+query2query.addField('modified', true, true, false, Query2Query.types.DATETIME);
 
 var JSON_SCHEMA = {
    "$schema" : "http://json-schema.org/draft-04/schema#",
@@ -105,18 +118,6 @@ module.exports = function(databaseHelper) {
    };
 
    /**
-    * Tries to find the station with the given <code>feedId</code> and returns it to the given <code>callback</code>. If
-    * successful, the PM 2.5 Station is returned as the 2nd argument to the <code>callback</code> function.  If
-    * unsuccessful, <code>null</code> is returned to the callback.
-    *
-    * @param {int} feedId ID of the PM 2.5 station feed to find.
-    * @param {function} callback function with signature <code>callback(err, pm25Station)</code>
-    */
-   this.findByFeedId = function(feedId, callback) {
-      findOne("SELECT * FROM PM25Stations WHERE feedId=?", [feedId], callback);
-   };
-
-   /**
     * Tries to find the nearest station with data within <code>SEARCH_RADIUS_IN_KM</code> kilometers of the given
     * <code>latitude</code> and <code>longitude</code>.  Returns <code>null</code> if the given <code>latitude</code> or
     * <code>longitude</code> is <code>null</code>.
@@ -175,6 +176,69 @@ module.exports = function(databaseHelper) {
                [latitude, longitude, SEARCH_RADIUS_IN_KM, ONE_DEGREE_OF_LATITUDE_IN_KM],
                callback);
       }
+   };
+
+   /**
+    * Tries to find the station with the given <code>feedId</code> and returns it to the given <code>callback</code>. If
+    * successful, the station is returned as the 2nd argument to the <code>callback</code> function.  If unsuccessful,
+    * <code>null</code> is returned to the callback.
+    *
+    * @param {string} feedId ID of the station to find.
+    * @param {string|Array} fieldsToSelect comma-delimited string or array of strings of field names to select. An empty
+    * string, an empty array, or <code>null</code> will cause all fields to be selected
+    * @param {function} callback function with signature <code>callback(err, station)</code>
+    */
+   this.findByFeedId = function(feedId, fieldsToSelect, callback) {
+      if (fieldsToSelect == null) {
+         fieldsToSelect = [];
+      }
+      
+      findStation(fieldsToSelect, 'feedId', feedId, callback);
+   };
+
+   var findStation = function(fieldsToSelect, whereField, whereValue, callback) {
+      query2query.parse({fields : fieldsToSelect}, function(err, queryParts) {
+         if (err) {
+            return callback(err);
+         }
+
+         var sql = queryParts.selectClause + " FROM PM25Stations WHERE " + whereField + "=?";
+         databaseHelper.findOne(sql, [whereValue], function(err, station) {
+            if (err) {
+               log.error("Error trying to find PM25Station with " + whereField + " [" + whereValue + "]: " + err);
+               return callback(err);
+            }
+
+            return callback(null, station);
+         });
+      });
+   };
+
+   this.find = function(queryString, callback) {
+      query2query.parse(queryString, function(err, queryParts) {
+
+                           if (err) {
+                              return callback(err);
+                           }
+
+                           var sql = queryParts.sql("PM25Stations");
+                           log.debug("PM25Stations.find(): " + sql + (queryParts.whereValues.length > 0 ? " [where values: " + queryParts.whereValues + "]" : ""));
+
+                           // use findWithLimit so we can also get a count of the total number of records that would have been returned
+                           // had there been no LIMIT clause included in the query
+                           databaseHelper.findWithLimit(sql, queryParts.whereValues, function(err, result) {
+                              if (err) {
+                                 return callback(err);
+                              }
+
+                              // copy in the offset and limit
+                              result.offset = queryParts.offset;
+                              result.limit = queryParts.limit;
+
+                              return callback(null, result, queryParts.selectFields);
+                           });
+                        },
+                        MAX_FOUND_STATIONS);
    };
 
    var refreshCache = function() {

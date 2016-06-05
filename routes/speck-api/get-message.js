@@ -24,7 +24,7 @@ module.exports = function(ActiveSpeckModel, PM25StationsModel) {
                         var stationFeedId = preferences.nearestPm25Station.feedId;
 
                         // now find the corresponding PM25Station
-                        return PM25StationsModel.findByFeedId(stationFeedId, function(err, station) {
+                        return PM25StationsModel.findByFeedId(stationFeedId, null, function(err, station) {
                            if (err) {
                               log.error("Failed to find the PM25Station with feedId [" + stationFeedId + "]");
                               sendResponse(res);

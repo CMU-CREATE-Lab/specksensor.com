@@ -313,6 +313,7 @@ flow.series([
                         app.use('/api/v1/*', noSessionSupport, corsSupport);
                         app.use('/api/v1/users', require('./routes/api/users')(db.users));
                         app.use('/api/v1/user-verification', require('./routes/api/user-verification'));
+                        app.use('/api/v1/pm-stations', require('./routes/api/pm-stations')(db.pm25Stations));
 
                         // speck API
                         app.use('/get_time', noSessionSupport, corsSupport, require('./routes/speck-api/get-time'));
