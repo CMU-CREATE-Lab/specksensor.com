@@ -51,8 +51,8 @@
 
    // look within a bounding box with radius of 40 km around geocoded location
    var SEARCH_RADIUS_IN_KM = 40;
-   // when geocoding, ignore govt feeds which have a PM2.5 feed which hasn't been updated within the past 6 hours
-   var SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
+   // when geocoding, ignore govt feeds which have a PM2.5 feed which hasn't been updated within the past 4 hours
+   var FOUR_HOURS_IN_SECONDS = 4 * 60 * 60;
 
    // grapher stuff
    var plotManager;
@@ -65,6 +65,7 @@
 
    var govtFeeds = [];
    var govtFeedsById = {};
+   var govtRecentValuesByFeedId = {};
    var speckFeeds = { indoor : [], outdoor : [] };
    var speckFeedsById = { indoor : {}, outdoor : {} };
    var feedsById = {};
@@ -136,6 +137,9 @@
                            },
                            function(done) {
                               loadSpeckFeeds(0, done);
+                           },
+                           function(done) {
+                              loadRecentGovtData(0, done);
                            }
                         ],
                         function(err) {
@@ -176,10 +180,26 @@
                   if (selectedFeed) {
                      var selectedMarker = map.getMarkerById(selectedFeed.id);
                      var markerCanvasPosition = map.worldPointToCanvasPixelCoords(selectedMarker.worldPoint);
+                     var radius = MARKER_RADIUS + 1;
                      context.beginPath();
-                     context.arc(markerCanvasPosition.x, markerCanvasPosition.y, MARKER_RADIUS + 1, 0, TWO_PI, false);
                      context.lineWidth = 2;
                      context.strokeStyle = SELECTED_MARKER_COLOR;
+                     if (selectedFeed.id in govtFeedsById) {
+                        // draw a square
+                        context.rect(markerCanvasPosition.x - radius,
+                                     markerCanvasPosition.y - radius,
+                                     2 * radius,
+                                     2 * radius);
+                     }
+                     else {
+                        // draw a circle
+                        context.arc(markerCanvasPosition.x,
+                                    markerCanvasPosition.y,
+                                    radius,
+                                    0,
+                                    TWO_PI,
+                                    false);
+                     }
                      context.stroke();
                   }
                }
@@ -187,6 +207,21 @@
       );
    };
 
+   /*
+            var isGovtFeed = marker.id in govtFeedsById;
+
+         context.beginPath();
+         if (isGovtFeed) {
+            // draw a square
+            context.fillStyle = getGovtMarkerColor(govtRecentValuesByFeedId[marker.id]);
+         }
+         else {
+            // draw a circle
+            context.arc(canvasPosition.x, canvasPosition.y, MARKER_RADIUS, 0, TWO_PI, false);
+            context.fillStyle = "rgba(10, 10, 10, 0.6)";
+         }
+
+    */
    function handleGeocode() {
       var location = getHashParam('loc');
       if (typeof location !== 'undefined' && location != null && location.length > 0) {
@@ -267,6 +302,42 @@
                   }
                   else {
                      done(new Error("Failed to load govt feeds: " + JSON.stringify(res.body, null, 3)));
+                  }
+               }
+            });
+   }
+
+   function loadRecentGovtData(page, done) {
+      var offset = ESDR_QUERY_ITEM_LIMIT * page;
+
+      superagent
+            .get("/api/v1/pm-stations?fields=feedId,recentValue&where=recentValue<>__NULL__&orderBy=feedId&limit=" + ESDR_QUERY_ITEM_LIMIT + "&offset=" + offset)
+            .end(function(err, res) {
+               if (err) {
+                  done(err);
+               }
+               else {
+                  // got the data
+                  if (res.body.code == 200 &&
+                      typeof res.body.data !== 'undefined' &&
+                      res.body.data != null) {
+
+                     // insert the new rows into the map
+                     for (var i = 0; i < res.body.data.rows.length; i++) {
+                        var row = res.body.data.rows[i];
+                        govtRecentValuesByFeedId[row.feedId] = row.recentValue;
+                     }
+
+                     // see whether we need to load more
+                     if (Object.keys(govtRecentValuesByFeedId).length < res.body.data.totalCount) {
+                        loadRecentGovtData(++page, done);
+                     }
+                     else {
+                        done();
+                     }
+                  }
+                  else {
+                     done(new Error("Failed to load recent data for govt feeds: " + JSON.stringify(res.body, null, 3)));
                   }
                }
             });
@@ -366,6 +437,31 @@
       });
    }
 
+   var getGovtMarkerColor = function(value) {
+
+      if (typeof value === 'undefined' || value == null) {
+         return "rgba(10, 10, 10, 0.6)";
+      }
+
+      if (value <= 12) {
+         return "rgb(0, 228, 0)";
+      }
+      else if (value <= 35.4) {
+         return "rgb(255, 255, 0)";
+      }
+      else if (value <= 55.4) {
+         return "rgb(255, 126, 0)";
+      }
+      else if (value <= 150.4) {
+         return "rgb(255, 0, 0)";
+      }
+      else if (value <= 250.4) {
+         return "rgb(153, 0, 76)";
+      }
+
+      return "rgb(126, 0, 35)";
+   };
+
    function renderMarker(marker, canvasPosition, context, filterStates) {
       var feed = feedsById[marker.id];
 
@@ -375,13 +471,23 @@
                            (selectedFeed != null && selectedFeed.id == feed.id);    // make sure the selected marker is drawn, even if the filter for it is disabled
 
       if (willDrawMarker) {
-         var radius = MARKER_RADIUS;
+         var isGovtFeed = marker.id in govtFeedsById;
 
-         // draw a circle
          context.beginPath();
-         context.arc(canvasPosition.x, canvasPosition.y, radius, 0, TWO_PI, false);
-         context.fillStyle = "rgba(10, 10, 10, 0.6)";
+         if (isGovtFeed) {
+            // draw a square
+            context.rect(canvasPosition.x - MARKER_RADIUS, canvasPosition.y - MARKER_RADIUS, 2 * MARKER_RADIUS, 2 * MARKER_RADIUS);
+            context.fillStyle = getGovtMarkerColor(govtRecentValuesByFeedId[marker.id]);
+         }
+         else {
+            // draw a circle
+            context.arc(canvasPosition.x, canvasPosition.y, MARKER_RADIUS, 0, TWO_PI, false);
+            context.fillStyle = "rgba(10, 10, 10, 0.6)";
+         }
          context.fill();
+         context.lineWidth = 1;
+         context.strokeStyle = "rgb(10, 10, 10)";
+         context.stroke();
       }
    }
 
@@ -829,7 +935,8 @@
                           }
                        });
          }
-      } else {
+      }
+      else {
          $("#pm_2_5_scale_container").empty().hide();
       }
    }
@@ -965,7 +1072,7 @@
    function findGovtFeedsWithinBoundingBox(boundingBox) {
       var center = boundingBox.getCenter();
       var currentTimeSecs = Date.now() / 1000;
-      var sixHoursAgo = currentTimeSecs - SIX_HOURS_IN_SECONDS;
+      var fourHoursAgo = currentTimeSecs - FOUR_HOURS_IN_SECONDS;
 
       var obj = {
          feeds : null,
@@ -990,9 +1097,9 @@
          // most recent data
          if (isContained) {
 
-            // only consider this feed if the data isn't stale (i.e. more than 6 hours old)
+            // only consider this feed if the data isn't stale (i.e. more than 4 hours old)
             var maxTimeSecs = getMaxTimeSecsOfGovtFeedPM25Channel(feed);
-            if (maxTimeSecs > sixHoursAgo) {
+            if (maxTimeSecs > fourHoursAgo) {
                // compute the distance, but divide by 1000 to get kilometers
                var distanceKm = google.maps.geometry.spherical.computeDistanceBetween(center, feed.latLng) / 1000;
 
