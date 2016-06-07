@@ -800,20 +800,27 @@ a.anchor {
     fill: #99004c; }
   #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q6 {
     fill: #7e0023; }
-  #public_data_page .daily_stats_calendar_and_table .daily_stats_table {
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_table .value_cell {
+    text-align: center;
+    padding: 2px 0;
+    border-right: 1px solid #aaaaaa;
+    border-left: 1px solid #aaaaaa; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_table .header_cell {
+    text-align: center;
+    padding: 2px 0;
+    font-weight: bold;
+    border-top: 1px solid #aaaaaa;
+    border-right: 1px solid #aaaaaa;
+    border-left: 1px solid #aaaaaa; }
+  #public_data_page .daily_stats_calendar_and_table .days_table {
+    display: none; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_toggle {
+    font-size: smaller;
+    text-align: center;
     margin-bottom: 30px; }
-    #public_data_page .daily_stats_calendar_and_table .daily_stats_table .value_cell {
-      text-align: center;
-      padding: 2px 0;
-      border-right: 1px solid #aaaaaa;
-      border-left: 1px solid #aaaaaa; }
-    #public_data_page .daily_stats_calendar_and_table .daily_stats_table .header_cell {
-      text-align: center;
-      padding: 2px 0;
-      font-weight: bold;
-      border-top: 1px solid #aaaaaa;
-      border-right: 1px solid #aaaaaa;
-      border-left: 1px solid #aaaaaa; }
+    #public_data_page .daily_stats_calendar_and_table .daily_stats_toggle label {
+      margin-right: 10px;
+      font-weight: normal; }
   #public_data_page .daily_stats_calendar_and_table .bar_graph_cell {
     text-align: center;
     padding: 0;

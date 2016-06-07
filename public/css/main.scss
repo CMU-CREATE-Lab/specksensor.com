@@ -1171,8 +1171,6 @@ $BANNER_HEIGHT: 60px;
 
       .daily_stats_table {
 
-         margin-bottom: 30px;
-
          .value_cell {
             text-align: center;
             padding: 2px 0;
@@ -1187,6 +1185,24 @@ $BANNER_HEIGHT: 60px;
             border-top: 1px solid $BORDER_COLOR;
             border-right: 1px solid $BORDER_COLOR;
             border-left: 1px solid $BORDER_COLOR;
+         }
+      }
+
+      .days_table {
+         display: none;
+      }
+
+      .perc_table {
+      }
+
+      .daily_stats_toggle {
+         font-size: smaller;
+         text-align: center;
+         margin-bottom: 30px;
+
+         label {
+            margin-right: 10px;
+            font-weight: normal;
          }
       }
 

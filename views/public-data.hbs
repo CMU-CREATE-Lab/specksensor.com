@@ -939,13 +939,27 @@
                           pm25Channels.forEach(function(pm25ChannelName) {
                              var pm25StatsChannelName = pm25ChannelName + "_daily_max";
                              var calendarElementId = "daily_stats_calendar_" + feed.id + "_" + pm25ChannelName;
-                             statsContainer.append($(dailyStatsCalendarAndTableTemplate({
-                                                                                                       calendarElementId : calendarElementId,
-                                                                                                       channelName : pm25ChannelName,
-                                                                                                       hasMultipleChannels : hasMultipleChannels,
-                                                                                                       statsByYear : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].statsByYear,
-                                                                                                       years : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years
-                                                                                                    })));
+                             var dailyStatsCalendarAndTableElement = $(dailyStatsCalendarAndTableTemplate({
+                                                                                                             calendarElementId : calendarElementId,
+                                                                                                             channelName : pm25ChannelName,
+                                                                                                             hasMultipleChannels : hasMultipleChannels,
+                                                                                                             statsByYear : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].statsByYear,
+                                                                                                             years : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years
+                                                                                                          }));
+                             statsContainer.append(dailyStatsCalendarAndTableElement);
+
+                             // add event handlers for day counts vs percentages
+                             var daysTable = dailyStatsCalendarAndTableElement.find(".days_table");
+                             var percTable = dailyStatsCalendarAndTableElement.find(".perc_table");
+                             dailyStatsCalendarAndTableElement.find("#percentages_toggle_" + pm25ChannelName).click(function() {
+                                daysTable.hide();
+                                percTable.show();
+                             });
+                             dailyStatsCalendarAndTableElement.find("#counts_toggle_" + pm25ChannelName).click(function() {
+                                percTable.hide();
+                                daysTable.show();
+                             });
+
                              cal = new CalHeatMap();
                              cal.init(createDailyStatsCalendarOptions(calendarElementId, statsDataByChannel[pm25ChannelName][pm25StatsChannelName].data, startDate));
                           });
@@ -1329,7 +1343,7 @@
          <p>
             This map shows the locations of regulated PM<sub>2.5</sub> stations and all public Specks. Enter an address
             or location to find the nearest regulated station and see the current and historical air quality. Or, select
-            a marker on the map to see a plot of the air quality at that location.  The regulated station
+            a marker on the map to see a plot of the air quality at that location. The regulated station
             markers are colored according to their most recent value using the US EPA PM<sub>2.5</sub> scale shown below.
          </p>
          <div class="geocode_form_container">

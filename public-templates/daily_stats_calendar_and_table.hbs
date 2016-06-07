@@ -13,8 +13,8 @@
       </tr>
    </table>
 
-   <div class="section_title">Dirty Days: Percentages</div>
-   <div class="daily_stats_table pm_2_5_scale">
+   <div class="daily_stats_table perc_table pm_2_5_scale">
+      <div class="section_title">Dirty Days: Percentages</div>
       <table border="0" cellpadding="0" cellspacing="0" class="centered_table">
          <tr>
             <td>&nbsp;</td>
@@ -117,5 +117,116 @@
             </td>
          </tr>
       </table>
+   </div>
+   <div class="daily_stats_table days_table pm_2_5_scale">
+      <div class="section_title">Dirty Days: Counts</div>
+      <table border="0" cellpadding="0" cellspacing="0" class="centered_table">
+         <tr>
+            <td>&nbsp;</td>
+            {{#each years}}
+               <td class="header_cell">{{this}}</td>
+            {{/each}}
+            <td class="header_cell">Total</td>
+         </tr>
+         <tr>
+            <td><div class="pm_2_5_scale_color level0"></div></td>
+            {{#each years as |year|}}
+               <td class="value_cell">
+                  {{#with (lookup ../statsByYear year)}}
+                     {{level0}}
+                  {{/with}}
+               </td>
+            {{/each}}
+            <td class="value_cell">{{statsByYear.all.level0}}</td>
+         </tr>
+         <tr>
+            <td><div class="pm_2_5_scale_color level1"></div></td>
+            {{#each years as |year|}}
+               <td class="value_cell">
+                  {{#with (lookup ../statsByYear year)}}
+                     {{level1}}
+                  {{/with}}
+               </td>
+            {{/each}}
+            <td class="value_cell">{{statsByYear.all.level1}}</td>
+         </tr>
+         <tr>
+            <td><div class="pm_2_5_scale_color level2"></div></td>
+            {{#each years as |year|}}
+               <td class="value_cell">
+                  {{#with (lookup ../statsByYear year)}}
+                     {{level2}}
+                  {{/with}}
+               </td>
+            {{/each}}
+            <td class="value_cell">{{statsByYear.all.level2}}</td>
+         </tr>
+         <tr>
+            <td><div class="pm_2_5_scale_color level3"></div></td>
+            {{#each years as |year|}}
+               <td class="value_cell">
+                  {{#with (lookup ../statsByYear year)}}
+                     {{level3}}
+                  {{/with}}
+               </td>
+            {{/each}}
+            <td class="value_cell">{{statsByYear.all.level3}}</td>
+         </tr>
+         <tr>
+            <td><div class="pm_2_5_scale_color level4"></div></td>
+            {{#each years as |year|}}
+               <td class="value_cell">
+                  {{#with (lookup ../statsByYear year)}}
+                     {{level4}}
+                  {{/with}}
+               </td>
+            {{/each}}
+            <td class="value_cell">{{statsByYear.all.level4}}</td>
+         </tr>
+         <tr>
+            <td><div class="pm_2_5_scale_color level5"></div></td>
+            {{#each years as |year|}}
+               <td class="value_cell">
+                  {{#with (lookup ../statsByYear year)}}
+                     {{level5}}
+                  {{/with}}
+               </td>
+            {{/each}}
+            <td class="value_cell">{{statsByYear.all.level5}}</td>
+         </tr>
+         <tr>
+            <td>&nbsp;</td>
+            {{#each years as |year|}}
+               <td class="bar_graph_cell">
+                  {{#with (lookup ../statsByYear year)}}
+                     <div class="bar_graph">
+                        <div class="bar_graph_item bar_graph_item0 level0" style="height:{{math level0Perc '*' 30}}px;"></div>
+                        <div class="bar_graph_item bar_graph_item1 level1" style="height:{{math level1Perc '*' 30}}px;"></div>
+                        <div class="bar_graph_item bar_graph_item2 level2" style="height:{{math level2Perc '*' 30}}px;"></div>
+                        <div class="bar_graph_item bar_graph_item3 level3" style="height:{{math level3Perc '*' 30}}px;"></div>
+                        <div class="bar_graph_item bar_graph_item4 level4" style="height:{{math level4Perc '*' 30}}px;"></div>
+                        <div class="bar_graph_item bar_graph_item5 level5" style="height:{{math level5Perc '*' 30}}px;"></div>
+                     </div>
+                  {{/with}}
+               </td>
+            {{/each}}
+            <td class="bar_graph_cell">
+               <div class="bar_graph">
+                  <div class="bar_graph_item bar_graph_item0 level0" style="height:{{math statsByYear.all.level0Perc '*' 30}}px;"></div>
+                  <div class="bar_graph_item bar_graph_item1 level1" style="height:{{math statsByYear.all.level1Perc '*' 30}}px;"></div>
+                  <div class="bar_graph_item bar_graph_item2 level2" style="height:{{math statsByYear.all.level2Perc '*' 30}}px;"></div>
+                  <div class="bar_graph_item bar_graph_item3 level3" style="height:{{math statsByYear.all.level3Perc '*' 30}}px;"></div>
+                  <div class="bar_graph_item bar_graph_item4 level4" style="height:{{math statsByYear.all.level4Perc '*' 30}}px;"></div>
+                  <div class="bar_graph_item bar_graph_item5 level5" style="height:{{math statsByYear.all.level5Perc '*' 30}}px;"></div>
+               </div>
+            </td>
+         </tr>
+      </table>
+   </div>
+   <div class="daily_stats_toggle">
+      <input id="percentages_toggle_{{channelName}}" name="counts_percentages_toggle_{{channelName}}" type="radio" checked="checked">
+      <label for="percentages_toggle_{{channelName}}">Percentages</label>
+      <input id="counts_toggle_{{channelName}}" name="counts_percentages_toggle_{{channelName}}" type="radio">
+      <label for="counts_toggle_{{channelName}}">Counts</label>
    </div>
 </div>
