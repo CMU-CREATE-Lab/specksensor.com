@@ -916,6 +916,9 @@ $BANNER_HEIGHT: 60px;
 
    #instructions {
       margin-bottom: 10px;
+      p {
+         font-size: larger;
+      }
    }
 
    #results {
@@ -931,7 +934,6 @@ $BANNER_HEIGHT: 60px;
    }
 
    #selected_feed_name_label {
-      margin-top: 10px;
       margin-bottom: 10px;
       .feed_name_label {
          font-size: 18px;
@@ -1042,13 +1044,15 @@ $BANNER_HEIGHT: 60px;
 
    .section_title {
       margin-top: 20px;
+      margin-bottom: 5px;
       font-size: 18px;
       text-align: center;
    }
 
    .section_subtitle {
       font-size: 12px;
-      text-align: center;
+      //margin-bottom: 5px;
+      //text-align: center;
    }
 
    .pm_2_5_scale {
@@ -1121,97 +1125,107 @@ $BANNER_HEIGHT: 60px;
 
    }
 
-   #daily_stats_calendar_and_table_container {
-      display: none;
+   .centered_table {
+      margin-left: auto;
+      margin-right: auto;
+   }
 
-      .centered_table {
-         margin-left: auto;
-         margin-right: auto;
-      }
+   .daily_stats_calendar_and_table {
+      margin: 0;
 
-      $BAR_WIDTH: 7px;
-      $BAR_HEIGHT: 30px;
-      .bar_graph {
-         font-size: 0;
-         line-height: 0;
-         width: $BAR_WIDTH*6;
-         height: $BAR_HEIGHT;
-         min-width: $BAR_WIDTH*6;
-         max-width: $BAR_WIDTH*6;
-         position: relative;
-
-         .bar_graph_item {
-            position: absolute;
-            bottom: 0;
-            display: block;
-            margin: 0;
-            padding: 0;
-            width: $BAR_WIDTH;
-            min-width: $BAR_WIDTH;
+      .daily_stats_calendar {
+         .ch-tooltip {
+            font-size: 9pt;
          }
 
-         @for $i from 0 through 5 {
-            .bar_graph_item#{$i} {
-               left: $BAR_WIDTH * $i;
-            }
-         }
-      }
-
-      .daily_stats_calendar_and_table {
-         margin: 0;
-
-         .daily_stats_calendar {
-            .ch-tooltip {
-               font-size: 9pt;
-            }
-
-            .qi {
-               fill: rgb(0, 0, 0);
-            }
-
-            .q1 {
-               fill: rgb(0, 228, 0);
-            }
-
-            .q2 {
-               fill: rgb(255, 255, 0);
-            }
-
-            .q3 {
-               fill: rgb(255, 126, 0);
-            }
-
-            .q4 {
-               fill: rgb(255, 0, 0);
-            }
-
-            .q5 {
-               fill: rgb(153, 0, 76);
-            }
-
-            .q6 {
-               fill: rgb(126, 0, 35);
-            }
+         .qi {
+            fill: rgb(0, 0, 0);
          }
 
-         .daily_stats_table {
+         .q1 {
+            fill: rgb(0, 228, 0);
+         }
 
-            .value_cell {
-               text-align: center;
-               padding: 2px 5px;
-            }
+         .q2 {
+            fill: rgb(255, 255, 0);
+         }
 
-            .header_cell {
-               text-align: center;
-               padding: 2px 5px;
-               font-weight: bold;
-            }
+         .q3 {
+            fill: rgb(255, 126, 0);
+         }
+
+         .q4 {
+            fill: rgb(255, 0, 0);
+         }
+
+         .q5 {
+            fill: rgb(153, 0, 76);
+         }
+
+         .q6 {
+            fill: rgb(126, 0, 35);
          }
       }
 
-      .daily_stats_calendar_container:last-of-type {
-         margin-right: 0;
+      $BORDER_COLOR: #aaaaaa;
+
+      .daily_stats_table {
+
+         margin-bottom: 30px;
+
+         .value_cell {
+            text-align: center;
+            padding: 2px 0;
+            border-right: 1px solid $BORDER_COLOR;
+            border-left: 1px solid $BORDER_COLOR;
+         }
+
+         .header_cell {
+            text-align: center;
+            padding: 2px 0;
+            font-weight: bold;
+            border-top: 1px solid $BORDER_COLOR;
+            border-right: 1px solid $BORDER_COLOR;
+            border-left: 1px solid $BORDER_COLOR;
+         }
       }
+
+      .bar_graph_cell {
+         text-align: center;
+         padding: 0;
+         border-right: 1px solid $BORDER_COLOR;
+         border-left: 1px solid $BORDER_COLOR;
+         border-bottom: 1px solid $BORDER_COLOR;
+
+         $BAR_WIDTH: 7px;
+         $BAR_HEIGHT: 30px;
+         .bar_graph {
+            font-size: 0;
+            line-height: 0;
+            width: $BAR_WIDTH*6;
+            height: $BAR_HEIGHT;
+            min-width: $BAR_WIDTH*6;
+            max-width: $BAR_WIDTH*6;
+            position: relative;
+
+            .bar_graph_item {
+               position: absolute;
+               bottom: 0;
+               display: block;
+               margin: 0;
+               padding: 0;
+               width: $BAR_WIDTH;
+               min-width: $BAR_WIDTH;
+            }
+
+            @for $i from 0 through 5 {
+               .bar_graph_item#{$i} {
+                  left: $BAR_WIDTH * $i;
+               }
+            }
+         }
+      }
+
    }
 }
 

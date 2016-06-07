@@ -1,6 +1,10 @@
 <div class="daily_stats_calendar_and_table">
-   <div class="section_title">PM<sub>2.5</sub> Daily Maxima</div>
-   <div class="section_subtitle">{{channelName}}</div>
+   <div class="section_title">PM<sub>2.5</sub> Daily Maxima
+      {{#if hasMultipleChannels}}
+         <span class="section_subtitle">({{channelName}})</span>
+      {{/if}}
+   </div>
+
    <table border="0" cellpadding="0" cellspacing="0" class="centered_table">
       <tr>
          <td>
@@ -9,7 +13,7 @@
       </tr>
    </table>
 
-   <div class="section_title">Dirty Day Percentages</div>
+   <div class="section_title">Dirty Days: Percentages</div>
    <div class="daily_stats_table pm_2_5_scale">
       <table border="0" cellpadding="0" cellspacing="0" class="centered_table">
          <tr>
@@ -88,7 +92,7 @@
          <tr>
             <td>&nbsp;</td>
             {{#each years as |year|}}
-               <td class="value_cell">
+               <td class="bar_graph_cell">
                   {{#with (lookup ../statsByYear year)}}
                      <div class="bar_graph">
                         <div class="bar_graph_item bar_graph_item0 level0" style="height:{{math level0Perc '*' 30}}px;"></div>
@@ -101,7 +105,7 @@
                   {{/with}}
                </td>
             {{/each}}
-            <td class="value_cell">
+            <td class="bar_graph_cell">
                <div class="bar_graph">
                   <div class="bar_graph_item bar_graph_item0 level0" style="height:{{math statsByYear.all.level0Perc '*' 30}}px;"></div>
                   <div class="bar_graph_item bar_graph_item1 level1" style="height:{{math statsByYear.all.level1Perc '*' 30}}px;"></div>

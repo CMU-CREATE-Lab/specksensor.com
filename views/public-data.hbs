@@ -363,6 +363,12 @@
             });
    }
 
+   function getDesiredPlotManagerSize() {
+      return $("#grapher_container").width()    // grapher container width
+             - $(".y_axis").width()             // Y axis width
+             - 3;                               // grapher and Y axis borders
+   }
+
    function initializeGrapher() {
       var now = new Date();
       var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -377,11 +383,7 @@
       }
 
       plotManager = new org.bodytrack.grapher.PlotManager("date_axis", channelMinTimeSecs, channelMaxTimeSecs);
-      plotManager.setWillAutoResizeWidth(true, function() {
-         return $("#grapher_container").width()    // window width
-                - $(".y_axis").width()             // Y axis width
-                - 3;                               // grapher and Y axis borders
-      });
+      plotManager.setWillAutoResizeWidth(true, getDesiredPlotManagerSize);
 
       // create the plot container so that we can turn autoscaling on by default (but don't pad)
       plotManager.addPlotContainer("plot_container").setAutoScaleEnabled(true, false);
@@ -516,7 +518,7 @@
          // remove the current feed from the grapher (if any)
          removeFeedFromGrapher(selectedFeed);
 
-         $("#daily_stats_calendar_and_table_container").hide();
+         $(".daily_stats_calendar_and_table").remove();
 
          $(".grapher_item").hide();
 
@@ -798,10 +800,12 @@
    // determine whether we should even show the daily stats calendar.  We only show it for govt feeds and only if
    // the selected channel is a PM2.5 feed with associated daily stats channels.
    function renderDailyStats(feed) {
-      var dailyStatsCalendarAndTableContainer = $("#daily_stats_calendar_and_table_container");
-      dailyStatsCalendarAndTableContainer.hide().empty();
+      var grapherContainerElement = $("#grapher_container");
+
+      $(".daily_stats_calendar_and_table").remove();
 
       if (feed.id in govtFeedsById) {
+         grapherContainerElement.removeClass("col-sm-12").addClass("col-sm-7").addClass("col-md-8");
 
          var pm25Channels = [];
 
@@ -925,6 +929,7 @@
             });
 
             // fetch the export data
+            var statsContainer = $("#stats_container");
             _.parallel(commands,
                        function() {
 
@@ -933,20 +938,23 @@
                           pm25Channels.forEach(function(pm25ChannelName) {
                              var pm25StatsChannelName = pm25ChannelName + "_daily_max";
                              var calendarElementId = "daily_stats_calendar_" + feed.id + "_" + pm25ChannelName;
-                             dailyStatsCalendarAndTableContainer.append($(dailyStatsCalendarAndTableTemplate({
-                                                                                                                calendarElementId : calendarElementId,
-                                                                                                                channelName : pm25ChannelName,
-                                                                                                                hasMultipleChannels : hasMultipleChannels,
-                                                                                                                statsByYear : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].statsByYear,
-                                                                                                                years : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years
-                                                                                                             })));
+                             statsContainer.append($(dailyStatsCalendarAndTableTemplate({
+                                                                                                       calendarElementId : calendarElementId,
+                                                                                                       channelName : pm25ChannelName,
+                                                                                                       hasMultipleChannels : hasMultipleChannels,
+                                                                                                       statsByYear : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].statsByYear,
+                                                                                                       years : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years
+                                                                                                    })));
                              cal = new CalHeatMap();
                              cal.init(createDailyStatsCalendarOptions(calendarElementId, statsDataByChannel[pm25ChannelName][pm25StatsChannelName].data, startDate));
                           });
-                          dailyStatsCalendarAndTableContainer.show();
                        });
          }
       }
+      else {
+         grapherContainerElement.addClass("col-sm-12").removeClass("col-sm-7").removeClass("col-md-8");
+      }
+      plotManager.setWidth(getDesiredPlotManagerSize());
    }
 
    function createDailyStatsCalendarOptions(containerElementId, data, startingDate) {
@@ -979,7 +987,6 @@
             var min = date.getTime() / 1000;    // date is midnight
             var max = min + 86400;              // add number of seconds in 1 day to get the next midnight
             plotManager.getDateAxis().setRange(min, max);
-            //console.log("Value was [" + value + "] on [" + date + "] --> [" + min + "," + max + "]");
          },
          cellSize : 7,
          cellPadding : 1,
@@ -1323,7 +1330,8 @@
          <p>
             This map shows the locations of regulated PM<sub>2.5</sub> stations and all public Specks. Enter an address
             or location to find the nearest regulated station and see the current and historical air quality. Or, select
-            a marker on the map to see a plot of the air quality at that location.
+            a marker on the map to see a plot of the air quality at that location.  The regulated station
+            markers are colored according to their most recent value using the US EPA PM<sub>2.5</sub> scale shown below.
          </p>
          <div class="geocode_form_container">
             <form class="geocode_form" action="/public-data" method="get" style="display:none"></form>
@@ -1355,68 +1363,67 @@
                <label for="indoor_speck_checkbox">Indoor Specks</label>
             </div>
          </div>
-
-         <div id="grapher_container" class="noselect">
-            <div id="selected_feed_name_label">
-               <div class="feed_name_label grapher_item"></div>
-            </div>
-            <table id="grapher" class="grapher_item" border="0" cellpadding="0" cellspacing="0" style="display:none">
-               <tr>
-                  <td>
-                     <div id="date_axis" class="date_axis"></div>
-                  </td>
-                  <td align="center" valign="bottom">
-                     <div id="export_button_container" class="btn-group">
-                        <button id="export_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Download your data">
-                           <i class="fa fa-cloud-download"></i>
-                        </button>
-                        <ul id="export_button_menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                           <li><a id="export_this_channel_button" href="#">This Channel</a></li>
-                           <li><a id="export_all_channels_button" href="#">All Channels</a></li>
-                        </ul>
-                     </div>
-                  </td>
-               </tr>
-               <tr>
-                  <td>
-                     <div id="plot_container" class="plot_container" style="height:300px; border: 1px solid black;">
-                        <div id="value_and_time"></div>
-                     </div>
-                  </td>
-                  <td>
-                     <div id="y_axis" class="y_axis" style="height:300px">
-                        <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
-                     </div>
-                  </td>
-               </tr>
-               <tr>
-                  <td colspan="2" align="right">
-                     <div id="grapher_toolbar_bottom" class="grapher_toolbar">
-                        <div class="pull-left">
-                           <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group dropup">
-                              <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                 <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
-                              </button>
-                              <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
-                           </div>
-                        </div>
-
-                        <div class="btn-group pull-right">
-                           <a id="auto_scale_toggle_button" class="btn btn-default btn-sm active" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
-                        </div>
-                     </div>
-                  </td>
-               </tr>
-            </table>
-         </div>
-
       </div>
       <div class="col-sm-5 col-md-4">
          {{> pm_2_5_scale_table}}
       </div>
-      <div class="col-sm-5 col-md-4">
-         <div id="daily_stats_calendar_and_table_container" class="noselect col-sm-12">
+   </div>
+   <div class="row">
+      <div id="grapher_container" class="noselect col-sm-7 col-md-8">
+         <div id="selected_feed_name_label">
+            <div class="feed_name_label grapher_item"></div>
          </div>
+         <table id="grapher" class="grapher_item" border="0" cellpadding="0" cellspacing="0" style="display:none">
+            <tr>
+               <td>
+                  <div id="date_axis" class="date_axis"></div>
+               </td>
+               <td align="center" valign="bottom">
+                  <div id="export_button_container" class="btn-group">
+                     <button id="export_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Download the data">
+                        <i class="fa fa-cloud-download"></i>
+                     </button>
+                     <ul id="export_button_menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a id="export_this_channel_button" href="#">This Channel</a></li>
+                        <li><a id="export_all_channels_button" href="#">All Channels</a></li>
+                     </ul>
+                  </div>
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <div id="plot_container" class="plot_container" style="height:300px; border: 1px solid black;">
+                     <div id="value_and_time"></div>
+                  </div>
+               </td>
+               <td>
+                  <div id="y_axis" class="y_axis" style="height:300px">
+                     <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
+                  </div>
+               </td>
+            </tr>
+            <tr>
+               <td colspan="2" align="right">
+                  <div id="grapher_toolbar_bottom" class="grapher_toolbar">
+                     <div class="pull-left">
+                        <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group dropup">
+                           <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                              <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
+                           </button>
+                           <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
+                        </div>
+                     </div>
+
+                     <div class="btn-group pull-right">
+                        <a id="auto_scale_toggle_button" class="btn btn-default btn-sm active" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
+                     </div>
+                  </div>
+               </td>
+            </tr>
+         </table>
+      </div>
+      <div id="stats_container" class="noselect col-sm-5 col-md-4">
+
       </div>
    </div>
 </div>

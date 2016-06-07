@@ -645,6 +645,8 @@ a.anchor {
 
 #public_data_page #instructions {
   margin-bottom: 10px; }
+  #public_data_page #instructions p {
+    font-size: larger; }
 
 #public_data_page #results .fa {
   font-size: 36px;
@@ -654,7 +656,6 @@ a.anchor {
   margin-bottom: 10px; }
 
 #public_data_page #selected_feed_name_label {
-  margin-top: 10px;
   margin-bottom: 10px; }
   #public_data_page #selected_feed_name_label .feed_name_label {
     font-size: 18px; }
@@ -724,12 +725,12 @@ a.anchor {
 
 #public_data_page .section_title {
   margin-top: 20px;
+  margin-bottom: 5px;
   font-size: 18px;
   text-align: center; }
 
 #public_data_page .section_subtitle {
-  font-size: 12px;
-  text-align: center; }
+  font-size: 12px; }
 
 #public_data_page .pm_2_5_scale .pm_2_5_scale_color {
   width: 20px;
@@ -777,66 +778,76 @@ a.anchor {
     text-align: center;
     font-weight: bold; }
 
-#public_data_page #daily_stats_calendar_and_table_container {
-  display: none; }
-  #public_data_page #daily_stats_calendar_and_table_container .centered_table {
-    margin-left: auto;
-    margin-right: auto; }
-  #public_data_page #daily_stats_calendar_and_table_container .bar_graph {
-    font-size: 0;
-    line-height: 0;
-    width: 42px;
-    height: 30px;
-    min-width: 42px;
-    max-width: 42px;
-    position: relative; }
-    #public_data_page #daily_stats_calendar_and_table_container .bar_graph .bar_graph_item {
-      position: absolute;
-      bottom: 0;
-      display: block;
-      margin: 0;
-      padding: 0;
-      width: 7px;
-      min-width: 7px; }
-    #public_data_page #daily_stats_calendar_and_table_container .bar_graph .bar_graph_item0 {
-      left: 0px; }
-    #public_data_page #daily_stats_calendar_and_table_container .bar_graph .bar_graph_item1 {
-      left: 7px; }
-    #public_data_page #daily_stats_calendar_and_table_container .bar_graph .bar_graph_item2 {
-      left: 14px; }
-    #public_data_page #daily_stats_calendar_and_table_container .bar_graph .bar_graph_item3 {
-      left: 21px; }
-    #public_data_page #daily_stats_calendar_and_table_container .bar_graph .bar_graph_item4 {
-      left: 28px; }
-    #public_data_page #daily_stats_calendar_and_table_container .bar_graph .bar_graph_item5 {
-      left: 35px; }
-  #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table {
-    margin: 0; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .ch-tooltip {
-      font-size: 9pt; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .qi {
-      fill: black; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q1 {
-      fill: #00e400; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q2 {
-      fill: yellow; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q3 {
-      fill: #ff7e00; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q4 {
-      fill: red; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q5 {
-      fill: #99004c; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_calendar .q6 {
-      fill: #7e0023; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_table .value_cell {
+#public_data_page .centered_table {
+  margin-left: auto;
+  margin-right: auto; }
+
+#public_data_page .daily_stats_calendar_and_table {
+  margin: 0; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .ch-tooltip {
+    font-size: 9pt; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .qi {
+    fill: black; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q1 {
+    fill: #00e400; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q2 {
+    fill: yellow; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q3 {
+    fill: #ff7e00; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q4 {
+    fill: red; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q5 {
+    fill: #99004c; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q6 {
+    fill: #7e0023; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_table {
+    margin-bottom: 30px; }
+    #public_data_page .daily_stats_calendar_and_table .daily_stats_table .value_cell {
       text-align: center;
-      padding: 2px 5px; }
-    #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_and_table .daily_stats_table .header_cell {
+      padding: 2px 0;
+      border-right: 1px solid #aaaaaa;
+      border-left: 1px solid #aaaaaa; }
+    #public_data_page .daily_stats_calendar_and_table .daily_stats_table .header_cell {
       text-align: center;
-      padding: 2px 5px;
-      font-weight: bold; }
-  #public_data_page #daily_stats_calendar_and_table_container .daily_stats_calendar_container:last-of-type {
-    margin-right: 0; }
+      padding: 2px 0;
+      font-weight: bold;
+      border-top: 1px solid #aaaaaa;
+      border-right: 1px solid #aaaaaa;
+      border-left: 1px solid #aaaaaa; }
+  #public_data_page .daily_stats_calendar_and_table .bar_graph_cell {
+    text-align: center;
+    padding: 0;
+    border-right: 1px solid #aaaaaa;
+    border-left: 1px solid #aaaaaa;
+    border-bottom: 1px solid #aaaaaa; }
+    #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph {
+      font-size: 0;
+      line-height: 0;
+      width: 42px;
+      height: 30px;
+      min-width: 42px;
+      max-width: 42px;
+      position: relative; }
+      #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph .bar_graph_item {
+        position: absolute;
+        bottom: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
+        width: 7px;
+        min-width: 7px; }
+      #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph .bar_graph_item0 {
+        left: 0px; }
+      #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph .bar_graph_item1 {
+        left: 7px; }
+      #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph .bar_graph_item2 {
+        left: 14px; }
+      #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph .bar_graph_item3 {
+        left: 21px; }
+      #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph .bar_graph_item4 {
+        left: 28px; }
+      #public_data_page .daily_stats_calendar_and_table .bar_graph_cell .bar_graph .bar_graph_item5 {
+        left: 35px; }
 
 #air_quality_page {
   margin-top: 40px;
