@@ -658,7 +658,9 @@ a.anchor {
 #public_data_page #selected_feed_name_label {
   margin-bottom: 10px; }
   #public_data_page #selected_feed_name_label .feed_name_label {
-    font-size: 18px; }
+    font-size: 21px;
+    text-align: center;
+    margin-top: 10px; }
 
 #public_data_page #map_container {
   position: relative;
@@ -686,7 +688,6 @@ a.anchor {
       margin-bottom: 0; }
 
 #public_data_page #grapher_container {
-  margin-top: 20px;
   margin-bottom: 10px; }
   #public_data_page #grapher_container .horizontal_list_or_menu_button .dropdown-menu > .menu_item a.selected {
     font-weight: bold; }
@@ -724,13 +725,21 @@ a.anchor {
     line-height: 30px; }
 
 #public_data_page .section_title {
-  margin-top: 20px;
   margin-bottom: 5px;
   font-size: 18px;
   text-align: center; }
 
 #public_data_page .section_subtitle {
   font-size: 12px; }
+
+#public_data_page .pm_2_5_scale_container {
+  border: none;
+  margin-bottom: 10px; }
+  @media (max-width: 767px) {
+    #public_data_page .pm_2_5_scale_container {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #aaaaaa; } }
 
 #public_data_page .pm_2_5_scale .pm_2_5_scale_color {
   width: 20px;
@@ -762,12 +771,6 @@ a.anchor {
   @media (max-width: 1199px) {
     #public_data_page .pm_2_5_scale_table {
       font-size: 12px; } }
-  @media (max-width: 991px) {
-    #public_data_page .pm_2_5_scale_table {
-      font-size: 12px; } }
-  @media (max-width: 767px) {
-    #public_data_page .pm_2_5_scale_table {
-      font-size: 15px; } }
   #public_data_page .pm_2_5_scale_table .pm_2_5_scale_row .pm_2_5_scale_cell {
     text-align: right;
     padding: 2px 5px;
@@ -800,6 +803,8 @@ a.anchor {
     fill: #99004c; }
   #public_data_page .daily_stats_calendar_and_table .daily_stats_calendar .q6 {
     fill: #7e0023; }
+  #public_data_page .daily_stats_calendar_and_table .daily_stats_table .section_title {
+    margin-top: 20px; }
   #public_data_page .daily_stats_calendar_and_table .daily_stats_table .value_cell {
     text-align: center;
     padding: 2px 0;

@@ -913,6 +913,7 @@ $BANNER_HEIGHT: 60px;
 // =====================================================================================================================
 
 #public_data_page {
+   $BORDER_COLOR: #aaaaaa;
 
    #instructions {
       margin-bottom: 10px;
@@ -936,7 +937,9 @@ $BANNER_HEIGHT: 60px;
    #selected_feed_name_label {
       margin-bottom: 10px;
       .feed_name_label {
-         font-size: 18px;
+         font-size: 21px;
+         text-align: center;
+         margin-top: 10px;
       }
    }
 
@@ -975,7 +978,6 @@ $BANNER_HEIGHT: 60px;
    }
 
    #grapher_container {
-      margin-top: 20px;
       margin-bottom: 10px;
 
       .horizontal_list_or_menu_button {
@@ -1043,7 +1045,6 @@ $BANNER_HEIGHT: 60px;
    }
 
    .section_title {
-      margin-top: 20px;
       margin-bottom: 5px;
       font-size: 18px;
       text-align: center;
@@ -1051,8 +1052,17 @@ $BANNER_HEIGHT: 60px;
 
    .section_subtitle {
       font-size: 12px;
-      //margin-bottom: 5px;
-      //text-align: center;
+   }
+
+   .pm_2_5_scale_container {
+      border: none;
+      margin-bottom: 10px;
+
+      @media (max-width: $SMALL_WIDTH) {
+         margin-top: 10px;
+         padding:10px;
+         border: 1px solid $BORDER_COLOR;
+      }
    }
 
    .pm_2_5_scale {
@@ -1095,12 +1105,6 @@ $BANNER_HEIGHT: 60px;
       @media (max-width: $LARGE_WIDTH) {
          font-size: 12px;
       }
-      @media (max-width: $MEDIUM_WIDTH) {
-         font-size: 12px;
-      }
-      @media (max-width: $SMALL_WIDTH) {
-         font-size: 15px;
-      }
 
       .pm_2_5_scale_row {
 
@@ -1122,7 +1126,6 @@ $BANNER_HEIGHT: 60px;
             font-weight: bold;
          }
       }
-
    }
 
    .centered_table {
@@ -1167,9 +1170,11 @@ $BANNER_HEIGHT: 60px;
          }
       }
 
-      $BORDER_COLOR: #aaaaaa;
-
       .daily_stats_table {
+
+         .section_title {
+            margin-top: 20px;
+         }
 
          .value_cell {
             text-align: center;
