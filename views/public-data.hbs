@@ -44,7 +44,7 @@
    var EXTRA_SMALL_DEVICE_WIDTH_PIXELS = 629;
 
    // map and marker rendering
-   var MAP_CENTER = new google.maps.LatLng(26.59657854674542, 7.913147269592282);
+   var MAP_CENTER = new google.maps.LatLng(18.154407669746245, -60.99310273040771);
    var SELECTED_MARKER_COLOR = "#ff0000";
    var MARKER_RADIUS = 5;
    var TWO_PI = 2 * Math.PI;
@@ -74,9 +74,29 @@
    var cal = null;
 
    var dailyStatsCalendarAndTableTemplate = Handlebars.templates['daily_stats_calendar_and_table'];
-   var pm25ScaleTableTemplate = Handlebars.templates['pm_2_5_scale_table'];
 
    var statsDataByChannel = {};
+
+   // stole this (with slight modification) from http://jsfiddle.net/mpetrovich/wMmHS/
+   Handlebars.registerHelper("math", function(lvalue, operator, rvalue, numDecimalPlaces) {
+      lvalue = parseFloat(lvalue);
+      rvalue = parseFloat(rvalue);
+
+      var result = {
+         "+" : lvalue + rvalue,
+         "-" : lvalue - rvalue,
+         "*" : lvalue * rvalue,
+         "/" : lvalue / rvalue,
+         "%" : lvalue % rvalue
+      }[operator];
+
+      numDecimalPlaces = parseInt(numDecimalPlaces);
+      if (isNaN(numDecimalPlaces) || numDecimalPlaces < 0) {
+         numDecimalPlaces = 0;
+      }
+
+      return result.toFixed(numDecimalPlaces);
+   });
 
    function getHashParam(paramName) {
       var hash = window.location.hash.substr(1);
@@ -497,7 +517,6 @@
          removeFeedFromGrapher(selectedFeed);
 
          $("#daily_stats_calendar_and_table_container").hide();
-         $("#pm_2_5_scale_container").empty().hide();
 
          $(".grapher_item").hide();
 
@@ -875,7 +894,7 @@
                                  // now compute percentages
                                  var computePercentages = function(group) {
                                     for (var level = 0; level <= 5; level++) {
-                                       group['level' + level + 'Perc'] = Math.round((group.numDays > 0) ? group['level' + level] / group.numDays * 100 : 0);
+                                       group['level' + level + 'Perc'] = (group.numDays > 0) ? group['level' + level] / group.numDays : 0;
                                     }
                                  };
                                  statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years.forEach(function(year) {
@@ -919,25 +938,14 @@
                                                                                                                 channelName : pm25ChannelName,
                                                                                                                 hasMultipleChannels : hasMultipleChannels,
                                                                                                                 statsByYear : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].statsByYear,
-                                                                                                                years : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years,
-                                                                                                                willShowPm25ScaleTable : !hasMultipleChannels,
-                                                                                                                pm_2_5_scale_table : pm25ScaleTableTemplate()
+                                                                                                                years : statsDataByChannel[pm25ChannelName][pm25StatsChannelName].years
                                                                                                              })));
                              cal = new CalHeatMap();
                              cal.init(createDailyStatsCalendarOptions(calendarElementId, statsDataByChannel[pm25ChannelName][pm25StatsChannelName].data, startDate));
                           });
                           dailyStatsCalendarAndTableContainer.show();
-                          if (hasMultipleChannels) {
-                             $("#pm_2_5_scale_container").empty().append($(pm25ScaleTableTemplate())).show();
-                          }
-                          else {
-                             $("#pm_2_5_scale_container").empty().hide();
-                          }
                        });
          }
-      }
-      else {
-         $("#pm_2_5_scale_container").empty().hide();
       }
    }
 
@@ -948,6 +956,12 @@
       return {
          itemSelector : '#' + containerElementId,
          domain : "year",
+         //label : {
+         //   position : "left",
+         //   width : 20,
+         //   rotate : "left",
+         //   offset : { x : 15, y : 10 }
+         //},
          label : {
             position : "top"
          },
@@ -958,7 +972,6 @@
          },
          tooltip : false,
          subDomainDateFormat : "%Y-%m-%d",
-
          subDomain : "x_day",
          start : startingDate,
          data : data,
@@ -1326,7 +1339,7 @@
       <div id="results" class="col-xs-12"></div>
    </div>
    <div class="row">
-      <div id="map_container" class="noselect col-sm-12">
+      <div id="map_container" class="noselect col-sm-7 col-md-8">
          <div id="map_area"></div>
          <div id="map_filters_area">
             <div class="map_filter">
@@ -1342,63 +1355,68 @@
                <label for="indoor_speck_checkbox">Indoor Specks</label>
             </div>
          </div>
-      </div>
-      <div id="daily_stats_calendar_and_table_container" class="noselect col-sm-12">
-      </div>
-      <div id="pm_2_5_scale_container" class="noselect col-sm-12" style="display:none;margin-bottom:20px">
-      </div>
-      <div id="grapher_container" class="noselect col-sm-12">
-         <div id="selected_feed_name_label">
-            <div class="feed_name_label grapher_item"></div>
-         </div>
-         <table id="grapher" class="grapher_item" border="0" cellpadding="0" cellspacing="0" style="display:none">
-            <tr>
-               <td>
-                  <div id="date_axis" class="date_axis"></div>
-               </td>
-               <td align="center" valign="bottom">
-                  <div id="export_button_container" class="btn-group">
-                     <button id="export_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Download your data">
-                        <i class="fa fa-cloud-download"></i>
-                     </button>
-                     <ul id="export_button_menu" class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li><a id="export_this_channel_button" href="#">This Channel</a></li>
-                        <li><a id="export_all_channels_button" href="#">All Channels</a></li>
-                     </ul>
-                  </div>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <div id="plot_container" class="plot_container" style="height:300px; border: 1px solid black;">
-                     <div id="value_and_time"></div>
-                  </div>
-               </td>
-               <td>
-                  <div id="y_axis" class="y_axis" style="height:300px">
-                     <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
-                  </div>
-               </td>
-            </tr>
-            <tr>
-               <td colspan="2" align="right">
-                  <div id="grapher_toolbar_bottom" class="grapher_toolbar">
-                     <div class="pull-left">
-                        <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group dropup">
-                           <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                              <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
-                           </button>
-                           <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
+
+         <div id="grapher_container" class="noselect">
+            <div id="selected_feed_name_label">
+               <div class="feed_name_label grapher_item"></div>
+            </div>
+            <table id="grapher" class="grapher_item" border="0" cellpadding="0" cellspacing="0" style="display:none">
+               <tr>
+                  <td>
+                     <div id="date_axis" class="date_axis"></div>
+                  </td>
+                  <td align="center" valign="bottom">
+                     <div id="export_button_container" class="btn-group">
+                        <button id="export_button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Download your data">
+                           <i class="fa fa-cloud-download"></i>
+                        </button>
+                        <ul id="export_button_menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                           <li><a id="export_this_channel_button" href="#">This Channel</a></li>
+                           <li><a id="export_all_channels_button" href="#">All Channels</a></li>
+                        </ul>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <div id="plot_container" class="plot_container" style="height:300px; border: 1px solid black;">
+                        <div id="value_and_time"></div>
+                     </div>
+                  </td>
+                  <td>
+                     <div id="y_axis" class="y_axis" style="height:300px">
+                        <div id="y_axis_label" class="rotate_90 y_axis_label">&nbsp;</div>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="2" align="right">
+                     <div id="grapher_toolbar_bottom" class="grapher_toolbar">
+                        <div class="pull-left">
+                           <div id="channel_switcher_menu" class="horizontal_list_or_menu_button btn-group dropup">
+                              <button type="button" class="menu_button btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                 <span id="channel_switcher_menu_label"></span> <span class="caret"></span>
+                              </button>
+                              <ul id="channel_switcher_menu_items" class="horizontal_list_or_menu_button_items dropdown-menu" role="menu"></ul>
+                           </div>
+                        </div>
+
+                        <div class="btn-group pull-right">
+                           <a id="auto_scale_toggle_button" class="btn btn-default btn-sm active" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
                         </div>
                      </div>
+                  </td>
+               </tr>
+            </table>
+         </div>
 
-                     <div class="btn-group pull-right">
-                        <a id="auto_scale_toggle_button" class="btn btn-default btn-sm active" href="#" onclick="toggleYAxisAutoScaling(); return false;" title="Toggle Y axis auto-scaling">Auto Scale</a>
-                     </div>
-                  </div>
-               </td>
-            </tr>
-         </table>
+      </div>
+      <div class="col-sm-5 col-md-4">
+         {{> pm_2_5_scale_table}}
+      </div>
+      <div class="col-sm-5 col-md-4">
+         <div id="daily_stats_calendar_and_table_container" class="noselect col-sm-12">
+         </div>
       </div>
    </div>
 </div>

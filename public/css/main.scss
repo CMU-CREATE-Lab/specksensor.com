@@ -973,7 +973,9 @@ $BANNER_HEIGHT: 60px;
    }
 
    #grapher_container {
+      margin-top: 20px;
       margin-bottom: 10px;
+
       .horizontal_list_or_menu_button {
 
          .dropdown-menu > .menu_item {
@@ -1038,6 +1040,17 @@ $BANNER_HEIGHT: 60px;
       }
    }
 
+   .section_title {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+   }
+
+   .section_subtitle {
+      font-size: 12px;
+      text-align: center;
+   }
+
    .pm_2_5_scale {
       .pm_2_5_scale_color {
          width: 20px;
@@ -1067,12 +1080,23 @@ $BANNER_HEIGHT: 60px;
       .level5 {
          background-color: rgb(126, 0, 35);
       }
-
    }
 
    .pm_2_5_scale_table {
-      margin-top: 20px;
-      font-size: smaller;
+      font-size: 15px;
+      white-space: nowrap;
+      margin-left: auto;
+      margin-right: auto;
+
+      @media (max-width: $LARGE_WIDTH) {
+         font-size: 12px;
+      }
+      @media (max-width: $MEDIUM_WIDTH) {
+         font-size: 12px;
+      }
+      @media (max-width: $SMALL_WIDTH) {
+         font-size: 15px;
+      }
 
       .pm_2_5_scale_row {
 
@@ -1094,23 +1118,47 @@ $BANNER_HEIGHT: 60px;
             font-weight: bold;
          }
       }
+
    }
 
    #daily_stats_calendar_and_table_container {
       display: none;
 
+      .centered_table {
+         margin-left: auto;
+         margin-right: auto;
+      }
+
+      $BAR_WIDTH: 7px;
+      $BAR_HEIGHT: 30px;
+      .bar_graph {
+         font-size: 0;
+         line-height: 0;
+         width: $BAR_WIDTH*6;
+         height: $BAR_HEIGHT;
+         min-width: $BAR_WIDTH*6;
+         max-width: $BAR_WIDTH*6;
+         position: relative;
+
+         .bar_graph_item {
+            position: absolute;
+            bottom: 0;
+            display: block;
+            margin: 0;
+            padding: 0;
+            width: $BAR_WIDTH;
+            min-width: $BAR_WIDTH;
+         }
+
+         @for $i from 0 through 5 {
+            .bar_graph_item#{$i} {
+               left: $BAR_WIDTH * $i;
+            }
+         }
+      }
+
       .daily_stats_calendar_and_table {
-         margin: 20px 40px 0 0;
-
-         .daily_stats_title {
-            font-size: 18px;
-            text-align: left;
-         }
-
-         .daily_stats_subtitle {
-            font-size: 12px;
-            text-align: left;
-         }
+         margin: 0;
 
          .daily_stats_calendar {
             .ch-tooltip {
@@ -1147,10 +1195,9 @@ $BANNER_HEIGHT: 60px;
          }
 
          .daily_stats_table {
-            margin-left: 40px;
 
             .value_cell {
-               text-align: right;
+               text-align: center;
                padding: 2px 5px;
             }
 
