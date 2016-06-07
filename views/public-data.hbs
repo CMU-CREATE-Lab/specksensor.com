@@ -803,10 +803,9 @@
       var grapherContainerElement = $("#grapher_container");
 
       $(".daily_stats_calendar_and_table").remove();
+      grapherContainerElement.addClass("col-sm-12").removeClass("col-sm-7").removeClass("col-md-8");
 
       if (feed.id in govtFeedsById) {
-         grapherContainerElement.removeClass("col-sm-12").addClass("col-sm-7").addClass("col-md-8");
-
          var pm25Channels = [];
 
          // keep track of the channel which has the earliest starting time, so, for feeds which have multiple PM2.5
@@ -821,6 +820,8 @@
          }
 
          if (pm25Channels.length > 0) {
+            grapherContainerElement.removeClass("col-sm-12").addClass("col-sm-7").addClass("col-md-8");
+
             var minYear = new Date(minTimeSecs * 1000).getFullYear();
 
             var createStatsFetcher = function(feedId, pm25ChannelName, pm25StatsChannelName) {
@@ -951,9 +952,7 @@
                        });
          }
       }
-      else {
-         grapherContainerElement.addClass("col-sm-12").removeClass("col-sm-7").removeClass("col-md-8");
-      }
+
       plotManager.setWidth(getDesiredPlotManagerSize());
    }
 
