@@ -131,6 +131,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Do You Know What You Are Breathing In?",
+            author : "M. Hatipoglu",
+            source : "TrendinTech",
+            date : new Date("2016-06-13 00:00:00"),
+            url : "http://trendintech.com/2016/06/13/do-you-know-what-you-are-breathing-in/"
+         },
+         {
             title : "Your Office Air Is Killing You",
             author : "Douglas Main",
             source : "Newsweek",
