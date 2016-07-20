@@ -1,1 +1,1 @@
-<a href="mailto:{{email}}{{#if subject}}?Subject={{subject}}{{/if}}" target="_top">{{email}}</a>
+<a href="mailto:{{email}}{{#if subject}}?Subject={{subject}}{{/if}}" target="_top">{{#if text}}{{text}}{{else}}{{email}}{{/if}}</a>
