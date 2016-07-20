@@ -10,11 +10,11 @@
             is manufactured under license from Carnegie Mellon University.
             Our goal is to empower everyday citizens to improve the air they breathe.
          </p>
-{{!--
-         <p>
-            Interested in working for Airviz? Check out our <a href="/jobs">jobs</a> page.
-         </p>
---}}
+         {{#if isJobsPageEnabled}}
+            <p>
+               Interested in working for Airviz? Check out our <a href="/jobs">jobs</a> page.
+            </p>
+         {{/if}}
       </div>
       <div id="about_us_logos" class="col-sm-6">
          <a href="http://www.cmu.edu" target="_blank"><img id="cmu_logo" src="/images/CMU_logo_horiz_red.png" alt="cmu_logo"></a><br>

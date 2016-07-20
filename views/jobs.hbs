@@ -1,6 +1,33 @@
 <div id="jobs_page" class="clearfix">
    <h2>Jobs</h2>
-   <div>
-      Sorry, we have no open positions at this time.
-   </div>
+   {{#if isJobsPageEnabled}}
+      <div class="row">
+         <div class="col-sm-12">
+            <h4>Firmware Programmer</h4>
+            <p>
+               Are you a firmware programmer who wants to empower communities everywhere? Airviz is hiring!
+            </p>
+            <p>
+               Airviz, maker of the Speck air quality sensor and the most recent daughter company of the CREATE Lab at
+               Carnegie Mellon, is inventing new technologies that empower citizens everywhere to take control of their
+               indoor air quality and improve their quality of life. As a Pittsburgh company with funding already secured
+               and a deep culture of collaboration with CREATE, we are ready to hire a Pittsburgh-based firmware programmer
+               who will develop and manage the interactive code running on the Speck air quality sensor and for new
+               products in our development line. This person will work closely with Outreach, Sales, Hardware/Software
+               Engineering, and leadership on a daily basis, and will see thousands of individuals benefit directly from
+               their work.
+            </p>
+            <p>
+               Airviz will begin interviews on a rolling basis until this position is filled. The compensation package will
+               be generous and competitive. Please
+               {{> mailto email="sara@specksensor.com" subject="Firmware%20Programmer%20job%20application" text="email your CV to Sara Longo"}},
+               Operations Manager at Airviz, to be considered for this position.
+            </p>
+         </div>
+      </div>
+   {{else}}
+      <div>
+         Sorry, we have no open positions at this time.
+      </div>
+   {{/if}}
 </div>

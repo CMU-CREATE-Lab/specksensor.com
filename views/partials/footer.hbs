@@ -23,11 +23,11 @@
          <div class="link">
             {{#ifEqual section 'press'}}<span class="active">Press</span>{{else}}<a href="/press">Press</a>{{/ifEqual}}
          </div>
-{{!--
-         <div class="link">
-            {{#ifEqual section 'jobs'}}<span class="active">Jobs</span>{{else}}<a href="/jobs">Jobs</a>{{/ifEqual}}
-         </div>
---}}
+         {{#if isJobsPageEnabled}}
+            <div class="link">
+               {{#ifEqual section 'jobs'}}<span class="active">Jobs</span>{{else}}<a href="/jobs">Jobs</a>{{/ifEqual}}
+            </div>
+         {{/if}}
          <div class="link">
             <a href="http://blog.specksensor.com">Blog</a>
          </div>

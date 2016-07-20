@@ -263,6 +263,7 @@ flow.series([
                            function(req, res, next) {
                               log.debug("req.isAuthenticated()=[" + req.isAuthenticated() + "]");
                               res.locals.isAuthenticated = req.isAuthenticated();
+                              res.locals.isJobsPageEnabled = config.get("jobsPage:enabled");
                               res.locals.esdrUrl = config.get("esdr:rootUrl");
                               res.locals.googleAnalytics = config.get("googleServices:analytics");
                               res.locals.crazyEggAnalytics = config.get("crazyEggAnalytics");

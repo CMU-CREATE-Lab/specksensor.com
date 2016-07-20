@@ -53,7 +53,8 @@
                <div style="color: #9d9d9d">See air quality for your location</div>
             </li>
             <li class="dropdown">
-               <a href="#" class="dropdown-toggle {{#ifEqual parent_section 'learn'}}active{{/ifEqual}}" data-toggle="dropdown">Learn <b class="caret"></b></a>
+               <a href="#" class="dropdown-toggle {{#ifEqual parent_section 'learn'}}active{{/ifEqual}}" data-toggle="dropdown">Learn
+                  <b class="caret"></b></a>
                <ul class="dropdown-menu">
                   <li>
                      <a href="/learn/air-quality" {{#ifEqual section 'air-quality'}}class="dropdown-menu-active"{{/ifEqual}}>Air Quality</a>
@@ -76,7 +77,8 @@
                </ul>
             </li>
             <li class="dropdown">
-               <a href="#" class="dropdown-toggle {{#ifEqual parent_section 'support'}}active{{/ifEqual}}" data-toggle="dropdown">Setup &amp; Support <b class="caret"></b></a>
+               <a href="#" class="dropdown-toggle {{#ifEqual parent_section 'support'}}active{{/ifEqual}}" data-toggle="dropdown">Setup &amp; Support
+                  <b class="caret"></b></a>
                <ul class="dropdown-menu">
                   <li>
                      <a href="/support/getting-started" {{#ifEqual section 'getting-started'}}class="dropdown-menu-active"{{/ifEqual}}>Getting Started</a>
@@ -131,11 +133,11 @@
             <li class="show_in_mobile_navbar">
                <a href="/press" {{#ifEqual section 'press'}}class="active"{{/ifEqual}}>Press</a>
             </li>
-{{!--
-            <li class="show_in_mobile_navbar">
-               <a href="/jobs" {{#ifEqual section 'jobs'}}class="active"{{/ifEqual}}>Jobs</a>
-            </li>
---}}
+            {{#if isJobsPageEnabled}}
+               <li class="show_in_mobile_navbar">
+                  <a href="/jobs" {{#ifEqual section 'jobs'}}class="active"{{/ifEqual}}>Jobs</a>
+               </li>
+            {{/if}}
             <li class="show_in_mobile_navbar">
                <a href="http://blog.specksensor.com">Blog</a>
             </li>
