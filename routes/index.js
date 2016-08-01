@@ -131,6 +131,17 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Speck Air Quality Monitors Available for Checkout",
+            author : "Beth Chiasson",
+            source : "Lafayette Public Library System",
+            date : new Date("2016-07-29 00:00:00"),
+            file : {
+               name : "20160729_Lafayette_Public_Library_System.pdf",
+               type : "pdf"
+            },
+            url : "http://lafayettepubliclibrary.org/?p=24939"
+         },
+         {
             title : "Do You Know What You Are Breathing In?",
             author : "M. Hatipoglu",
             source : "TrendinTech",
