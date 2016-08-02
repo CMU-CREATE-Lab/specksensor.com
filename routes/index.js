@@ -131,6 +131,23 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "New Library Resource Provides Indoor Air Quality Information for Richland County Restidents",
+            author : "Laura Burns",
+            source : "Moms Clean Air Force",
+            date : new Date("2016-08-01 00:00:00"),
+            file : {
+               name : "20160801_Moms_Clean_Air_Force_Mid_Ohio.pdf",
+               type : "pdf"
+            }
+         },
+         {
+            title : "Air quality monitors now available to Lafayette Public Library cardholders",
+            author : "",
+            source : "KATC",
+            date : new Date("2016-08-01 00:00:00"),
+            url : "http://www.katc.com/story/32588614/air-quality-monitors-now-available-to-lafayette-public-library-cardholders"
+         },
+         {
             title : "Speck Air Quality Monitors Available for Checkout",
             author : "Beth Chiasson",
             source : "Lafayette Public Library System",
