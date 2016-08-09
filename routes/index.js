@@ -131,6 +131,16 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Check Out Air Quality Monitors at Library",
+            author : "Lisa Picker",
+            source : "Carroll County Public Library",
+            date : new Date("2016-08-09 00:00:00"),
+            file : {
+               name : "20160809_Carroll_County_Public_Library.pdf",
+               type : "pdf"
+            }
+         },
+         {
             title : "New Library Resource Provides Indoor Air Quality Information for Richland County Restidents",
             author : "Laura Burns",
             source : "Moms Clean Air Force",
