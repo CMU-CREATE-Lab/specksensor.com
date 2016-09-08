@@ -131,6 +131,20 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Check It Out: Air Quality Monitors and Other High-tech Devices Available at Fondulac District Library",
+            author : "Jeanette Brickner",
+            source : "Journal Star",
+            date : new Date("2016-09-05 00:00:00"),
+            url : "http://www.pjstar.com/news/20160905/check-it-out-air-quality-monitors-and-other-high-tech-devices-available-at-fondulac-district-library"
+         },
+         {
+            title : "Culture of Learning Brings Air Monitors to Libraries",
+            author : "",
+            source : "Bonner County Daily Bee",
+            date : new Date("2016-09-03 00:00:00"),
+            url : "http://www.bonnercountydailybee.com/columns/20160903/culture_of_learning_brings_air_monitors_to_libraries"
+         },
+         {
             title : "Check Out Air Quality Monitors at Library",
             author : "Lisa Picker",
             source : "Carroll County Public Library",
@@ -138,7 +152,8 @@ router.get('/press', function(req, res) {
             file : {
                name : "20160809_Carroll_County_Public_Library.pdf",
                type : "pdf"
-            }
+            },
+            url : "http://library.carr.org/about/docs/press/Speck%20Air.pdf"
          },
          {
             title : "New Library Resource Provides Indoor Air Quality Information for Richland County Restidents",
