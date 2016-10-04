@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var config = require('../config');
 
 router.get('/air-quality', function(req, res) {
    res.render('learn/air-quality', {
@@ -33,6 +34,7 @@ router.get('/libraries-and-advocates', function(req, res) {
       title : "Learn: Libraries and Advocates",
       parent_section : "learn",
       section : "libraries-and-advocates",
+      googleMapsApiKey : config.get("maps:apiKey"),
       hero_image : { filename : "library_hero.jpg", css_class : "anchor_center" }
    });
 });

@@ -1,3 +1,510 @@
+<style type="text/css">
+   .marker_name {
+      font-weight: bold;
+   }
+
+   #map_area {
+      height: 500px;
+   }
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key={{{googleMapsApiKey}}}" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript">
+   var LIBRARIES = [
+      {
+         "name" : "Tunkhannock Public Library",
+         "address" : {
+            "street" : "220 W Tioga St",
+            "city" : "Tunkhannock",
+            "state" : "PA",
+            "zip" : "18657"
+         },
+         "lat" : 41.546142,
+         "lon" : -75.964728,
+         "isPublic" : true,
+         "url" : "http://www.tunkhannocklibrary.org"
+      },
+      {
+         "name" : "Stark County District Library",
+         "address" : {
+            "street" : "715 Market Ave N",
+            "city" : "Canton",
+            "state" : "OH",
+            "zip" : "44702"
+         },
+         "lat" : 40.797659,
+         "lon" : -81.375561,
+         "isPublic" : true,
+         "url" : "http://www.starklibrary.org"
+      },
+      {
+         "name" : "Erie County Public Library",
+         "address" : {
+            "street" : "160 East Front St",
+            "city" : "Erie",
+            "state" : "PA",
+            "zip" : "16507"
+         },
+         "lat" : 42.136643,
+         "lon" : -80.086648,
+         "isPublic" : true,
+         "url" : "http://www.erielibrary.org"
+      },
+      {
+         "name" : "Guelph Public Library",
+         "address" : {
+            "street" : "100 Norfolk St",
+            "city" : "Guelph",
+            "state" : "ON",
+            "zip" : "N1H 4J6",
+            "country" : "Canada"
+         },
+         "lat" : 43.545659,
+         "lon" : -80.252675,
+         "isPublic" : true,
+         "url" : "http://www.guelphpl.ca"
+      },
+      {
+         "name" : "North Scituate Public Library",
+         "address" : {
+            "street" : "606 West Greenville Rd",
+            "city" : "North Scituate",
+            "state" : "RI",
+            "zip" : "02857"
+         },
+         "lat" : 41.833833,
+         "lon" : -71.587072,
+         "isPublic" : true,
+         "url" : "http://scituatelibrary.org"
+      },
+      {
+         "name" : "Siuslaw Public Library District",
+         "address" : {
+            "street" : "1460 9th St",
+            "city" : "Florence",
+            "state" : "OR",
+            "zip" : "97439"
+         },
+         "lat" : 43.974415,
+         "lon" : -124.105319,
+         "isPublic" : true,
+         "url" : "http://www.siuslawlibrary.org"
+      },
+      {
+         "name" : "Neenah Public Library",
+         "address" : {
+            "street" : "240 East Wisconsin Ave",
+            "city" : "Neenah",
+            "state" : "WI",
+            "zip" : "54956"
+         },
+         "lat" : 44.184958,
+         "lon" : -88.457672,
+         "isPublic" : true,
+         "url" : "http://www.neenahlibrary.org"
+      },
+      {
+         "name" : "Mansfield Richland County Public Library",
+         "address" : {
+            "street" : "25 Lutz Ave",
+            "city" : "Lexington",
+            "state" : "OH",
+            "zip" : "44904"
+         },
+         "lat" : 40.679316,
+         "lon" : -82.583613,
+         "isPublic" : true,
+         "url" : "http://mrcpl.org"
+      },
+      {
+         "name" : "North Liberty Community Library",
+         "address" : {
+            "street" : "520 West Cherry St",
+            "city" : "North Liberty",
+            "state" : "IA",
+            "zip" : "52317"
+         },
+         "lat" : 41.750133,
+         "lon" : -91.605341,
+         "isPublic" : true,
+         "url" : "http://www.northlibertylibrary.org"
+      },
+      {
+         "name" : "Wilbraham Public Library",
+         "address" : {
+            "street" : "25 Crane Park Dr",
+            "city" : "Wilbraham",
+            "state" : "MA",
+            "zip" : "01095"
+         },
+         "lat" : 42.121869,
+         "lon" : -72.428596,
+         "isPublic" : true,
+         "url" : "http://www.wilbrahamlibrary.org"
+      },
+      {
+         "name" : "Corvallis-Benton County Public Library",
+         "address" : {
+            "street" : "645 NW Monroe Ave",
+            "city" : "Corvallis",
+            "state" : "OR",
+            "zip" : "97330"
+         },
+         "lat" : 44.565702,
+         "lon" : -123.2644,
+         "isPublic" : true,
+         "url" : "http://cbcpubliclibrary.net/"
+      },
+      {
+         "name" : "Spotswood Public Library",
+         "address" : {
+            "street" : "548 Main St",
+            "city" : "Spotswood",
+            "state" : "NJ",
+            "zip" : "08884"
+         },
+         "lat" : 40.391852,
+         "lon" : -74.391336,
+         "isPublic" : true,
+         "url" : "http://spotslibrary.org"
+      },
+      {
+         "name" : "Patrick Heath Public Library",
+         "address" : {
+            "street" : "451 North Main St",
+            "city" : "Boerne",
+            "state" : "TX",
+            "zip" : "78006"
+         },
+         "lat" : 29.798161,
+         "lon" : -98.731219,
+         "isPublic" : true,
+         "url" : "http://boernelibrary.org"
+      },
+      {
+         "name" : "Garfield County Public Library Foundation",
+         "address" : {
+            "street" : "207 East Ave",
+            "city" : "Rifle",
+            "state" : "CO",
+            "zip" : "81650"
+         },
+         "lat" : 39.530887,
+         "lon" : -107.782111,
+         "isPublic" : true,
+         "url" : "http://www.gcpld.org"
+      },
+      {
+         "name" : "Fondulac District Library",
+         "address" : {
+            "street" : "400 Richland St",
+            "city" : "East Peoria",
+            "state" : "IL",
+            "zip" : "61611"
+         },
+         "lat" : 40.672174,
+         "lon" : -89.593557,
+         "isPublic" : true,
+         "url" : "http://www.fondulaclibrary.org"
+      },
+      {
+         "name" : "Adams County Library",
+         "address" : {
+            "street" : "569 N Cedar St",
+            "city" : "Adams",
+            "state" : "WI",
+            "zip" : "53910"
+         },
+         "lat" : 43.966796,
+         "lon" : -89.821653,
+         "isPublic" : true,
+         "url" : "http://www.adamscountylibrary.info"
+      },
+      {
+         "name" : "Pawling Library",
+         "address" : {
+            "street" : "11 Broad St",
+            "city" : "Pawling",
+            "state" : "NY",
+            "zip" : "12564"
+         },
+         "lat" : 41.563415,
+         "lon" : -73.602303,
+         "isPublic" : true,
+         "url" : "http://pawlinglibrary.org"
+      },
+      {
+         "name" : "Northern Onondaga Public Library (NOPL) at Cicero",
+         "address" : {
+            "street" : "8686 Knowledge Ln",
+            "city" : "Cicero",
+            "state" : "NY",
+            "zip" : "13039"
+         },
+         "lat" : 43.190584,
+         "lon" : -76.127202,
+         "isPublic" : true,
+         "url" : "http://www.nopl.org/about-us/hours-and-locations/cicero/"
+      },
+      {
+         "name" : "Capital Area District Libraries",
+         "address" : {
+            "street" : "401 S Capitol Ave",
+            "city" : "Lansing",
+            "state" : "MI",
+            "zip" : "48901-7919"
+         },
+         "lat" : 42.729522,
+         "lon" : -84.553409,
+         "isPublic" : true,
+         "url" : "http://www.cadl.org"
+      },
+      {
+         "name" : "Lanesboro Public Library",
+         "address" : {
+            "street" : "202 Parkway Ave S",
+            "city" : "Lanesboro",
+            "state" : "MN",
+            "zip" : "55949"
+         },
+         "lat" : 43.718803,
+         "lon" : -91.976614,
+         "isPublic" : true,
+         "url" : "http://www.lanesboro.lib.mn.us"
+      },
+      {
+         "name" : "Ashe County Public Library",
+         "address" : {
+            "street" : "148 Library Dr",
+            "city" : "West Jefferson",
+            "state" : "NC",
+            "zip" : "28694"
+         },
+         "lat" : 36.401245,
+         "lon" : -81.493724,
+         "isPublic" : true,
+         "url" : "http://www.ashelibrary.org"
+      },
+      {
+         "name" : "Litchfield Public Library District",
+         "address" : {
+            "street" : "400 N State",
+            "city" : "Litchfield",
+            "state" : "IL",
+            "zip" : "62056"
+         },
+         "lat" : 39.177267,
+         "lon" : -89.655397,
+         "isPublic" : true,
+         "url" : "http://www.litchfieldpubliclibrary.org"
+      },
+      {
+         "name" : "Darien Library",
+         "address" : {
+            "street" : "1441 Post Rd",
+            "city" : "Darien",
+            "state" : "CT",
+            "zip" : "06820"
+         },
+         "lat" : 41.069017,
+         "lon" : -73.478675,
+         "isPublic" : true,
+         "url" : "http://www.darienlibrary.org"
+      },
+      {
+         "name" : "Carroll County Public Library",
+         "address" : {
+            "street" : "1100 Green Valley Rd",
+            "city" : "New Windsor",
+            "state" : "MD",
+            "zip" : "21776"
+         },
+         "lat" : 39.548946,
+         "lon" : -77.111191,
+         "isPublic" : true,
+         "url" : "http://intranet.carr.org"
+      },
+      {
+         "name" : "Occidental College Library",
+         "address" : {
+            "street" : "1600 Campus Rd",
+            "city" : "Los Angeles",
+            "state" : "CA",
+            "zip" : "90041"
+         },
+         "lat" : 34.129581,
+         "lon" : -118.210692,
+         "isPublic" : false,
+         "url" : "https://www.oxy.edu/library"
+      },
+      {
+         "name" : "The Kraemer Family Library at the University of Colorado Colorado Springs",
+         "address" : {
+            "street" : "1420 Austin Bluffs Parkway",
+            "city" : "Colorado Springs",
+            "state" : "Colorado",
+            "zip" : "80918"
+         },
+         "lat" : 38.892809,
+         "lon" : -104.800365,
+         "isPublic" : false,
+         "url" : "http://www.uccs.edu/~library/"
+      },
+      {
+         "name" : "Cure d'Ars Catholic Church Library",
+         "address" : {
+            "street" : "4701 Martin Luther King Blvd",
+            "city" : "Denver",
+            "state" : "CO",
+            "zip" : "80207"
+         },
+         "lat" : 39.762217,
+         "lon" : -104.932818,
+         "isPublic" : false,
+         "url" : "http://curedarschurch.org/"
+      },
+      {
+         "name" : "Sharon High School Library",
+         "address" : {
+            "street" : "181 Pond St",
+            "city" : "Sharon",
+            "state" : "MA",
+            "zip" : "02067"
+         },
+         "lat" : 42.113537,
+         "lon" : -71.177652,
+         "isPublic" : false,
+         "url" : "http://shslib.sharon.k12.ma.us/content.php?pid=664543"
+      },
+      {
+         "name" : "East Bonner County Library District",
+         "address" : {
+            "street" : "1407 Cedar St",
+            "city" : "Sandpoint",
+            "state" : "ID",
+            "zip" : "83864"
+         },
+         "lat" : 48.275297,
+         "lon" : -116.568539,
+         "isPublic" : true,
+         "url" : "http://ebonnerlibrary.org"
+      },
+      {
+         "name" : "Lafayette Public Library",
+         "address" : {
+            "street" : "301 W Congress",
+            "city" : "Lafayette",
+            "state" : "LA",
+            "zip" : "70501"
+         },
+         "lat" : 30.226273,
+         "lon" : -92.020247,
+         "isPublic" : true,
+         "url" : "http://lafayettepubliclibrary.org"
+      },
+      {
+         "name" : "Jones Library",
+         "address" : {
+            "street" : "43 Amity St",
+            "city" : "Amherst",
+            "state" : "MA",
+            "zip" : "01002"
+         },
+         "lat" : 42.376317,
+         "lon" : -72.52084,
+         "isPublic" : true,
+         "url" : "http://www.joneslibrary.org"
+      },
+      {
+         "name" : "Witherle Memorial Library",
+         "address" : {
+            "street" : "PO Box 202",
+            "city" : "Castine",
+            "state" : "ME",
+            "zip" : "04421"
+         },
+         "lat" : 44.389958,
+         "lon" : -68.798309,
+         "isPublic" : true,
+         "url" : "http://www.witherle.lib.me.us"
+      },
+      {
+         "name" : "Carnegie Library of Pittsburgh",
+         "address" : {
+            "street" : "4400 Forbes Ave",
+            "city" : "Pittsburgh",
+            "state" : "PA",
+            "zip" : "15213-4080"
+         },
+         "lat" : 40.443196,
+         "lon" : -79.949915,
+         "isPublic" : true,
+         "url" : "http://www.carnegielibrary.org"
+      }
+   ];
+
+   // map stuff
+   var map;
+   var mapCenter; // keep track of the map's center point so we can recenter the map upon resizing the browser
+   var activeInfoWindow = null;
+
+   $(document).ready(function() {
+      console.log("Hi");
+      map = new google.maps.Map(document.getElementById('map_area'), {
+         center : { lat : 38.346767594801484, lng : 264.165728515625 },
+         zoom : 4,
+         streetViewControl : false
+      });
+
+      // keep track of the map's center so that we can recenter it upon resize of the browser (found at http://stackoverflow.com/q/8792676/703200)
+      google.maps.event.addDomListener(map, 'idle', function() {
+         mapCenter = map.getCenter();
+      });
+
+      google.maps.event.addDomListener(map, 'click', function() {
+         console.log("CLICK: " + Date.now());
+         if (activeInfoWindow != null) {
+            activeInfoWindow.close();
+         }
+         activeInfoWindow = null;
+      });
+
+      // when detecting a browser resize, kick the map to resize itself and then recenter using the center point obtained during idle
+      google.maps.event.addDomListener(window, 'resize', function() {
+         google.maps.event.trigger(map, 'resize');
+         map.setCenter(mapCenter);
+      });
+
+      LIBRARIES.forEach(function(library) {
+         var marker = new google.maps.Marker({
+            position : new google.maps.LatLng(library.lat, library.lon),
+            map : map,
+            title : library.name
+         });
+
+         var infowindow = new google.maps.InfoWindow({
+            content : '<div class="marker_name"><a href="' + library.url + '" target="library">' + library.name + '</a></div>' +
+                      '<div>' + library.address.street + '</div>' +
+                      '<div>' + library.address.city + ', ' + library.address.state + ' ' + library.address.zip + '</div>' +
+                      (library.address.country ? '<div>' + library.address.country + '</div>' : '')
+         });
+
+         marker.addListener('click', function() {
+            // close any other window
+            if (activeInfoWindow != null) {
+               activeInfoWindow.close();
+            }
+
+            infowindow.open(map, marker);
+            activeInfoWindow = infowindow;
+         });
+
+         infowindow.addListener('closeclick', function() {
+            activeInfoWindow = null;
+         });
+      });
+   });
+
+</script>
 <div id="libraries_and_advocates_page">
    <h2>Libraries and Advocates</h2>
    <p>
@@ -77,6 +584,12 @@
          <div style="text-align: center; padding: 20px 0">
             <a href="https://docs.google.com/forms/d/1lGvTBowkbvkoxcZYj_IydAaIIbnECw67oexHRlC7T1U/viewform" class="btn btn-default" target="_blank">Join Wait List</a>
          </div>
+      </div>
+   </div>
+   <div class="row">
+      <h3 style="margin-top:20px;text-align: center">Participating Libraries</h3>
+      <div id="map_area_container" class="col-xs-12">
+         <div id="map_area"></div>
       </div>
    </div>
 </div>
