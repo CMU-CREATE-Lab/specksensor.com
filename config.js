@@ -111,9 +111,6 @@ config.defaults(
          "crazyEggAnalytics" : {
             "enabled" : false
          },
-         "facebookAnalytics" : {
-            "enabled" : false
-         },
          "maps" : {
             "apiKey" : "AIzaSyDRg-ANz3nWQqLNFG9pQjZLXw45k84Eseo"
          },

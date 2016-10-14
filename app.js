@@ -267,7 +267,6 @@ flow.series([
                               res.locals.esdrUrl = config.get("esdr:rootUrl");
                               res.locals.googleAnalytics = config.get("googleServices:analytics");
                               res.locals.crazyEggAnalytics = config.get("crazyEggAnalytics");
-                              res.locals.facebookAnalytics = config.get("facebookAnalytics");
                               res.locals.affiliateMarketing = config.get("affiliateMarketing");
 
                               if (req.isAuthenticated()) {
