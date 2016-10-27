@@ -145,6 +145,17 @@ router.get('/press', function(req, res) {
             url : "http://www.bonnercountydailybee.com/columns/20160903/culture_of_learning_brings_air_monitors_to_libraries"
          },
          {
+            title : "Laboratory Assessment of Low-cost PM Monitors",
+            author : "Center for Air Resources Engineering and Science, Clarkson University",
+            source : "Journal of Aerosol Science",
+            date : new Date("2016-08-25 00:00:00"),
+            url : "http://www.sciencedirect.com/science/article/pii/S0021850216301021",
+            file : {
+               name : "20160825_Journal_Of_Aerosol_Science.pdf",
+               type : "pdf"
+            }
+         },
+         {
             title : "Check Out Air Quality Monitors at Library",
             author : "Lisa Picker",
             source : "Carroll County Public Library",
