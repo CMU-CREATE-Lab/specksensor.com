@@ -39,8 +39,9 @@
              geolocationResponse['location']['lng']) {
             $(".map_geolocation_prompt").hide();
             $("#map_geolocation_link").show();
-            var userLocation = new google.maps.LatLng(geolocationResponse['location']['lat'],
-                                                      geolocationResponse['location']['lng']);
+            var userLocation = new google.maps.LatLng(
+                  geolocationResponse['location']['lat'],
+                  geolocationResponse['location']['lng']);
             marker.setPosition(userLocation);
             map.setZoom(17);
             map.setCenter(userLocation);
@@ -174,13 +175,13 @@
       superagent
             .get("/logout")
             .end(function(err, res) {
-                    console.log(JSON.stringify(res.body, null, 3));
+               console.log(JSON.stringify(res.body, null, 3));
 
-                    // make sure the access token is cleared
-                    if (accessToken) {
-                       accessToken.set(null);
-                    }
-                 });
+               // make sure the access token is cleared
+               if (accessToken) {
+                  accessToken.set(null);
+               }
+            });
    }
 
    function handleLoginSuccess(loginResult) {
@@ -209,10 +210,27 @@
                                                    success : function(foundDevice) {
                                                       console.log("found device: " + JSON.stringify(foundDevice, null, 3));
                                                       deviceId = foundDevice.id;
-                                                      getFeeds();
+
+                                                      // udpate the properties
+                                                      if (speck.properties) {
+                                                         setDeviceProperties(deviceId, speck.properties, function(err, res) {
+                                                            if (err) {
+                                                               console.log("Error setting device properties: " + err);
+                                                            }
+                                                            else {
+                                                               console.log(res.body);
+                                                            }
+                                                            getFeeds();
+                                                         });
+                                                      }
+                                                      else {
+                                                         console.log("No device properties found, proceeding with getting feeds");
+                                                         getFeeds();
+                                                      }
                                                    },
                                                    unauthorized : function() {
                                                       // TODO: unauthorized--need to log in first and try again (this shouldn't happen, but...)
+                                                      console.log("Unauthorized (this shouldn't happen, but...)");
                                                    },
                                                    notFound : function() {
                                                       console.log("Unknown device, need to create it.");
@@ -266,7 +284,21 @@
                                 created : function(createdDevice) {
                                    deviceId = createdDevice.id;
                                    console.log("Device created: " + JSON.stringify(createdDevice, null, 3));
-                                   showChooseFeedPanel();
+                                   if (speck.properties) {
+                                      setDeviceProperties(deviceId, speck.properties, function(err, res) {
+                                         if (err) {
+                                            console.log("Error setting device properties: " + err);
+                                         }
+                                         else {
+                                            console.log(res.body);
+                                         }
+                                         showChooseFeedPanel();
+                                      });
+                                   }
+                                   else {
+                                      console.log("No device properties found, proceeding with showing the choose feed panel");
+                                      showChooseFeedPanel();
+                                   }
                                 },
                                 duplicate : function() {
                                    // TODO: serial number already exists for this product and user
@@ -297,6 +329,63 @@
       }
 
       return false;
+   }
+
+   function setDeviceProperties(deviceId, properties, callback) {
+      console.log("setDeviceProperties(" + deviceId + ", " + JSON.stringify(properties, null, 3) + ")");
+      var createCommand = function(key, value) {
+         return function(done) {
+            esdr.deviceProperties.set(deviceId, key, value,
+                                      {
+                                         complete : function(err, res) {
+                                            done(err);
+                                         },
+                                         success : function(data) {
+                                            console.log("Successfully set property [" + key + "]: " + JSON.stringify(data, null, 3));
+                                         },
+                                         badRequest : function() {
+                                            console.log("HTTP 400 when trying to set property [" + key + "]");
+                                         },
+                                         unauthorized : function() {
+                                            console.log("HTTP 401 when trying to set property [" + key + "]");
+                                         },
+                                         forbidden : function() {
+                                            console.log("HTTP 403 when trying to set property [" + key + "]");
+                                         },
+                                         notFound : function() {
+                                            console.log("HTTP 404 when trying to set property [" + key + "]");
+                                         },
+                                         validationError : function(data) {
+                                            console.log("HTTP 422 when trying to set property [" + key + "]: " + JSON.stringify(data, null, 3));
+                                         },
+                                         error : function(responseBody, httpStatusCode) {
+                                            console.log("Error: Unexpected error (HTTP status " + httpStatusCode + ") while trying to set property [" + key + "]: " + JSON.stringify(responseBody, null, 3));
+                                         },
+                                         failure : function(err, httpStatusCode) {
+                                            console.log("Error: Unexpected failure (HTTP status " + httpStatusCode + ") trying to set property [" + key + "]: " + err);
+                                         }
+                                      });
+         };
+      };
+      if (properties) {
+         var commands = [];
+         Object.keys(properties).forEach(function(key) {
+            var val = properties[key];
+            commands.push(createCommand(key, val));
+         });
+
+         if (commands.length > 0) {
+            _.series(commands, function(err) {
+               callback(err, !err);
+            });
+         }
+         else {
+            callback(new Error("No device properties found (1)"), false);
+         }
+      }
+      else {
+         callback(new Error("No device properties found (2)"), false);
+      }
    }
 
    function getFeeds() {
@@ -488,10 +577,10 @@
       map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
       map.set("disableDoubleClickZoom", true);
       marker = new google.maps.Marker({
-                                         position : map.getCenter(),
-                                         map : map,
-                                         draggable : true
-                                      });
+         position : map.getCenter(),
+         map : map,
+         draggable : true
+      });
 
       google.maps.event.addListener(map, 'dblclick', function(e) {
          console.log(e.latLng.toString());
@@ -614,7 +703,7 @@
 
 <div id="begin_registration_panel_no_api_key" class="content_container upload_panel">
    <div class="page_instructions">
-      You can view and explore data uploaded from your Speck on specksensor.com.  To enable uploads, you must
+      You can view and explore data uploaded from your Speck on specksensor.com. To enable uploads, you must
       first register your Speck with your specksensor.com account. This section will walk you through the registration
       process.
    </div>
@@ -626,7 +715,7 @@
 </div>
 <div id="begin_registration_panel_has_api_key" class="content_container upload_panel">
    <div class="page_instructions">
-      You can view and explore data uploaded from your Speck on specksensor.com.  To enable uploads, you must
+      You can view and explore data uploaded from your Speck on specksensor.com. To enable uploads, you must
       first register your Speck with your specksensor.com account. This section will walk you through the registration
       process.
    </div>
@@ -638,7 +727,7 @@
 </div>
 <div id="login_panel" class="content_container upload_panel">
    <div class="page_instructions">
-      You must be logged in to specksensor.com in order to register your Speck and configure it for uploads.  Please
+      You must be logged in to specksensor.com in order to register your Speck and configure it for uploads. Please
       log in using the form below.
    </div>
    <form id="login_form" onsubmit="return submitLoginForm('login_form','login_email','login_password','login_messages',null,handleLoginSuccess,handleLoginUnauthorized);">
