@@ -143,6 +143,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Asthma patients breathe easier with new bluetooth inhalers",
+            author : "Andrew Wagner",
+            source : "PBS NewsHour",
+            date : new Date("2017-05-10 00:00:00"),
+            url : "http://www.pbs.org/newshour/updates/asthma-patients-breathe-easier-new-bluetooth-inhalers/"
+         },
+         {
             title : "Check It Out: Air Quality Monitors and Other High-tech Devices Available at Fondulac District Library",
             author : "Jeanette Brickner",
             source : "Journal Star",
