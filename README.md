@@ -1,10 +1,9 @@
-specksensor.com
-============
+#specksensor.com
+
 
 The specksensor.com web site.
 
-Setup
-=====
+##Setup
 
 1. Install the module dependencies:
 
@@ -42,8 +41,45 @@ Setup
 
 6. If necessary, create the specksensor.com client and Speck product in ESDR.  The specksensor.com server verifies that they exist upon startup and will fail to start if they aren't found.
 
-Run
-===
+7. You'll now need to make sure the appropriate OAuth2 client exists in ESDR, for whatever environment you're running under.  
+
+    1. Log into ESDR and the go to the Clients tab.
+    2. Create the client as follows for whatever environment you're targeting.  Look in the appropriate `config-ENV.json` file for the Client Secret:
+    
+       |                        | dev                                                       | test                                                     | prod                                                           |
+       | -----------------------| --------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------- |
+       | **Display Name**       | Speck                                                     | Speck                                                    | Speck                                                          |  
+       | **Client ID**          | specksensor.com                                           | specksensor.com                                          | specksensor.com                                                |
+       | **Client Secret**      | \[see `config-dev.json`\]                                 | \[see `config-test.json`\]                               | \[see `config-prod.json`\]                                     |
+       | **Email Address**      | admin@specksensor.com                                     | admin@specksensor.com                                    | admin@specksensor.com                                          |
+       | **Verification URL**   | http://localhost:8888/verification/:verificationToken     | http://localhost:8889/verification/:verificationToken    | https://www.specksensor.com/verification/:verificationToken    |
+       | **Reset Password URL** | http://localhost:8888/password-reset/:resetPasswordToken  | http://localhost:8889/password-reset/:resetPasswordToken | https://www.specksensor.com/password-reset/:resetPasswordToken |
+       | **Visibility**         | Public                                                    | Public                                                   | Public                                                         |
+
+8. Now create the Speck product in ESDR.  You'll either need to do the OAuth2 dance to get an access token, or just look in the database and find the token there.  I think the latter is way easier, so these instructions will do that.
+    1. Log into the ESDR web site.  This creates the OAuth2 token you'll need.
+    2. Look in the MySQL Tokens table and find the record for your user.
+    3. In the root directory of this repository, run one of the following curl commands (making sure to replace `YOUR_ACCESS_TOKEN` with your access token), depending on the environment you're targeting:
+    
+       **Dev**:
+       
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3000/api/v1/products -d @./etc/create_speck_product/speck_product.json
+           
+       **Test**:
+       
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3001/api/v1/products -d @./etc/create_speck_product/speck_product.json
+
+       **Prod**:
+
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" https://esdr.cmucreatelab.org/api/v1/products -d @./etc/create_speck_product/speck_product.json
+
+    4. You should get a response like this:
+    
+       ```
+       {"code":201,"status":"success","data":{"id":1,"name":"speck_v1"}}
+       ```
+           
+##Run
 
 To run the server in development mode, do any of the following:
 
@@ -60,8 +96,8 @@ To run the server in production mode, do either of the following:
     NODE_ENV=prod npm start
     NODE_ENV=production npm start
 
-Development
-===========
+##Development
+
 To generate the CSS from the SCSS template, do:
 
     npm run-script gen-css
