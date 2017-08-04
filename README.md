@@ -1,9 +1,9 @@
-#specksensor.com
+# specksensor.com
 
 
 The specksensor.com web site.
 
-##Setup
+## Setup
 
 1. Install the module dependencies:
 
@@ -79,7 +79,7 @@ The specksensor.com web site.
        {"code":201,"status":"success","data":{"id":1,"name":"speck_v1"}}
        ```
            
-##Run
+## Run
 
 To run the server in development mode, do any of the following:
 
@@ -96,7 +96,7 @@ To run the server in production mode, do either of the following:
     NODE_ENV=prod npm start
     NODE_ENV=production npm start
 
-##Development
+## Development
 
 To generate the CSS from the SCSS template, do:
 
