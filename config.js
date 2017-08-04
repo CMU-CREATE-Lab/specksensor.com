@@ -23,10 +23,10 @@ config.defaults(
          },
          "product" : {
             "id" : "THIS_WILL_BE_DETERMINED_AT_RUNTIME",
-            "name" : 'speck_v1',
-            "prettyName" : 'Speck',
-            "vendor" : 'CMU CREATE Lab',
-            "description" : 'The Speck particle sensor.',
+            "name" : "speck_v1",
+            "prettyName" : "Speck",
+            "vendor" : "CMU CREATE Lab",
+            "description" : "The Speck particle sensor.",
             "defaultChannelSpecs" : {
                "version" : 1,
                "channels" : {
