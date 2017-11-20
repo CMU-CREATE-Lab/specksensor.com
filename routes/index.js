@@ -143,6 +143,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "How Tech Can Help You Understand Your Home's Air",
+            author : "Kayla Matthews",
+            source : "Houzz",
+            date : new Date("2017-11-20 00:00:00"),
+            url : "https://www.houzz.com/ideabooks/95143611"
+         },
+         {
             title : "Asthma patients breathe easier with new bluetooth inhalers",
             author : "Andrew Wagner",
             source : "PBS NewsHour",
