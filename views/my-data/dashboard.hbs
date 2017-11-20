@@ -15,6 +15,7 @@
    var ESDR_API_ROOT_URL = '{{esdrUrl}}/api/v1';
 
    var PRODUCT_ID = '{{speckProductId}}';
+   var ADDITIONAL_PRODUCTS = {{{additionalProducts}}};
 
    var DEFAULT_CHANNEL_NAMES = ["particle_count", "particle_concentration"];
    var DARK_BLUE_COLOR = "#2e68a3";
@@ -105,14 +106,22 @@
 
          esdr = new org.cmucreatelab.esdr.ESDR(token);
 
+         // build the productId part of the where clause
+         var productIdWhereClause = "productId=" + PRODUCT_ID;
+         if (Array.isArray(ADDITIONAL_PRODUCTS)){
+            ADDITIONAL_PRODUCTS.forEach(function(p){
+               productIdWhereClause += ",productId=" + p.id;
+            });
+         }
+
          // first load the devices, sorted by name
-         esdr.devices.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + "&orderBy=name&fields=id,name",
+         esdr.devices.find("?whereJoin=AND&where=userId={{user.esdrUserId}}&whereOr=" + productIdWhereClause + "&orderBy=name&fields=id,name",
                {
                   success : function(foundDevices) {
                      if (foundDevices && foundDevices.rows && foundDevices.rows.length > 0) {
                         var devices = foundDevices.rows;
                         // now load all the feeds
-                        esdr.feeds.find("?where=userId={{user.esdrUserId}},productId=" + PRODUCT_ID + ",minTimeSecs<>__null__&orderBy=-lastUpload&fields=id,userId,name,deviceId,apiKeyReadOnly,isPublic,latitude,longitude,channelSpecs,channelBounds,lastUpload,minTimeSecs,maxTimeSecs",
+                        esdr.feeds.find("?whereJoin=AND&where=userId={{user.esdrUserId}}&whereOr=" + productIdWhereClause + "&where=minTimeSecs<>__null__&orderBy=-lastUpload&fields=id,userId,name,deviceId,apiKeyReadOnly,isPublic,latitude,longitude,channelSpecs,channelBounds,lastUpload,minTimeSecs,maxTimeSecs",
                               {
                                  success : function(foundFeeds) {
                                     if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
@@ -860,7 +869,7 @@
    </div>
    <div id="content_area" style="display:none">
       <div id="devices_and_feeds_sidebar_menu_container">
-         <div class="title">My Specks</div>
+         <div class="title">My Devices</div>
          <div id="devices_and_feeds_sidebar_menu"></div>
       </div>
       <div id="grapher_container" class="noselect" style="display:none">

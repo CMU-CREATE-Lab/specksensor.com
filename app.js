@@ -55,6 +55,23 @@ process
 var doesClientExist = false;
 var doesProductExist = false;
 
+var findEsdrProductByName = function(productName, callback) {
+   esdr.getProductByName(productName,
+                         function(err, product) {
+                            if (err) {
+                               if (err instanceof RemoteError && err.data && err.data.code == httpStatus.NOT_FOUND) {
+                                  log.warn("Product [" + productName + "] not found in ESDR");
+                               }
+                               else {
+                                  log.error("Unexpected error while trying to find the product [" + productName + "] in ESDR: " + JSON.stringify(err, null, 3));
+                               }
+                               callback(err);
+                            }
+                            else {
+                               callback(null, product);
+                            }
+                         });
+};
 flow.series([
                // make sure our client entry exists in ESDR
                function(done) {
@@ -87,34 +104,76 @@ flow.series([
                // now make sure the product exists in ESDR
                function(done) {
                   log.info("Making sure the Speck product exists in ESDR...");
-                  esdr.getProductId(config.get("product:name"),
-                                    function(err, productId) {
-                                       if (err) {
-                                          if (err instanceof RemoteError && err.data && err.data.code == httpStatus.NOT_FOUND) {
-                                             log.error("Product not found in ESDR!");
-                                          }
-                                          else {
-                                             log.error("Unexpected error while trying to find the product in ESDR: " + JSON.stringify(err, null, 3));
-                                          }
-                                       }
-                                       else {
-                                          log.info("Product already exists in ESDR, no creation necessary.");
+                  findEsdrProductByName(config.get("product:name"),
+                                        function(err, product) {
+                                           if (err) {
+                                              if (err instanceof RemoteError && err.data && err.data.code == httpStatus.NOT_FOUND) {
+                                                 log.error("Product not found in ESDR!");
+                                              }
+                                              else {
+                                                 log.error("Unexpected error while trying to find the product in ESDR: " + JSON.stringify(err, null, 3));
+                                              }
+                                           }
+                                           else {
+                                              log.info("Product already exists in ESDR, no creation necessary.");
 
-                                          //store the product ID in the config, so we can use it elsewhere
-                                          config.set("product:id", productId);
-                                          doesProductExist = true;
-                                       }
-                                       done();
-                                    });
+                                              //store the product ID in the config, so we can use it elsewhere
+                                              config.set("product:id", product.id);
+                                              doesProductExist = true;
+                                           }
+                                           done();
+                                        });
+               },
+
+               // now see whether any of the additional products (if any) exist in ESDR
+               function(done) {
+                  //additionalProducts
+                  log.info("Checking which additional products exist in ESDR...");
+                  var additionalProducts = config.get("additionalProducts");
+                  if (Array.isArray(additionalProducts)) {
+                     var commands = [];
+                     additionalProducts.forEach(function(p) {
+                        if ('name' in p) {
+                           commands.push(function(productCheckDone) {
+                              log.info("Checking additional product [" + p.name + "]...");
+                              findEsdrProductByName(p.name,
+                                                    function(err, product) {
+                                                       if (err) {
+                                                          log.warn("Additional product [" + p.name + "] not found");
+                                                          p['id'] = null;
+                                                          p['prettyName'] = null;
+                                                       }
+                                                       else {
+                                                          log.info("Additional product [" + p.name + "] found!");
+                                                          p['id'] = product.id;
+                                                          p['prettyName'] = product.prettyName;
+                                                       }
+                                                       productCheckDone();
+                                                    });
+                           });
+                        }
+                     });
+                     flow.series(commands, function(err) {
+                        log.info("Done checking additional products");
+                        log.debug("Additional products: " + JSON.stringify(additionalProducts, null, 3));
+                        done(err);
+                     });
+                  }
+                  else {
+                     log.info("No additional products found.");
+                     done();
+                  }
                }
 
             ],
             function() {
-               if (!doesClientExist || !doesProductExist) {
+               if (doesClientExist && doesProductExist) {
+                  log.info("Client and product both exist in ESDR.");
+               }
+               else {
                   log.error("Server will not be fully functional because the client and/or product could not be verified to exist in ESDR.");
                }
-
-               log.info("Client and product exist in ESDR, now continuing with server startup...");
+               log.info("Continuing with server startup...");
 
                // now initialize the database and get a reference to it
                Database.create(function(err, db) {
@@ -179,11 +238,11 @@ flow.series([
 
                         // enable logging of the ESDR user ID and specksensor.com user ID, if authenticated
                         requestLogger.token('uids', function(req) {
-                                                   if (req.user) {
-                                                      return req.user.esdrUserId + " " + req.user.id;
-                                                   }
-                                                   return '- -';
-                                                });
+                           if (req.user) {
+                              return req.user.esdrUserId + " " + req.user.id;
+                           }
+                           return '- -';
+                        });
 
                         // set up HTTP request logging (do this AFTER the static file serving so we don't log those)
                         if (RunMode.isStaging() || RunMode.isProduction()) {

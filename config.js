@@ -73,6 +73,11 @@ config.defaults(
                }
             }
          },
+         "additionalProducts" : [
+            {
+               "name" : "honeybee_dylos"
+            }
+         ],
          "cookie" : {
             "name" : "specksensor_sid",
             "secret" : "YOUR_COOKIE_SECRET"

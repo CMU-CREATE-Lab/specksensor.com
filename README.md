@@ -63,20 +63,41 @@ The specksensor.com web site.
     
        **Dev**:
        
-           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3000/api/v1/products -d @./etc/create_speck_product/speck_product.json
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3000/api/v1/products -d @./etc/create_products/speck_product.json
            
        **Test**:
        
-           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3001/api/v1/products -d @./etc/create_speck_product/speck_product.json
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3001/api/v1/products -d @./etc/create_products/speck_product.json
 
        **Prod**:
 
-           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" https://esdr.cmucreatelab.org/api/v1/products -d @./etc/create_speck_product/speck_product.json
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" https://esdr.cmucreatelab.org/api/v1/products -d @./etc/create_products/speck_product.json
 
     4. You should get a response like this:
     
        ```
        {"code":201,"status":"success","data":{"id":1,"name":"speck_v1"}}
+       ```
+           
+9. If you want to also see Honeybee Dylos devices in your instance of the site, then you'll also need to create the Honeybee Dylos product in ESDR.  As in the previous step, you'll need your OAuth2 access token.
+    1. In the root directory of this repository, run one of the following curl commands (making sure to replace `YOUR_ACCESS_TOKEN` with your access token), depending on the environment you're targeting:
+    
+       **Dev**:
+       
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3000/api/v1/products -d @./etc/create_products/honeybee_dylos_product.json
+           
+       **Test**:
+       
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" http://localhost:3001/api/v1/products -d @./etc/create_products/honeybee_dylos_product.json
+
+       **Prod**:
+
+           curl -X POST -H "Content-Type:application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" https://esdr.cmucreatelab.org/api/v1/products -d @./etc/create_products/honeybee_dylos_product.json
+
+    2. You should get a response like this:
+    
+       ```
+       {"code":201,"status":"success","data":{"id":2,"name":"honeybee_dylos"}}
        ```
            
 ## Run

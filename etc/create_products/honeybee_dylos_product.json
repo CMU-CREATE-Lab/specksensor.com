@@ -1,0 +1,27 @@
+{
+   "name" : "honeybee_dylos",
+   "prettyName" : "Honeybee Dylos",
+   "vendor" : "Dylos",
+   "description" : "A Dylos configured with Honeybee",
+   "defaultChannelSpecs" : {
+      "version" : 1,
+      "channels" : {
+         "Large" : {
+            "units" : "particles/ft^3",
+            "prettyName" : "Large Particles",
+            "range" : {
+               "min" : 0,
+               "max" : null
+            }
+         },
+         "Small" : {
+            "range" : {
+               "max" : null,
+               "min" : 0
+            },
+            "prettyName" : "Small Particles",
+            "units" : "particles/ft^3"
+         }
+      }
+   }
+}
