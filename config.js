@@ -76,6 +76,9 @@ config.defaults(
          "additionalProducts" : [
             {
                "name" : "honeybee_dylos"
+            },
+            {
+               "name" : "honeybee"
             }
          ],
          "cookie" : {

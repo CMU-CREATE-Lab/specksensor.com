@@ -1,0 +1,10 @@
+{
+   "name" : "honeybee",
+   "prettyName" : "Honeybee",
+   "vendor" : "CMU CREATE Lab",
+   "description" : "A honeybee device",
+   "defaultChannelSpecs" : {
+      "version" : 1,
+      "channels" : { }
+   }
+}
