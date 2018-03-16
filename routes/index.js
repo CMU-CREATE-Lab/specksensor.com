@@ -143,6 +143,16 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Airviz announces the first-ever Bluetooth-enabled HVAC air filter with in-app monitoring",
+            author : "",
+            source : "Airviz",
+            date : new Date("2018-03-16 00:00:00"),
+            file : {
+               name : "20180316_smart_air_filter.pdf",
+               type : "pdf"
+            }
+         },
+         {
             title : "How Tech Can Help You Understand Your Home's Air",
             author : "Kayla Matthews",
             source : "Houzz",
