@@ -143,6 +143,13 @@ router.get('/press', function(req, res) {
       section : "press",
       articles : [
          {
+            title : "Airviz Speck indoor air-quality monitor review: It's great, as far as it goes",
+            author : "Michael Brown",
+            source : "Tech Hive",
+            date : new Date("2018-03-23 00:00:00"),
+            url : "https://www.techhive.com/article/3265444/sensors/airviz-speck-indoor-air-quality-monitor-review.html"
+         },
+         {
             title : "Airviz announces the first-ever Bluetooth-enabled HVAC air filter with in-app monitoring",
             author : "Jordan Mroziak",
             source : "Airviz",
