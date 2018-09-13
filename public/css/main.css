@@ -189,20 +189,33 @@ a.anchor {
         color: white; } }
   #main_navbar .navbar-brand {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     float: none;
     font-family: Lato, sans-serif !important;
-    font-size: 36px;
-    line-height: 67px;
+    margin-top: 14px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    width: 70px;
+    height: auto;
     padding: 0;
     -webkit-transition: all 0.2s ease;
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
-    transition: all 0.2s ease; }
+    transition: all 0.2s ease;
+    color: #9d9d9d; }
+    #main_navbar .navbar-brand a {
+      color: #9d9d9d;
+      text-decoration: none; }
+    #main_navbar .navbar-brand .speck {
+      font-size: 36px;
+      line-height: 25px; }
+    #main_navbar .navbar-brand .by_airviz {
+      font-size: 12px;
+      line-height: 12px;
+      margin-top: 10px;
+      white-space: nowrap; }
   #main_navbar .nav > li > a {
     padding-top: 27px;
     font-size: 16px;
@@ -276,12 +289,21 @@ a.anchor {
         padding-top: 10px; } }
   @media (max-width: 767px) {
       #main_navbar .navbar-brand {
-        font-size: 24px;
-        line-height: 46px;
+        margin-top: 5px;
         -webkit-transition: all 0.2s ease;
         -moz-transition: all 0.2s ease;
         -o-transition: all 0.2s ease;
-        transition: all 0.2s ease; } }
+        transition: all 0.2s ease; }
+        #main_navbar .navbar-brand .speck {
+          font-size: 24px;
+          line-height: 24px; }
+        #main_navbar .navbar-brand .by_airviz {
+          font-size: 10px;
+          line-height: 10px;
+          margin-top: 2px;
+          white-space: nowrap; }
+      #main_navbar .navbar-brand {
+        width: 0; } }
 
 #main_navbar a:focus {
   outline: none; }
@@ -299,12 +321,19 @@ a.anchor {
       #main_navbar.shrink .nav > li > a {
         padding-top: 10px; } }
   #main_navbar.shrink .navbar-brand {
-    font-size: 24px;
-    line-height: 46px;
+    margin-top: 5px;
     -webkit-transition: all 0.2s ease;
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease; }
+    #main_navbar.shrink .navbar-brand .speck {
+      font-size: 24px;
+      line-height: 24px; }
+    #main_navbar.shrink .navbar-brand .by_airviz {
+      font-size: 10px;
+      line-height: 10px;
+      margin-top: 2px;
+      white-space: nowrap; }
   #main_navbar.shrink .geocode_form_container {
     -ms-transform: scale(0.8);
     -webkit-transform: scale(0.8);

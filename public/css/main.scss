@@ -306,8 +306,20 @@ a.anchor {
    }
 
    .navbar-brand {
-      font-size: 24px;
-      line-height: 46px;
+      margin-top: 5px;
+
+      .speck {
+         font-size: 24px;
+         line-height: 24px;
+      }
+
+      .by_airviz {
+         font-size: 10px;
+         line-height: 10px;
+         margin-top: 2px;
+         white-space: nowrap;
+      }
+
       @include easing;
    }
 }
@@ -344,17 +356,36 @@ a.anchor {
 
    .navbar-brand {
       position: relative;
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
       float: none;
       font-family: Lato, sans-serif !important;
-      font-size: 36px;
-      line-height: 67px;
+      margin-top: 14px;
       margin-left: auto;
       margin-right: auto;
       text-align: center;
-      width: 70px;
+      height: auto;
       padding: 0;
       @include easing;
+      color: #9d9d9d;
+
+      a {
+         color: #9d9d9d;
+         text-decoration: none;
+      }
+
+      .speck {
+         font-size: 36px;
+         line-height: 25px;
+      }
+
+      .by_airviz {
+         font-size: 12px;
+         line-height: 12px;
+         margin-top: 10px;
+         white-space: nowrap;
+      }
    }
 
    .nav > li > a {
@@ -424,6 +455,9 @@ a.anchor {
 
    @media (max-width: $SMALL_WIDTH) {
       @include shrunken_navbar;
+      .navbar-brand {
+         width:0;
+      }
    }
 }
 
@@ -1060,7 +1094,7 @@ $BANNER_HEIGHT: 60px;
 
       @media (max-width: $SMALL_WIDTH) {
          margin-top: 10px;
-         padding:10px;
+         padding: 10px;
          border: 1px solid $BORDER_COLOR;
       }
    }
