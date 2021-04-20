@@ -608,6 +608,14 @@ router.get('/jobs', function(req, res) {
    res.render('jobs', { title : "Jobs", section : "jobs" });
 });
 
+router.get('/buy', function(req, res) {
+   res.render('buy', {
+      title : "Get One",
+      section : "buy",
+      hero_image : { filename : "white_speck_with_bamboo_pot_hero.jpg", css_class : "anchor_left" }
+   });
+});
+
 router.get('/policies-and-terms', function(req, res) {
    res.render('policies-and-terms', {
       title : "Policies and Terms",
@@ -648,10 +656,6 @@ router.get('/faq', function(req, res) {
 
 router.get('/contact', function(req, res) {
    res.redirect('/support/contact-us');
-});
-
-router.get('/buy', function(req, res) {
-   res.redirect('http://store.specksensor.com/');
 });
 
 router.get('/software', function(req, res) {
