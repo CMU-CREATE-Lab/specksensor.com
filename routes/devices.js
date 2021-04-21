@@ -16,6 +16,7 @@ router.get('/',
                             title : "Devices",
                             section : "devices",
                             speckProductId : config.get("product:id"),
+                            esdrApiRootUrl : config.get("esdr:apiRootUrl"),
                             additionalProducts : filteredAdditionalProducts
                          });
            });

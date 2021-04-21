@@ -18,6 +18,9 @@
                <div id="feed_panel_{{id}}" class="panel panel-default">
                   <div class="panel-heading">
                      <div class="pull-right feed_controls">
+                        {{#if hasData}}
+                           <div class="control_button"><a href="{{{downloadUrl}}}"><i class="fa fa-download"></i></a></div>
+                        {{/if}}
                         <div class="control_button" onclick="confirmDeleteFeed({{id}});"><i class="fa fa-trash-o"></i>
                         </div>
                      </div>

@@ -1,5 +1,6 @@
 <script language="JavaScript" type="text/javascript">
    var esdr = null;
+   var ESDR_API_ROOT_URL = '{{esdrApiRootUrl}}';
    var PRODUCT_ID = '{{speckProductId}}';
    var ADDITIONAL_PRODUCTS = {{{additionalProducts}}};
 
@@ -51,7 +52,7 @@
                });
 
                // now load all the feeds and associate each with its device
-               esdr.feeds.find("?whereJoin=AND&where=userId={{user.esdrUserId}}&whereOr=" + productIdWhereClause + "&orderBy=-lastUpload&fields=id,name,deviceId,apiKey,apiKeyReadOnly,isPublic,exposure,created,lastUpload,minTimeSecs,maxTimeSecs&cache-bust=" + Date.now(),
+               esdr.feeds.find("?whereJoin=AND&where=userId={{user.esdrUserId}}&whereOr=" + productIdWhereClause + "&orderBy=-lastUpload&fields=id,name,deviceId,apiKey,apiKeyReadOnly,isPublic,exposure,created,lastUpload,minTimeSecs,maxTimeSecs,channelBounds&cache-bust=" + Date.now(),
                                {
                                   success : function(foundFeeds) {
                                      if (foundFeeds && foundFeeds.rows && foundFeeds.rows.length > 0) {
@@ -66,6 +67,12 @@
                                            feed.maxTimeSecsFormatted = hasData ? createDateTimeString(new Date(feed.maxTimeSecs * 1000)) : null;
                                            feed.lastUploadFormatted = hasData ? createDateTimeString(new Date(feed.lastUpload)) : "never";
                                            feed.createdFormatted = createDateTimeString(new Date(feed.created));
+
+                                           if (hasData) {
+                                              var channelNames = Object.keys(feed.channelBounds.channels).join(',');
+                                              feed.downloadUrl = ESDR_API_ROOT_URL + '/feeds/' + feed.apiKeyReadOnly + '/channels/' + channelNames + '/export?timezone=UTC&format=csv';
+                                           }
+
                                            devicesById[feed.deviceId].feeds.push(feed);
                                            feedsById[feed.id] = feed;
                                         });
