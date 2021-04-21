@@ -2025,6 +2025,15 @@ $DASHBOARD_MENU_PANEL_PADDING: 5px;
       }
 
       .feed_controls {
+         .control_button {
+            a {
+               color: #333;
+               &:hover {
+                  color: #337ab7;
+               }
+            }
+         }
+
          .control_button:hover {
             color: #337ab7;
          }

@@ -1302,6 +1302,11 @@ a.anchor {
 #devices_page .device_list .device_controls .control_button:hover {
   color: #000000; }
 
+#devices_page .device_list .feed_controls .control_button a {
+  color: #333; }
+  #devices_page .device_list .feed_controls .control_button a:hover {
+    color: #337ab7; }
+
 #devices_page .device_list .feed_controls .control_button:hover {
   color: #337ab7; }
 
