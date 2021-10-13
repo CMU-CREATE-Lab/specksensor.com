@@ -44,7 +44,7 @@
     "run-mode": "^1.0.1",
     "serve-favicon": "^2.5.0",
     "string": "^3.3.3",
-    "superagent": "^0.21.0"
+    "superagent-ls": "^1.4.0"
   },
   "devDependencies": {
     "handlebars": "^4.7.7",

@@ -1,5 +1,5 @@
 var flow = require('nimble');
-var superagent = require('superagent');
+var superagent = require('superagent-ls');
 var httpStatus = require('http-status');
 var JaySchema = require('jayschema');
 var jsonValidator = new JaySchema();
@@ -192,7 +192,7 @@ module.exports = function(databaseHelper) {
       if (fieldsToSelect == null) {
          fieldsToSelect = [];
       }
-      
+
       findStation(fieldsToSelect, 'feedId', feedId, callback);
    };
 
