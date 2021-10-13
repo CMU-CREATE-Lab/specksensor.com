@@ -2,7 +2,7 @@
    "appenders" : {
       "file" : {
          "type" : "dateFile",
-         "filename" : "/logs/esdr/specksensor.com",
+         "filename" : "./logs/specksensor.com",
          "pattern" : "yyyy-MM-dd.log",
          "alwaysIncludePattern" : true,
          "layout" : {
