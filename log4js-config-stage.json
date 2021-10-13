@@ -1,17 +1,19 @@
 {
-   "replaceConsole": true,
-   "appenders" : [
-      {
+   "appenders" : {
+      "file" : {
          "type" : "dateFile",
          "filename" : "./logs/specksensor.com",
-         "pattern" : "-yyyy-MM-dd.log",
+         "pattern" : "yyyy-MM-dd.log",
          "alwaysIncludePattern" : true,
          "layout" : {
             "type" : "basic"
          }
       }
-   ],
-   "levels" : {
-      "[all]":"INFO"
-   }
+   },
+      "categories" : {
+         "default" : {
+            "appenders" : ["file"],
+            "level" : "info"
+         }
+      }
 }

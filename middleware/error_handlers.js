@@ -1,23 +1,22 @@
 var httpStatus = require('http-status');
-var S = require('string');
 var log = require('log4js').getLogger('specksensor:middleware:error_handlers');
 
 var isApi = function(req) {
-   return (S(req.url).startsWith("/api/")
+   return (req.url.startsWith("/api/")
            ||
            (
            req.method.toLowerCase() == "post" &&
-           S(req.url).startsWith("/login")
+           req.url.startsWith("/login")
            )
            ||
            (
            req.method.toLowerCase() == "get" &&
-           S(req.url).startsWith("/access-token")
+           req.url.startsWith("/access-token")
            )
            ||
            (
            (req.method.toLowerCase() == "put" || req.method.toLowerCase() == "post") &&
-           S(req.url).startsWith("/password-reset")
+           req.url.startsWith("/password-reset")
            )
    );
 };
