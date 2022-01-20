@@ -2,83 +2,104 @@ body {
   background: white !important;
   max-height: 760px;
   overflow-y: hidden;
-  padding-top: 0; }
+  padding-top: 0;
+}
 
 .upload_panel {
-  display: none; }
+  display: none;
+}
 
 #already_logged_in_email {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 #upload_progress_bar {
-  margin-bottom: 20px; }
-  #upload_progress_bar .marker_on {
-    width: 20px;
-    height: 20px;
-    background: transparent url("../images/progress_marker_on.png") no-repeat 0 0;
-    background-size: 20px 20px; }
-  #upload_progress_bar .marker_off {
-    width: 20px;
-    height: 20px;
-    background: transparent url("../images/progress_marker_off.png") no-repeat 0 0;
-    background-size: 20px 20px; }
-  #upload_progress_bar .bar_on {
-    width: 130px;
-    height: 6px;
-    background-color: black; }
-  #upload_progress_bar .bar_off {
-    width: 130px;
-    height: 6px;
-    background-color: #acacac; }
-  #upload_progress_bar .label_on {
-    color: black; }
-  #upload_progress_bar .label_off {
-    color: #acacac; }
-  #upload_progress_bar .half_bar_spacer {
-    width: 65px;
-    height: 1px; }
-  #upload_progress_bar .marker_spacer {
-    width: 20px;
-    height: 1px; }
+  margin-bottom: 20px;
+}
+#upload_progress_bar .marker_on {
+  width: 20px;
+  height: 20px;
+  background: transparent url("../images/progress_marker_on.png") no-repeat 0 0;
+  background-size: 20px 20px;
+}
+#upload_progress_bar .marker_off {
+  width: 20px;
+  height: 20px;
+  background: transparent url("../images/progress_marker_off.png") no-repeat 0 0;
+  background-size: 20px 20px;
+}
+#upload_progress_bar .bar_on {
+  width: 130px;
+  height: 6px;
+  background-color: black;
+}
+#upload_progress_bar .bar_off {
+  width: 130px;
+  height: 6px;
+  background-color: #acacac;
+}
+#upload_progress_bar .label_on {
+  color: black;
+}
+#upload_progress_bar .label_off {
+  color: #acacac;
+}
+#upload_progress_bar .half_bar_spacer {
+  width: 65px;
+  height: 1px;
+}
+#upload_progress_bar .marker_spacer {
+  width: 20px;
+  height: 1px;
+}
 
 #create_feed_form_extra_controls {
   width: 425px;
-  margin-top: 12px; }
+  margin-top: 12px;
+}
 
 .feed_list {
   overflow-y: scroll;
   max-height: 350px;
-  margin-bottom: 20px; }
-  .feed_list .feed_list_item {
-    border: 1px solid black;
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    padding: 10px;
-    margin: 5px 0 5px 0;
-    cursor: pointer; }
-  .feed_list .feed_list_item:hover {
-    border: 1px solid #337ab7; }
-  .feed_list .selected_feed {
-    color: white;
-    background-color: #337ab7; }
+  margin-bottom: 20px;
+}
+.feed_list .feed_list_item {
+  border: 1px solid black;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding: 10px;
+  margin: 5px 0 5px 0;
+  cursor: pointer;
+}
+.feed_list .feed_list_item:hover {
+  border: 1px solid #337ab7;
+}
+.feed_list .selected_feed {
+  color: white;
+  background-color: #337ab7;
+}
 
 #map_area #map_canvas {
   width: 423px;
   height: 230px;
   border: 1px solid black;
   margin: 0;
-  padding: 0; }
-
+  padding: 0;
+}
 #map_area .map_instructions {
   font-size: 12px !important;
-  color: #666666; }
-
+  color: #666666;
+}
 #map_area #map_geolocation {
-  font-size: 12px !important; }
-
+  font-size: 12px !important;
+}
 #map_area .map_geolocation_prompt {
-  display: none; }
+  display: none;
+}
 
 .h2, h2 {
-  margin-top: 0; }
+  margin-top: 0;
+}
+
+/*# sourceMappingURL=upload.css.map */

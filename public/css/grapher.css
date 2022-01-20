@@ -2,10 +2,12 @@
   position: relative;
   border: 1px solid black;
   box-sizing: content-box;
-  -webkit-box-sizing: content-box; }
+  -webkit-box-sizing: content-box;
+}
 
 .plot_container > canvas:focus {
-  outline: none; }
+  outline: none;
+}
 
 .date_axis {
   position: relative;
@@ -14,7 +16,8 @@
   border: 1px solid black;
   border-bottom-width: 0;
   box-sizing: content-box;
-  -webkit-box-sizing: content-box; }
+  -webkit-box-sizing: content-box;
+}
 
 .y_axis {
   position: relative;
@@ -22,13 +25,15 @@
   border: 1px solid black;
   border-left-width: 0;
   box-sizing: content-box;
-  -webkit-box-sizing: content-box; }
+  -webkit-box-sizing: content-box;
+}
 
 .y_axis_label {
   position: absolute;
   text-align: center;
   font-size: 8pt;
-  height: auto; }
+  height: auto;
+}
 
 #value_and_time {
   position: absolute;
@@ -39,9 +44,13 @@
   margin: 2px;
   padding: 2px;
   font-size: 11px;
-  line-height: 11px; }
+  line-height: 11px;
+}
 
 .color_box {
   position: absolute;
   left: 0;
-  width: 100%; }
+  width: 100%;
+}
+
+/*# sourceMappingURL=grapher.css.map */
