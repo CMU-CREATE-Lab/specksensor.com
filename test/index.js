@@ -48,50 +48,50 @@ describe("specksensor.com", function() {
    before(function(initDone) {
       // make sure the client exists in ESDR
       esdr.findClient(config.get("client:name"),
-                        function(err, result) {
-                           if (err) {
-                              throw new Error("Error occurred while finding the Speck client in ESDR: " + JSON.stringify(err, null, 3));
-                           }
-                           else {
-                              log.info("The client exists in ESDR.");
-                           }
+                      function(err, result) {
+                         if (err) {
+                            throw new Error("Error occurred while finding the Speck client in ESDR: " + JSON.stringify(err, null, 3));
+                         }
+                         else {
+                            log.info("The client exists in ESDR.");
+                         }
 
-                           Database.create(function(err, theDatabase) {
-                              if (err) {
-                                 throw err;
-                              }
-                              db = theDatabase;
-                              pool.getConnection(function(err, connection) {
-                                 if (err) {
-                                    throw err;
-                                 }
+                         Database.create(function(err, theDatabase) {
+                            if (err) {
+                               throw err;
+                            }
+                            db = theDatabase;
+                            pool.getConnection(function(err, connection) {
+                               if (err) {
+                                  throw err;
+                               }
 
-                                 flow.series([
-                                                function(done) {
-                                                   connection.query("DELETE FROM sessions", function(err) {
-                                                      if (err) {
-                                                         throw err;
-                                                      }
+                               flow.series([
+                                              function(done) {
+                                                 connection.query("DELETE FROM sessions", function(err) {
+                                                    if (err) {
+                                                       throw err;
+                                                    }
 
-                                                      done();
-                                                   });
-                                                },
-                                                function(done) {
-                                                   connection.query("DELETE FROM Users", function(err) {
-                                                      if (err) {
-                                                         throw err;
-                                                      }
+                                                    done();
+                                                 });
+                                              },
+                                              function(done) {
+                                                 connection.query("DELETE FROM Users", function(err) {
+                                                    if (err) {
+                                                       throw err;
+                                                    }
 
-                                                      done();
-                                                   });
-                                                }
-                                             ],
-                                             function() {
-                                                initDone();
-                                             });
-                              });
-                           });
-                        });
+                                                    done();
+                                                 });
+                                              }
+                                           ],
+                                           function() {
+                                              initDone();
+                                           });
+                            });
+                         });
+                      });
    });
 
    describe("REST API", function() {
@@ -108,22 +108,22 @@ describe("specksensor.com", function() {
                      .post("/api/v1/users")
                      .send(testUsers.testUser1)
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.CREATED);
-                             res.body.should.have.property('code', httpStatus.CREATED);
-                             res.body.should.have.property('status', 'success');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('email', testUsers.testUser1.email);
-                             res.body.data.should.have.property('displayName', testUsers.testUser1.displayName);
-                             res.body.data.should.have.property('verificationToken');
+                        res.should.have.property('status', httpStatus.CREATED);
+                        res.body.should.have.property('code', httpStatus.CREATED);
+                        res.body.should.have.property('status', 'success');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('email', testUsers.testUser1.email);
+                        res.body.data.should.have.property('displayName', testUsers.testUser1.displayName);
+                        res.body.data.should.have.property('verificationToken');
 
-                             // remember the verification token so we can verify this user
-                             verificationTokens[testUsers.testUser1.email] = res.body.data.verificationToken;
-                             done();
-                          });
+                        // remember the verification token so we can verify this user
+                        verificationTokens[testUsers.testUser1.email] = res.body.data.verificationToken;
+                        done();
+                     });
             });
 
             it("Should not be able to create the same user again", function(done) {
@@ -131,18 +131,18 @@ describe("specksensor.com", function() {
                      .post("/api/v1/users")
                      .send(testUsers.testUser1)
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.CONFLICT);
-                             res.body.should.have.property('code', httpStatus.CONFLICT);
-                             res.body.should.have.property('status', 'error');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('email', testUsers.testUser1.email);
+                        res.should.have.property('status', httpStatus.CONFLICT);
+                        res.body.should.have.property('code', httpStatus.CONFLICT);
+                        res.body.should.have.property('status', 'error');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('email', testUsers.testUser1.email);
 
-                             done();
-                          });
+                        done();
+                     });
             });
 
             it("Should be able to create a different user", function(done) {
@@ -150,22 +150,22 @@ describe("specksensor.com", function() {
                      .post("/api/v1/users")
                      .send(testUsers.testUser2)
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.CREATED);
-                             res.body.should.have.property('code', httpStatus.CREATED);
-                             res.body.should.have.property('status', 'success');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('email', testUsers.testUser2.email);
-                             res.body.data.should.have.property('displayName', testUsers.testUser2.displayName);
-                             res.body.data.should.have.property('verificationToken');
+                        res.should.have.property('status', httpStatus.CREATED);
+                        res.body.should.have.property('code', httpStatus.CREATED);
+                        res.body.should.have.property('status', 'success');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('email', testUsers.testUser2.email);
+                        res.body.data.should.have.property('displayName', testUsers.testUser2.displayName);
+                        res.body.data.should.have.property('verificationToken');
 
-                             // remember the verification token so we can verify this user
-                             verificationTokens[testUsers.testUser2.email] = res.body.data.verificationToken;
-                             done();
-                          });
+                        // remember the verification token so we can verify this user
+                        verificationTokens[testUsers.testUser2.email] = res.body.data.verificationToken;
+                        done();
+                     });
             });
 
             it("Should fail to create an invalid user", function(done) {
@@ -176,24 +176,23 @@ describe("specksensor.com", function() {
                               password : "X"          // too short
                            })
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
+                        res.should.have.property('status', httpStatus.UNPROCESSABLE_ENTITY);
+                        res.body.should.have.property('code', httpStatus.UNPROCESSABLE_ENTITY);
+                        res.body.should.have.property('status', 'error');
+                        res.body.should.have.property('data');
+                        res.body.data.errors.should.have.length(2);
+                        res.body.data.errors[0].should.have.property('keyword', 'format');
+                        res.body.data.errors[0].should.have.property('dataPath', '.email');
+                        res.body.data.errors[0].should.have.property('schemaPath', '#/properties/email/format');
+                        res.body.data.errors[1].should.have.property('keyword', 'minLength');
+                        res.body.data.errors[1].should.have.property('dataPath', '.password');
+                        res.body.data.errors[1].should.have.property('schemaPath', '#/properties/password/minLength');
 
-                             res.should.have.property('status', httpStatus.UNPROCESSABLE_ENTITY);
-                             res.body.should.have.property('code', httpStatus.UNPROCESSABLE_ENTITY);
-                             res.body.should.have.property('status', 'error');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.length(2);
-                             res.body.data[0].should.have.property('instanceContext', '#/password');
-                             res.body.data[0].should.have.property('constraintName', 'minLength');
-                             res.body.data[0].should.have.property('kind', 'StringValidationError');
-                             res.body.data[1].should.have.property('instanceContext', '#/email');
-                             res.body.data[1].should.have.property('constraintName', 'format');
-                             res.body.data[1].should.have.property('kind', 'FormatValidationError');
-
-                             done();
-                          });
+                        done();
+                     });
             });
 
          });   // end Create
@@ -202,74 +201,74 @@ describe("specksensor.com", function() {
             it("Should be able to verify a new user", function(done) {
                agent(url)
                      .put("/api/v1/user-verification")
-                     .send({token : verificationTokens[testUsers.testUser1.email]})
+                     .send({ token : verificationTokens[testUsers.testUser1.email] })
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.OK);
-                             res.body.should.have.property('code', httpStatus.OK);
-                             res.body.should.have.property('status', 'success');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('isVerified', true);
+                        res.should.have.property('status', httpStatus.OK);
+                        res.body.should.have.property('code', httpStatus.OK);
+                        res.body.should.have.property('status', 'success');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('isVerified', true);
 
-                             done();
-                          });
+                        done();
+                     });
             });
 
             it("Should be able to verify the same user again", function(done) {
                agent(url)
                      .put("/api/v1/user-verification")
-                     .send({token : verificationTokens[testUsers.testUser1.email]})
+                     .send({ token : verificationTokens[testUsers.testUser1.email] })
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.OK);
-                             res.body.should.have.property('code', httpStatus.OK);
-                             res.body.should.have.property('status', 'success');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('isVerified', true);
+                        res.should.have.property('status', httpStatus.OK);
+                        res.body.should.have.property('code', httpStatus.OK);
+                        res.body.should.have.property('status', 'success');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('isVerified', true);
 
-                             done();
-                          });
+                        done();
+                     });
             });
 
             it("Should fail to verify with a bogus verification token", function(done) {
                agent(url)
                      .put("/api/v1/user-verification")
-                     .send({token : "bogus"})
+                     .send({ token : "bogus" })
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.BAD_REQUEST);
-                             res.body.should.have.property('code', httpStatus.BAD_REQUEST);
-                             res.body.should.have.property('status', 'error');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('isVerified', false);
+                        res.should.have.property('status', httpStatus.BAD_REQUEST);
+                        res.body.should.have.property('code', httpStatus.BAD_REQUEST);
+                        res.body.should.have.property('status', 'error');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('isVerified', false);
 
-                             done();
-                          });
+                        done();
+                     });
             });
 
             it("Should fail to verify with a missing verification token", function(done) {
                agent(url)
                      .put("/api/v1/user-verification")
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.UNPROCESSABLE_ENTITY);
-                             res.body.should.have.property('code', httpStatus.UNPROCESSABLE_ENTITY);
-                             res.body.should.have.property('status', 'error');
-                             res.body.should.have.property('data', null);
-                             done();
-                          });
+                        res.should.have.property('status', httpStatus.UNPROCESSABLE_ENTITY);
+                        res.body.should.have.property('code', httpStatus.UNPROCESSABLE_ENTITY);
+                        res.body.should.have.property('status', 'error');
+                        res.body.should.have.property('data', null);
+                        done();
+                     });
             });
 
          });   // end Verification
@@ -279,74 +278,74 @@ describe("specksensor.com", function() {
             it("Should be able to login an already-verified user", function(done) {
                agent(url)
                      .post("/login")
-                     .send({email : testUsers.testUser1.email, password : testUsers.testUser1.password})
+                     .send({ email : testUsers.testUser1.email, password : testUsers.testUser1.password })
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.OK);
-                             res.body.should.have.property('code', httpStatus.OK);
-                             res.body.should.have.property('status', 'success');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('accessToken');
-                             res.body.data.should.have.property('accessTokenExpiration');
+                        res.should.have.property('status', httpStatus.OK);
+                        res.body.should.have.property('code', httpStatus.OK);
+                        res.body.should.have.property('status', 'success');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('accessToken');
+                        res.body.data.should.have.property('accessTokenExpiration');
 
-                             done();
-                          });
+                        done();
+                     });
             });
 
             it("Should fail to login an unverified user", function(done) {
                agent(url)
                      .post("/login")
-                     .send({email : testUsers.testUser2.email, password : testUsers.testUser2.password})
+                     .send({ email : testUsers.testUser2.email, password : testUsers.testUser2.password })
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.UNAUTHORIZED);
-                             res.body.should.have.property('code', httpStatus.UNAUTHORIZED);
-                             res.body.should.have.property('status', 'error');
-                             res.body.should.have.property('data', null);
+                        res.should.have.property('status', httpStatus.UNAUTHORIZED);
+                        res.body.should.have.property('code', httpStatus.UNAUTHORIZED);
+                        res.body.should.have.property('status', 'error');
+                        res.body.should.have.property('data', null);
 
-                             done();
-                          });
+                        done();
+                     });
             });
 
             it("Should be able to login after verifying that user", function(done) {
                agent(url)
                      .put("/api/v1/user-verification")
-                     .send({token : verificationTokens[testUsers.testUser2.email]})
+                     .send({ token : verificationTokens[testUsers.testUser2.email] })
                      .end(function(err, res) {
-                             if (err) {
-                                return done(err);
-                             }
+                        if (err) {
+                           return done(err);
+                        }
 
-                             res.should.have.property('status', httpStatus.OK);
-                             res.body.should.have.property('code', httpStatus.OK);
-                             res.body.should.have.property('status', 'success');
-                             res.body.should.have.property('data');
-                             res.body.data.should.have.property('isVerified', true);
+                        res.should.have.property('status', httpStatus.OK);
+                        res.body.should.have.property('code', httpStatus.OK);
+                        res.body.should.have.property('status', 'success');
+                        res.body.should.have.property('data');
+                        res.body.data.should.have.property('isVerified', true);
 
-                             agent(url)
-                                   .post("/login")
-                                   .send({email : testUsers.testUser2.email, password : testUsers.testUser2.password})
-                                   .end(function(err, res) {
-                                           if (err) {
-                                              return done(err);
-                                           }
+                        agent(url)
+                              .post("/login")
+                              .send({ email : testUsers.testUser2.email, password : testUsers.testUser2.password })
+                              .end(function(err, res) {
+                                 if (err) {
+                                    return done(err);
+                                 }
 
-                                           res.should.have.property('status', httpStatus.OK);
-                                           res.body.should.have.property('code', httpStatus.OK);
-                                           res.body.should.have.property('status', 'success');
-                                           res.body.should.have.property('data');
-                                           res.body.data.should.have.property('accessToken');
-                                           res.body.data.should.have.property('accessTokenExpiration');
+                                 res.should.have.property('status', httpStatus.OK);
+                                 res.body.should.have.property('code', httpStatus.OK);
+                                 res.body.should.have.property('status', 'success');
+                                 res.body.should.have.property('data');
+                                 res.body.data.should.have.property('accessToken');
+                                 res.body.data.should.have.property('accessTokenExpiration');
 
-                                           done();
-                                        });
-                          });
+                                 done();
+                              });
+                     });
             });
 
             // TODO: get session cookie, access protected resource with that cookie (show that you can't
@@ -415,7 +414,8 @@ describe("specksensor.com", function() {
                                   (err != null).should.be.true;
                                   (err instanceof ValidationError).should.be.true;
                                   err.should.have.property("data");
-                                  err.data.should.have.length(2);
+                                  err.data.should.have.property("errors");
+                                  err.data.errors.should.have.length(2);
 
                                   done();
                                });

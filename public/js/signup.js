@@ -35,34 +35,62 @@ function submitSignUpForm(formElementId, emailElementId, passwordElementId, erro
             .send(user)
             .end(function(err, res) {
                     setFormEnabled(form, true);
-                    if (res.status == 201) {
+                    if (res.status === 201) {
                        form.hide();
                        messages.add('Welcome! We have sent you email with instructions to activate your account. ' + additionalSuccessMessage);
                        messages.render(successMessagesElement);
                     }
                     else {
-                       if (res.status == 409) {
+                       if (res.status === 409) {
                           messages.add("Sorry, a user with that email address already exists.");
                           emailElement.focus();
                        }
-                       else if (res.status == 422) {
-                          if (res.body.data && res.body.data.length > 0) {
+                       else if (res.status === 422) {
+                          /*
+                          {
+                             "message": "validation failed",
+                             "errors": [
+                                {
+                                   "keyword": "minLength",
+                                   "dataPath": ".email",
+                                   "schemaPath": "#/properties/email/minLength",
+                                   "params": {
+                                      "limit": 6
+                                   },
+                                   "message": "should NOT be shorter than 6 characters"
+                                },
+                                {
+                                   "keyword": "minLength",
+                                   "dataPath": ".password",
+                                   "schemaPath": "#/properties/password/minLength",
+                                   "params": {
+                                      "limit": 5
+                                   },
+                                   "message": "should NOT be shorter than 5 characters"
+                                }
+                             ],
+                             "validation": true,
+                             "ajv": true
+                          }
+                           */
+                          console.log(JSON.stringify(res.body.data, null, 3));
+                          if (res.body.data && res.body.data.errors && res.body.data.errors.length > 0) {
                              var emailErrors = [];
                              var passwordErrors = [];
-                             res.body.data.forEach(function(item) {
-                                var field = item.instanceContext;
-                                var constraintName = item.constraintName;
-                                if (field == '#/email') {
-                                   if (constraintName == 'minLength') {
-                                      emailErrors.push("The email address must be at least " + item.constraintValue + " characters.");
+                             res.body.data.errors.forEach(function(item) {
+                                var field = item.dataPath;
+                                var schemaPath = item.schemaPath;
+                                if (field == '.email') {
+                                   if (schemaPath == '#/properties/email/minLength') {
+                                      emailErrors.push("The email address must be at least " + item.params.limit + " characters.");
                                    }
-                                   if (constraintName == 'format') {
+                                   if (schemaPath == '#/properties/email/format') {
                                       emailErrors.push("The email address must be a valid email address.");
                                    }
                                 }
-                                else if (field == '#/password') {
-                                   if (constraintName == 'minLength') {
-                                      passwordErrors.push("The password must be at least " + item.constraintValue + " characters.");
+                                else if (field == '.password') {
+                                   if (schemaPath == '#/properties/password/minLength') {
+                                      passwordErrors.push("The password must be at least " + item.params.limit + " characters.");
                                    }
                                 }
                              });

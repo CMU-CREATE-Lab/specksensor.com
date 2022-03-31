@@ -520,24 +520,24 @@
                                  console.log(JSON.stringify(validationErrors, null, 3));
                                  if (validationErrors && validationErrors.length > 0) {
                                     validationErrors.forEach(function(item) {
-                                       var field = item.instanceContext;
-                                       var constraintName = item.constraintName;
+                                       var field = item.dataPath;
+                                       var schemaPath = item.schemaPath;
                                        switch (field) {
-                                          case '#/name' :
-                                             if (constraintName == 'minLength') {
-                                                messages.add("The location name must be at least " + item.constraintValue + " characters.");
+                                          case '.name' :
+                                             if (schemaPath == '#/properties/name/minLength') {
+                                                messages.add("The location name must be at least " + item.params.limit + " characters.");
                                              }
-                                             else if (constraintName == 'maxLength') {
-                                                messages.add("The location name cannot be more than " + item.constraintValue + " characters.");
+                                             else if (schemaPath == '#/properties/name/maxLength') {
+                                                messages.add("The location name cannot be more than " + item.params.limit + " characters.");
                                              }
                                              else {
                                                 messages.add("Invalid location name.");
                                              }
                                              break;
-                                          case '#/latitude' :
+                                          case '.latitude' :
                                              messages.add("Invalid location latitude.");
                                              break;
-                                          case '#/longitude' :
+                                          case '.longitude' :
                                              messages.add("Invalid location longitude.");
                                              break;
                                           default:

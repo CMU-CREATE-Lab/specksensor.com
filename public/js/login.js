@@ -50,10 +50,10 @@ function submitLoginForm(formElementId, emailElementId, passwordElementId, messa
             .end(function(err, res) {
                     setFormEnabled(form, true);
                     console.log(JSON.stringify(res.body, null, 3));
-                    if (res.status == 200) {
+                    if (res.status === 200) {
                        successHandler(res.body.data);
                     }
-                    else if (res.status == 401) {
+                    else if (res.status === 401) {
                        unauthorizedHandler(messages);
                     }
                     else {
